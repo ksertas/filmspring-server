@@ -20,6 +20,10 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @OneToOne
+    @JoinColumn(name = "avatar")
+    private Avatar avatar;
+
     @Column(name = "enabled")
     private boolean enabled;
 
@@ -54,6 +58,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Avatar getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
     }
 
     public boolean isEnabled() {

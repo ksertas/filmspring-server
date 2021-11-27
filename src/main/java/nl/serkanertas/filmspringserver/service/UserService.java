@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService  {
@@ -15,8 +16,13 @@ public class UserService  {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private FilmRepository filmRepository;
+//    public User getUser(long user_id) {
+//        return userRepository.getById(user_id);
+//    }
+
+    public User getUser(long user_id) {
+        return userRepository.findById(user_id).get();
+    }
 
     public Iterable<User> getAllUsers() {
         return userRepository.findAll();
@@ -26,5 +32,9 @@ public class UserService  {
         userRepository.save(user);
     }
 
+    public void deleteUser(Long user_id) {
+        User user = userRepository.findById(user_id).get();
+        userRepository.delete(user);
+    }
 
 }

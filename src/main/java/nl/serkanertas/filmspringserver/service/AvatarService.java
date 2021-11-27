@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
@@ -26,24 +27,22 @@ public class AvatarService {
     AvatarRepository avatarRepository;
 
     @Transactional
-    public User storeAvatar(long user_id, MultipartFile file) throws IOException {
+    public void storeAvatar(long user_id, MultipartFile file) throws IOException {
         User user = userService.getUser(user_id);
-        String name = file.getOriginalFilename();
-        Avatar avatar = new Avatar(name,
+        Avatar avatar = new Avatar(
+                file.getOriginalFilename(),
                 file.getContentType(),
                 file.getBytes());
-        System.out.println(avatar);
+
         user.setAvatar(avatar);
-        avatarRepository.save(avatar);
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     @Transactional
-    public Avatar getAvatar(long avatar_id) {
-//        User user = userService.getUser(user_id);
-        Avatar avatar = avatarRepository.findById(avatar_id).get();
-        System.out.println(avatar.getData().length);
-        return avatar;
+    public Avatar getAvatar(long user_id) {
+        User user = userService.getUser(user_id);
+        System.out.println(user.getUsername() + " With " + user.getAvatar().getFileName());
+        return user.getAvatar();
     }
 
 }

@@ -19,29 +19,34 @@ public class UserController {
     @Autowired
     AvatarService avatarService;
 
-    @GetMapping("/get/all")
+    @GetMapping
     ResponseEntity<Object> getAllUsers() {
         return ResponseEntity.ok().body(userService.getAllUsers());
     }
 
-    @GetMapping("/get/user/{user_id}")
+    @GetMapping("/{user_id}")
     ResponseEntity<Object> getUser(@PathVariable long user_id) {
         return ResponseEntity.ok().body(userService.getUser(user_id));
     }
 
-    @PostMapping("/create/user")
+    @PostMapping
     ResponseEntity<Object> createUser(@RequestBody User user) {
         userService.createUser(user);
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete/user/{user_id}")
+    @DeleteMapping("/{user_id}")
     ResponseEntity<Object> deleteUser(@PathVariable long user_id) {
         userService.deleteUser(user_id);
         return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/upload/avatar/{user_id}")
+    @GetMapping(value = "/avatar/{user_id}")
+    public ResponseEntity<Object> getAvatar(@PathVariable long user_id) {
+        return ResponseEntity.ok(avatarService.getAvatar(user_id));
+    }
+
+    @PutMapping("/avatar/{user_id}")
     public ResponseEntity<Object> uploadAvatar(@RequestParam("file") MultipartFile file, @PathVariable long user_id) {
         try {
             avatarService.storeAvatar(user_id, file);
@@ -52,9 +57,10 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/get/avatar/{user_id}")
-    public ResponseEntity<Object> getAvatar(@PathVariable long user_id) {
-        return ResponseEntity.ok(avatarService.getAvatar(user_id));
+    @DeleteMapping("/avatar/{user_id}")
+    public ResponseEntity<Object> deleteAvatar(@PathVariable long user_id) {
+        avatarService.deleteAvatar(user_id);
+        return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
     }
 
 }

@@ -1,5 +1,7 @@
 package nl.serkanertas.filmspringserver.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -16,6 +18,7 @@ public class Avatar {
     @Lob
     private byte[] data;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "avatar")
     private User user;
 

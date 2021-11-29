@@ -18,9 +18,6 @@ public class FilmService {
     @Autowired
     private FilmRepository filmRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
     public Iterable<Film> getAllFilms() {
         return filmRepository.findAll();
     }

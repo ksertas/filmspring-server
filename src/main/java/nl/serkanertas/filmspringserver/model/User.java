@@ -1,10 +1,13 @@
 package nl.serkanertas.filmspringserver.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -21,20 +24,31 @@ public class User {
     private String email;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "avatar")
+    @JoinTable(name = "user_avatar",
+    joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "user_id")},
+    inverseJoinColumns = {@JoinColumn(name = "avatar_id", referencedColumnName = "avatar_id")})
     private Avatar avatar;
 
     @Column(name = "enabled")
     private boolean enabled;
 
+//    @ManyToMany(mappedBy = "usersWatchedFilm")
+//    private List<Film> watchedFilms = new ArrayList<>();
+//
+//    @ManyToMany(mappedBy = "usersWatchedSeries")
+//    private List<Series> watchedSeries = new ArrayList<>();
+//
+//    @ManyToMany(mappedBy = "usersInGroup")
+//    private List<Group> groupsUserIsIn = new ArrayList<>();
+
     @ManyToMany(mappedBy = "usersWatchedFilm")
-    private List<Film> watchedFilms = new ArrayList<>();
+    private Set<Film> watchedFilms = new HashSet<>();
 
     @ManyToMany(mappedBy = "usersWatchedSeries")
-    private List<Series> watchedSeries = new ArrayList<>();
+    private Set<Series> watchedSeries = new HashSet<>();
 
     @ManyToMany(mappedBy = "usersInGroup")
-    private List<Group> groupsUserIsIn = new ArrayList<>();
+    private Set<Group> groupsUserIsIn = new HashSet<>();
 
     public long getUser_id() {
         return user_id;
@@ -76,27 +90,27 @@ public class User {
         this.enabled = enabled;
     }
 
-    public List<Film> getWatchedFilms() {
+    public Set<Film> getWatchedFilms() {
         return watchedFilms;
     }
 
-    public void setWatchedFilms(List<Film> watchedFilms) {
+    public void setWatchedFilms(Set<Film> watchedFilms) {
         this.watchedFilms = watchedFilms;
     }
 
-    public List<Series> getWatchedSeries() {
+    public Set<Series> getWatchedSeries() {
         return watchedSeries;
     }
 
-    public void setWatchedSeries(List<Series> watchedSeries) {
+    public void setWatchedSeries(Set<Series> watchedSeries) {
         this.watchedSeries = watchedSeries;
     }
 
-    public List<Group> getGroupsUserIsIn() {
+    public Set<Group> getGroupsUserIsIn() {
         return groupsUserIsIn;
     }
 
-    public void setGroupsUserIsIn(List<Group> groupsUserIsIn) {
+    public void setGroupsUserIsIn(Set<Group> groupsUserIsIn) {
         this.groupsUserIsIn = groupsUserIsIn;
     }
 }

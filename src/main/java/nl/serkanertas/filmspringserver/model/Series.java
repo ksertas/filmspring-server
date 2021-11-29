@@ -1,10 +1,10 @@
 package nl.serkanertas.filmspringserver.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "series")
@@ -37,21 +37,23 @@ public class Series {
     @Column(name = "runtime")
     private int runtime;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "actor_series",
             joinColumns = @JoinColumn(name = "series_id"),
             inverseJoinColumns = @JoinColumn(name = "actor_id")
     )
-    private Set<Actor> actorsInSeries = new HashSet<>();
+    private List<Actor> actorsInSeries = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "user_series",
             joinColumns = @JoinColumn(name = "series_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<User> usersWatchedSeries = new HashSet<>();;
+    private List<User> usersWatchedSeries = new ArrayList<>();
 
     public long getSeries_id() {
         return series_id;
@@ -125,19 +127,19 @@ public class Series {
         this.runtime = runtime;
     }
 
-    public Set<Actor> getActorsInSeries() {
+    public List<Actor> getActorsInSeries() {
         return actorsInSeries;
     }
 
-    public void setActorsInSeries(Set<Actor> actorsInSeries) {
+    public void setActorsInSeries(List<Actor> actorsInSeries) {
         this.actorsInSeries = actorsInSeries;
     }
 
-    public Set<User> getUsersWatchedSeries() {
+    public List<User> getUsersWatchedSeries() {
         return usersWatchedSeries;
     }
 
-    public void setUsersWatchedSeries(Set<User> usersWatchedSeries) {
+    public void setUsersWatchedSeries(List<User> usersWatchedSeries) {
         this.usersWatchedSeries = usersWatchedSeries;
     }
 }

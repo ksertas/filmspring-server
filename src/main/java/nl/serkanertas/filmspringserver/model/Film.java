@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "films")
@@ -36,13 +34,14 @@ public class Film {
     @Column(name = "runtime")
     private int runtime;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "actor_film",
             joinColumns = @JoinColumn(name = "film_id"),
             inverseJoinColumns = @JoinColumn(name = "actor_id")
     )
-    private Set<Actor> actorsInFilm = new HashSet<>();
+    private List<Actor> actorsInFilm = new ArrayList<>();
 
     @JsonIgnore
     @ManyToMany
@@ -51,7 +50,7 @@ public class Film {
             joinColumns = @JoinColumn(name = "film_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<User> usersWatchedFilm = new HashSet<>();
+    private List<User> usersWatchedFilm = new ArrayList<>();
 
     public long getFilm_id() {
         return film_id;
@@ -117,19 +116,19 @@ public class Film {
         this.runtime = runtime;
     }
 
-    public Set<Actor> getActorsInFilm() {
+    public List<Actor> getActorsInFilm() {
         return actorsInFilm;
     }
 
-    public void setActorsInFilm(Set<Actor> actorsInFilm) {
+    public void setActorsInFilm(List<Actor> actorsInFilm) {
         this.actorsInFilm = actorsInFilm;
     }
 
-    public Set<User> getUsersWatchedFilm() {
+    public List<User> getUsersWatchedFilm() {
         return usersWatchedFilm;
     }
 
-    public void setUsersWatchedFilm(Set<User> usersWatchedFilm) {
+    public void setUsersWatchedFilm(List<User> usersWatchedFilm) {
         this.usersWatchedFilm = usersWatchedFilm;
     }
 

@@ -5,9 +5,7 @@ import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -32,23 +30,14 @@ public class User {
     @Column(name = "enabled")
     private boolean enabled;
 
-//    @ManyToMany(mappedBy = "usersWatchedFilm")
-//    private List<Film> watchedFilms = new ArrayList<>();
-//
-//    @ManyToMany(mappedBy = "usersWatchedSeries")
-//    private List<Series> watchedSeries = new ArrayList<>();
-//
-//    @ManyToMany(mappedBy = "usersInGroup")
-//    private List<Group> groupsUserIsIn = new ArrayList<>();
-
     @ManyToMany(mappedBy = "usersWatchedFilm")
-    private Set<Film> watchedFilms = new HashSet<>();
+    private List<Film> watchedFilms = new ArrayList<>();
 
     @ManyToMany(mappedBy = "usersWatchedSeries")
-    private Set<Series> watchedSeries = new HashSet<>();
+    private List<Series> watchedSeries = new ArrayList<>();
 
     @ManyToMany(mappedBy = "usersInGroup")
-    private Set<Group> groupsUserIsIn = new HashSet<>();
+    private List<Group> groupsUserIsIn = new ArrayList<>();
 
     public long getUser_id() {
         return user_id;
@@ -90,27 +79,27 @@ public class User {
         this.enabled = enabled;
     }
 
-    public Set<Film> getWatchedFilms() {
+    public List<Film> getWatchedFilms() {
         return watchedFilms;
     }
 
-    public void setWatchedFilms(Set<Film> watchedFilms) {
+    public void setWatchedFilms(List<Film> watchedFilms) {
         this.watchedFilms = watchedFilms;
     }
 
-    public Set<Series> getWatchedSeries() {
+    public List<Series> getWatchedSeries() {
         return watchedSeries;
     }
 
-    public void setWatchedSeries(Set<Series> watchedSeries) {
+    public void setWatchedSeries(List<Series> watchedSeries) {
         this.watchedSeries = watchedSeries;
     }
 
-    public Set<Group> getGroupsUserIsIn() {
+    public List<Group> getGroupsUserIsIn() {
         return groupsUserIsIn;
     }
 
-    public void setGroupsUserIsIn(Set<Group> groupsUserIsIn) {
+    public void setGroupsUserIsIn(List<Group> groupsUserIsIn) {
         this.groupsUserIsIn = groupsUserIsIn;
     }
 }

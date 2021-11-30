@@ -9,7 +9,7 @@ import java.util.List;
 public class Actor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int actor_id;
+    private long actor_id;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -23,7 +23,7 @@ public class Actor {
     @ManyToMany(mappedBy = "actorsInSeries")
     private List<Series> series = new ArrayList<>();
 
-    public int getActor_id() {
+    public long getActor_id() {
         return actor_id;
     }
 

@@ -21,4 +21,20 @@ public class Group {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> usersInGroup = new ArrayList<>();
+
+    public long getGroup_id() {
+        return group_id;
+    }
+
+    public void setGroup_id(long group_id) {
+        this.group_id = group_id;
+    }
+
+    public List<User> getUsersInGroup() {
+        return usersInGroup;
+    }
+
+    public void setUsersInGroup(List<User> usersInGroup) {
+        this.usersInGroup = usersInGroup;
+    }
 }

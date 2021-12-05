@@ -12,8 +12,13 @@ public class FilmController {
     @Autowired
     private FilmService filmService;
 
+    @GetMapping("/{film_id}")
+    ResponseEntity<Object> getFilm(@PathVariable("film_id") long film_id) {
+        return ResponseEntity.ok().body(filmService.getFilm(film_id));
+    }
+
     @GetMapping()
-    ResponseEntity<Object> getAllMovies() {
+    ResponseEntity<Object> getAllFilms() {
         return ResponseEntity.ok().body(filmService.getAllFilms());
     }
 

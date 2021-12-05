@@ -19,8 +19,12 @@ public class Avatar {
     private byte[] data;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "avatar")
+    @OneToOne(mappedBy = "avatarUser")
     private User user;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "avatarGroup")
+    private Group group;
 
     public Avatar(){}
 
@@ -68,5 +72,13 @@ public class Avatar {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 }

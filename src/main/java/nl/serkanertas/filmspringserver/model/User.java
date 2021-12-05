@@ -22,7 +22,7 @@ public class User {
     @JoinTable(name = "user_avatar",
     joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "user_id")},
     inverseJoinColumns = {@JoinColumn(name = "avatar_id", referencedColumnName = "avatar_id")})
-    private Avatar avatar;
+    private Avatar avatarUser;
 
     @Column(name = "enabled")
     private boolean enabled;
@@ -33,7 +33,7 @@ public class User {
     @ManyToMany(mappedBy = "usersWatchedSeries")
     private List<Series> watchedSeries = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "usersInGroup")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "usersInGroup")
     private List<Group> groupsUserIsIn = new ArrayList<>();
 
     public long getUser_id() {
@@ -60,12 +60,12 @@ public class User {
         this.email = email;
     }
 
-    public Avatar getAvatar() {
-        return avatar;
+    public Avatar getAvatarUser() {
+        return avatarUser;
     }
 
-    public void setAvatar(Avatar avatar) {
-        this.avatar = avatar;
+    public void setAvatarUser(Avatar avatar) {
+        this.avatarUser = avatar;
     }
 
     public boolean isEnabled() {

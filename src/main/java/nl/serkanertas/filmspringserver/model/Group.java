@@ -13,6 +13,16 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long group_id;
 
+    private String name;
+
+    private boolean isWarned = false;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinTable(name = "group_avatar",
+            joinColumns = { @JoinColumn(name = "group_id", referencedColumnName = "group_id")},
+            inverseJoinColumns = {@JoinColumn(name = "avatar_id", referencedColumnName = "avatar_id")})
+    private Avatar avatarGroup;
+
     @JsonIgnore
     @ManyToMany
     @JoinTable(
@@ -36,5 +46,29 @@ public class Group {
 
     public void setUsersInGroup(List<User> usersInGroup) {
         this.usersInGroup = usersInGroup;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isWarned() {
+        return isWarned;
+    }
+
+    public void setWarned(boolean warned) {
+        isWarned = warned;
+    }
+
+    public Avatar getAvatarGroup() {
+        return avatarGroup;
+    }
+
+    public void setAvatarGroup(Avatar avatarGroup) {
+        this.avatarGroup = avatarGroup;
     }
 }

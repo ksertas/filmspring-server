@@ -9,17 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 @Service
 public class FilmService {
 
     @Autowired
     private UserService userService;
-
-//    @Autowired
-//    public void setActorService(ActorService actorService) {
-//    }
 
     @Autowired
     private FilmRepository filmRepository;

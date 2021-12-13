@@ -55,6 +55,13 @@ public class Series {
     )
     private List<User> usersWatchedSeries = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinTable(name = "series_poster",
+            joinColumns = { @JoinColumn(name = "series_id", referencedColumnName = "series_id")},
+            inverseJoinColumns = {@JoinColumn(name = "poster_id", referencedColumnName = "poster_id")})
+    private Poster posterSeries;
+
     public long getSeries_id() {
         return series_id;
     }
@@ -141,5 +148,13 @@ public class Series {
 
     public void setUsersWatchedSeries(List<User> usersWatchedSeries) {
         this.usersWatchedSeries = usersWatchedSeries;
+    }
+
+    public Poster getPosterSeries() {
+        return posterSeries;
+    }
+
+    public void setPosterSeries(Poster posterSeries) {
+        this.posterSeries = posterSeries;
     }
 }

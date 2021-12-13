@@ -35,6 +35,13 @@ public class Film {
     private int runtime;
 
     @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinTable(name = "film_poster",
+            joinColumns = { @JoinColumn(name = "film_id", referencedColumnName = "film_id")},
+            inverseJoinColumns = {@JoinColumn(name = "poster_id", referencedColumnName = "poster_id")})
+    private Poster posterFilm;
+
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "actor_film",
@@ -132,5 +139,11 @@ public class Film {
         this.usersWatchedFilm = usersWatchedFilm;
     }
 
+    public Poster getPosterFilm() {
+        return posterFilm;
+    }
 
+    public void setPosterFilm(Poster posterFilm) {
+        this.posterFilm = posterFilm;
+    }
 }

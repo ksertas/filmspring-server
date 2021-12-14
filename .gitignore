@@ -32,4 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
+### Temporary settings and planning ###
 /src/main/java/nl/serkanertas/filmspringserver/Todo.md
+/src/main/resources/application.properties
+/src/main/resources/data.sql

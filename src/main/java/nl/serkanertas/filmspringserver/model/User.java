@@ -1,5 +1,8 @@
 package nl.serkanertas.filmspringserver.model;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +31,15 @@ public class User {
     private boolean enabled;
 
     @ManyToMany(mappedBy = "usersWatchedFilm")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Film> watchedFilms = new ArrayList<>();
 
     @ManyToMany(mappedBy = "usersWatchedSeries")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Series> watchedSeries = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "usersInGroup")
+    @ManyToMany(mappedBy = "usersInGroup")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Group> groupsUserIsIn = new ArrayList<>();
 
     public long getUser_id() {

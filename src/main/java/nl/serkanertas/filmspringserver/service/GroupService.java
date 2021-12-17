@@ -7,9 +7,11 @@ import nl.serkanertas.filmspringserver.model.Group;
 import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,12 @@ public class GroupService {
 
     @Autowired
     private UserService userService;
+
+    private AvatarService avatarService;
+
+    public GroupService(@Lazy AvatarService avatarService) {
+        this.avatarService = avatarService;
+    }
 
     public GroupGetRequest mapGroupToDto(Long group_id){
         Group group = groupRepository.findById(group_id).get();
@@ -36,10 +44,10 @@ public class GroupService {
         return groupDto;
     }
 
-    public void createGroup(CreateGroupPostRequest groupDto) {
+    public void createGroup(CreateGroupPostRequest groupDto) throws IOException {
         Group group = new Group();
         group.setName(groupDto.getGroupName());
-        group.setAvatarGroup(groupDto.getGroupAvatar());
+        group.setAvatarGroup(avatarService.setDefaultAvatarGroup());
         group.setWarned(false);
         groupRepository.save(group);
     }

@@ -36,9 +36,23 @@ public class AvatarService {
     private AvatarRepository avatarRepository;
 
     public Avatar setDefaultAvatarUser() throws IOException {
-        File file = new File("src/main/resources/static/default_pfp.png");
+        File file = new File("src/main/resources/static/img/default_pfp.png");
         FileInputStream fileInput = new FileInputStream(file);
         MultipartFile multipartFile = new MockMultipartFile("default_avatar", "default_pfp.png",
+                "image/png", fileInput);
+
+        Avatar avatar = new Avatar(
+                multipartFile.getOriginalFilename(),
+                multipartFile.getContentType(),
+                multipartFile.getBytes());
+
+        return avatar;
+    }
+
+    public Avatar setDefaultAvatarGroup() throws IOException {
+        File file = new File("src/main/resources/static/img/default_group.png");
+        FileInputStream fileInput = new FileInputStream(file);
+        MultipartFile multipartFile = new MockMultipartFile("default_group_avatar", "default_group.png",
                 "image/png", fileInput);
 
         Avatar avatar = new Avatar(

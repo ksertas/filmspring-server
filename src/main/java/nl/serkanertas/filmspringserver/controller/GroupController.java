@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/groups")
@@ -27,7 +28,7 @@ public class GroupController {
     }
 
     @PostMapping
-    ResponseEntity<Object> createGroup(@Valid @RequestBody CreateGroupPostRequest group) {
+    ResponseEntity<Object> createGroup(@Valid @RequestBody CreateGroupPostRequest group) throws IOException {
         groupService.createGroup(group);
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }

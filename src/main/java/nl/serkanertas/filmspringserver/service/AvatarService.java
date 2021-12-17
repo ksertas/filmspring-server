@@ -6,11 +6,15 @@ import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.AvatarRepository;
 import nl.serkanertas.filmspringserver.repository.GroupRepository;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.mock.web.MockMultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 @Service
@@ -30,6 +34,20 @@ public class AvatarService {
 
     @Autowired
     private AvatarRepository avatarRepository;
+
+    public Avatar setDefaultAvatarUser() throws IOException {
+        File file = new File("src/main/resources/static/default_pfp.png");
+        FileInputStream fileInput = new FileInputStream(file);
+        MultipartFile multipartFile = new MockMultipartFile("default_avatar", "default_pfp.png",
+                "image/png", fileInput);
+
+        Avatar avatar = new Avatar(
+                multipartFile.getOriginalFilename(),
+                multipartFile.getContentType(),
+                multipartFile.getBytes());
+
+        return avatar;
+    }
 
     @Transactional
     public void storeAvatarUser(long user_id, MultipartFile file) throws IOException {

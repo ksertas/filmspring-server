@@ -6,7 +6,7 @@ import nl.serkanertas.filmspringserver.model.Series;
 
 import java.util.List;
 
-public class SearchedUserGetRequestDto {
+public class SearchedUserGetRequest {
     
     private String username;
 

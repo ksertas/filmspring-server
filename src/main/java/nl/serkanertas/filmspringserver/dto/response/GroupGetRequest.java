@@ -4,14 +4,14 @@ import nl.serkanertas.filmspringserver.model.Avatar;
 
 import java.util.List;
 
-public class GroupGetRequestDto {
+public class GroupGetRequest {
     private String groupName;
 
     private boolean isWarned;
 
     private Avatar avatar;
 
-    private List<SearchedUserGetRequestDto> usersInGroup;
+    private List<SearchedUserGetRequest> usersInGroup;
 
     public String getGroupName() {
         return groupName;
@@ -37,11 +37,11 @@ public class GroupGetRequestDto {
         this.avatar = avatar;
     }
 
-    public List<SearchedUserGetRequestDto> getUsersInGroup() {
+    public List<SearchedUserGetRequest> getUsersInGroup() {
         return usersInGroup;
     }
 
-    public void setUsersInGroup(List<SearchedUserGetRequestDto> usersInGroup) {
+    public void setUsersInGroup(List<SearchedUserGetRequest> usersInGroup) {
         this.usersInGroup = usersInGroup;
     }
 }

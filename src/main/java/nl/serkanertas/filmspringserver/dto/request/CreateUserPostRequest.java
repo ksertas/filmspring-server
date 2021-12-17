@@ -4,7 +4,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class NewUserPostRequestDto {
+public class CreateUserPostRequest {
 
     @NotBlank
     @Size(min = 3, max = 32, message = "Username must be between 3 and 32 characters long.")

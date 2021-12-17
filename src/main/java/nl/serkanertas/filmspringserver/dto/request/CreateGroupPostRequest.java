@@ -5,7 +5,7 @@ import nl.serkanertas.filmspringserver.model.Avatar;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class GroupPostRequestDto {
+public class CreateGroupPostRequest {
     @NotBlank
     @Size(min = 4, max = 32)
     private String groupName;

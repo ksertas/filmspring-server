@@ -6,7 +6,7 @@ import nl.serkanertas.filmspringserver.model.Group;
 import nl.serkanertas.filmspringserver.model.Series;
 import java.util.List;
 
-public class CurrentUserGetRequestDto {
+public class CurrentUserGetRequest {
     private String username;
 
     private String email;

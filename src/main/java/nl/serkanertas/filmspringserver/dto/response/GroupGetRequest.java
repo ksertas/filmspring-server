@@ -1,4 +1,4 @@
-package nl.serkanertas.filmspringserver.dto;
+package nl.serkanertas.filmspringserver.dto.response;
 
 import nl.serkanertas.filmspringserver.model.Avatar;
 

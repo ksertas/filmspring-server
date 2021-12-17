@@ -1,18 +1,30 @@
 package nl.serkanertas.filmspringserver.dto;
 
-import org.springframework.web.multipart.MultipartFile;
+import nl.serkanertas.filmspringserver.model.Avatar;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 public class GroupPostRequestDto {
     @NotBlank
     @Size(min = 4, max = 32)
     private String groupName;
 
-    private MultipartFile groupAvatar;
+    private Avatar groupAvatar;
 
-    @Size(min = 0, max = 15)
-    private List<String> invitedUsers;
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public Avatar getGroupAvatar() {
+        return groupAvatar;
+    }
+
+    public void setGroupAvatar(Avatar groupAvatar) {
+        this.groupAvatar = groupAvatar;
+    }
 }

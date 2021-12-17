@@ -11,7 +11,7 @@ public class GroupGetRequestDto {
 
     private Avatar avatar;
 
-    private List<searchedUserGetRequestDto> usersInGroup;
+    private List<SearchedUserGetRequestDto> usersInGroup;
 
     public String getGroupName() {
         return groupName;
@@ -37,11 +37,11 @@ public class GroupGetRequestDto {
         this.avatar = avatar;
     }
 
-    public List<searchedUserGetRequestDto> getUsersInGroup() {
+    public List<SearchedUserGetRequestDto> getUsersInGroup() {
         return usersInGroup;
     }
 
-    public void setUsersInGroup(List<searchedUserGetRequestDto> usersInGroup) {
+    public void setUsersInGroup(List<SearchedUserGetRequestDto> usersInGroup) {
         this.usersInGroup = usersInGroup;
     }
 }

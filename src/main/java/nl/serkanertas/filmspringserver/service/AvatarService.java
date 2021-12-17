@@ -77,7 +77,7 @@ public class AvatarService {
 
     @Transactional
     public void storeAvatarGroup(long group_id, MultipartFile file) throws IOException {
-        Group group = groupService.getGroup(group_id);
+        Group group = groupRepository.findById(group_id).get();
         Avatar avatar = new Avatar(
                 file.getOriginalFilename(),
                 file.getContentType(),
@@ -89,12 +89,12 @@ public class AvatarService {
 
     @Transactional
     public Avatar getAvatarGroup(long group_id) {
-        Group group = groupService.getGroup(group_id);
+        Group group = groupRepository.findById(group_id).get();
         return group.getAvatarGroup();
     }
 
     public void deleteAvatarGroup(long group_id) {
-        Group group = groupService.getGroup(group_id);
+        Group group = groupRepository.findById(group_id).get();
         Long currentAvatarId = group.getAvatarGroup().getAvatar_id();
         group.setAvatarGroup(null);
         avatarRepository.deleteById(currentAvatarId);

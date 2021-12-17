@@ -1,11 +1,13 @@
 package nl.serkanertas.filmspringserver.controller;
 
-import nl.serkanertas.filmspringserver.model.Group;
+import nl.serkanertas.filmspringserver.dto.request.CreateGroupPostRequest;
 import nl.serkanertas.filmspringserver.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/groups")
@@ -25,7 +27,7 @@ public class GroupController {
     }
 
     @PostMapping
-    ResponseEntity<Object> createGroup(@RequestBody Group group) {
+    ResponseEntity<Object> createGroup(@Valid @RequestBody CreateGroupPostRequest group) {
         groupService.createGroup(group);
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }

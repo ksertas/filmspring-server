@@ -1,8 +1,8 @@
 package nl.serkanertas.filmspringserver.service;
 
-import nl.serkanertas.filmspringserver.dto.request.GroupPostRequestDto;
-import nl.serkanertas.filmspringserver.dto.response.GroupGetRequestDto;
-import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequestDto;
+import nl.serkanertas.filmspringserver.dto.request.CreateGroupPostRequest;
+import nl.serkanertas.filmspringserver.dto.response.GroupGetRequest;
+import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
 import nl.serkanertas.filmspringserver.model.Group;
 import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.GroupRepository;
@@ -22,18 +22,10 @@ public class GroupService {
     @Autowired
     private UserService userService;
 
-    public void createGroup(GroupPostRequestDto groupDto) {
-        Group group = new Group();
-        group.setName(groupDto.getGroupName());
-        group.setAvatarGroup(groupDto.getGroupAvatar());
-        group.setWarned(false);
-        groupRepository.save(group);
-    }
-
-    public GroupGetRequestDto mapGroupToDto(Long group_id){
+    public GroupGetRequest mapGroupToDto(Long group_id){
         Group group = groupRepository.findById(group_id).get();
-        GroupGetRequestDto groupDto = new GroupGetRequestDto();
-        ArrayList<SearchedUserGetRequestDto> userGroupList = new ArrayList<>();
+        GroupGetRequest groupDto = new GroupGetRequest();
+        ArrayList<SearchedUserGetRequest> userGroupList = new ArrayList<>();
         groupDto.setGroupName(group.getName());
         groupDto.setAvatar(group.getAvatarGroup());
 
@@ -44,19 +36,26 @@ public class GroupService {
         return groupDto;
     }
 
+    public void createGroup(CreateGroupPostRequest groupDto) {
+        Group group = new Group();
+        group.setName(groupDto.getGroupName());
+        group.setAvatarGroup(groupDto.getGroupAvatar());
+        group.setWarned(false);
+        groupRepository.save(group);
+    }
 
     public void deleteGroup(long group_id) {
         groupRepository.deleteById(group_id);
     }
 
     @Transactional
-    public GroupGetRequestDto getGroup(long group_id) {
+    public GroupGetRequest getGroup(long group_id) {
         return mapGroupToDto(group_id);
     }
 
     @Transactional
-    public List<GroupGetRequestDto> getAllGroups() {
-        List<GroupGetRequestDto> groupDtos = new ArrayList<>();
+    public List<GroupGetRequest> getAllGroups() {
+        List<GroupGetRequest> groupDtos = new ArrayList<>();
         Iterable<Group> groups = groupRepository.findAll();
         for (Group group : groups) {
             groupDtos.add(mapGroupToDto(group.getGroup_id()));
@@ -65,7 +64,7 @@ public class GroupService {
     }
 
     @Transactional
-    public Iterable<SearchedUserGetRequestDto> getAllUsersFromGroup(long group_id) {
+    public Iterable<SearchedUserGetRequest> getAllUsersFromGroup(long group_id) {
         return getGroup(group_id).getUsersInGroup();
     }
 

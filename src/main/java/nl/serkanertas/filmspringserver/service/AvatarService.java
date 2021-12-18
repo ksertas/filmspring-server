@@ -6,7 +6,6 @@ import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.AvatarRepository;
 import nl.serkanertas.filmspringserver.repository.GroupRepository;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,7 +64,7 @@ public class AvatarService {
 
     @Transactional
     public void storeAvatarUser(long user_id, MultipartFile file) throws IOException {
-        User user = userService.getUser(user_id);
+        User user = userService.getUserEntity(user_id);
         Avatar avatar = new Avatar(
                 file.getOriginalFilename(),
                 file.getContentType(),
@@ -77,12 +76,12 @@ public class AvatarService {
 
     @Transactional
     public Avatar getAvatarUser(long user_id) {
-        User user = userService.getUser(user_id);
+        User user = userService.getUserEntity(user_id);
         return user.getAvatarUser();
     }
 
     public void deleteAvatarUser(long user_id) {
-        User user = userService.getUser(user_id);
+        User user = userService.getUserEntity(user_id);
         Long currentAvatarId = user.getAvatarUser().getAvatar_id();
         user.setAvatarUser(null);
         avatarRepository.deleteById(currentAvatarId);

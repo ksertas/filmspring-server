@@ -78,14 +78,14 @@ public class GroupService {
 
     @Transactional
     public void addUserToGroup(long user_id, long group_id) {
-        User user = userService.getUser(user_id);
+        User user = userService.getUserEntity(user_id);
         Group group = groupRepository.findById(group_id).get();
         group.getUsersInGroup().add(user);
         groupRepository.save(group);
     }
 
     public void removeUserFromGroup(long user_id, long group_id) {
-        User user = userService.getUser(user_id);
+        User user = userService.getUserEntity(user_id);
         Group group = groupRepository.findById(group_id).get();
         group.getUsersInGroup().remove(user);
         groupRepository.save(group);

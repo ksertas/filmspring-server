@@ -30,7 +30,7 @@ public class FilmService {
 
     @Transactional
     public void storeFilmToWatched(long user_id, long film_id){
-        User user = userService.getUser(user_id);
+        User user = userService.getUserEntity(user_id);
         Film film = filmRepository.findById(film_id).get();
         film.getUsersWatchedFilm().add(user);
         filmRepository.save(film);
@@ -38,7 +38,7 @@ public class FilmService {
 
     @Transactional
     public void deleteFilmFromUser(long user_id, long film_id) {
-        User user = userService.getUser(user_id);
+        User user = userService.getUserEntity(user_id);
         Film film = filmRepository.findById(film_id).get();
         film.getUsersWatchedFilm().remove(user);
         filmRepository.save(film);

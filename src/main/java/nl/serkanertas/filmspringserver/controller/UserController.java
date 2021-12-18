@@ -1,6 +1,7 @@
 package nl.serkanertas.filmspringserver.controller;
 
 import nl.serkanertas.filmspringserver.dto.request.CreateUserPostRequest;
+import nl.serkanertas.filmspringserver.dto.request.UpdateUserDetailsRequest;
 import nl.serkanertas.filmspringserver.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,12 +21,12 @@ public class UserController {
 
     @GetMapping
     ResponseEntity<Object> getAllUsers() {
-        return ResponseEntity.ok().body(userService.getAllUsers());
+        return ResponseEntity.ok().body(userService.getAllUsersEntity());
     }
 
     @GetMapping("/{user_id}")
     ResponseEntity<Object> getUser(@PathVariable long user_id) {
-        return ResponseEntity.ok().body(userService.getUser(user_id));
+        return ResponseEntity.ok().body(userService.getSearchedUser(user_id));
     }
 
     @PostMapping
@@ -36,6 +37,12 @@ public class UserController {
             userService.createUser(newUserPostRequestDto);
             return ResponseEntity.ok("created successfully");
         }
+    }
+
+    @PatchMapping("/{user_id}")
+    ResponseEntity<Object> updateUser(@PathVariable long user_id, @Valid @RequestBody UpdateUserDetailsRequest updateDetailsDto) {
+        userService.updateDetails(user_id, updateDetailsDto);
+        return ResponseEntity.ok().body("Updated account.");
     }
 
     @DeleteMapping("/{user_id}")

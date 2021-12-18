@@ -1,17 +1,15 @@
 package nl.serkanertas.filmspringserver.service;
 
 import nl.serkanertas.filmspringserver.dto.request.CreateUserPostRequest;
-import nl.serkanertas.filmspringserver.dto.response.CurrentUserGetRequest;
+import nl.serkanertas.filmspringserver.dto.request.UpdateUserDetailsRequest;
 import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
 import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.security.Principal;
 
 @Service
 public class UserService  {
@@ -30,8 +28,11 @@ public class UserService  {
         SearchedUserGetRequest userDto = new SearchedUserGetRequest();
         userDto.setUsername(user.getUsername());
         userDto.setAvatar(user.getAvatarUser());
-        userDto.setWatchedFilms(user.getWatchedFilms());
-        userDto.setWatchedSeries(user.getWatchedSeries());
+        if (!user.isMediaHidden()) {
+            userDto.setWatchedFilms(user.getWatchedFilms());
+            userDto.setWatchedSeries(user.getWatchedSeries());
+        }
+        userDto.setMediaHidden(user.isMediaHidden());
         return userDto;
     }
 
@@ -40,13 +41,25 @@ public class UserService  {
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         user.setEnabled(false);
+        user.setMediaHidden(false);
         user.setAvatarUser(avatarService.setDefaultAvatarUser());
         userRepository.save(user);
 
         return user.getUsername();
     }
 
-    public User getUser(Long user_id) {
+    public void updateDetails(Long user_id, UpdateUserDetailsRequest updateDetailsDto) {
+        User user = getUserEntity(user_id);
+        if (!(updateDetailsDto.getEmail() == null)) {
+            user.setEmail(updateDetailsDto.getEmail());
+        }
+        // preference will be 'false' if not sent
+        user.setMediaHidden(updateDetailsDto.isHideMediaPreference());
+
+        userRepository.save(user);
+    }
+
+    public User getUserEntity(Long user_id) {
         return userRepository.findById(user_id).get();
     }
 
@@ -54,12 +67,8 @@ public class UserService  {
         return mapUserToSearchedUser(user_id);
     }
 
-    public Iterable<User> getAllUsers() {
+    public Iterable<User> getAllUsersEntity() {
         return userRepository.findAll();
-    }
-
-    public void createUser(User user) {
-        userRepository.save(user);
     }
 
     public void deleteUser(long user_id) {

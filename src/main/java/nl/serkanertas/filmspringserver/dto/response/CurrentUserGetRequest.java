@@ -13,6 +13,8 @@ public class CurrentUserGetRequest {
 
     private boolean enabled;
 
+    private boolean hideMediaFromOthers;
+
     private Avatar avatar;
 
     private List<Film> watchedFilms;
@@ -43,6 +45,14 @@ public class CurrentUserGetRequest {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public boolean isHideMediaFromOthers() {
+        return hideMediaFromOthers;
+    }
+
+    public void setHideMediaFromOthers(boolean hideMediaFromOthers) {
+        this.hideMediaFromOthers = hideMediaFromOthers;
     }
 
     public Avatar getAvatar() {

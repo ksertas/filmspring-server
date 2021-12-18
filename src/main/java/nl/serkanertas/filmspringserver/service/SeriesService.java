@@ -28,7 +28,7 @@ public class SeriesService {
 
     @Transactional
     public void storeSeriesToWatched(long user_id, long series_id) {
-        User user = userService.getUser(user_id);
+        User user = userService.getUserEntity(user_id);
         Series series = seriesRepository.findById(series_id).get();
         series.getUsersWatchedSeries().add(user);
         seriesRepository.save(series);
@@ -36,7 +36,7 @@ public class SeriesService {
 
     @Transactional
     public void deleteSeriesFromUser(long user_id, long series_id) {
-        User user = userService.getUser(user_id);
+        User user = userService.getUserEntity(user_id);
         Series series = seriesRepository.findById(series_id).get();
         series.getUsersWatchedSeries().remove(user);
         seriesRepository.save(series);

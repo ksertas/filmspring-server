@@ -12,6 +12,8 @@ public class SearchedUserGetRequest {
 
     private Avatar avatar;
 
+    private boolean mediaHidden;
+
     private List<Film> watchedFilms;
 
     private List<Series> watchedSeries;
@@ -30,6 +32,14 @@ public class SearchedUserGetRequest {
 
     public void setAvatar(Avatar avatar) {
         this.avatar = avatar;
+    }
+
+    public boolean isMediaHidden() {
+        return mediaHidden;
+    }
+
+    public void setMediaHidden(boolean mediaHidden) {
+        this.mediaHidden = mediaHidden;
     }
 
     public List<Film> getWatchedFilms() {

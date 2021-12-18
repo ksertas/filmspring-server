@@ -30,6 +30,9 @@ public class User {
     @Column(name = "enabled")
     private boolean enabled;
 
+    @Column(name = "hideMediaFromOthers")
+    private boolean hideMedia;
+
     @ManyToMany(mappedBy = "usersWatchedFilm")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Film> watchedFilms = new ArrayList<>();
@@ -80,6 +83,14 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public boolean isMediaHidden() {
+        return hideMedia;
+    }
+
+    public void setMediaHidden(boolean hideMediaFromOthers) {
+        this.hideMedia = hideMediaFromOthers;
     }
 
     public List<Film> getWatchedFilms() {

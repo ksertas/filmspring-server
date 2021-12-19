@@ -2,10 +2,13 @@ package nl.serkanertas.filmspringserver.model;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.context.annotation.Bean;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "users")
@@ -40,6 +43,14 @@ public class User {
     @ManyToMany(mappedBy = "usersWatchedSeries")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Series> watchedSeries = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "usersPlannedFilm")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Film> plannedFlms = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "usersPlannedSeries")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Series> plannedSeries = new ArrayList<>();
 
     @ManyToMany(mappedBy = "usersInGroup")
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -107,6 +118,22 @@ public class User {
 
     public void setWatchedSeries(List<Series> watchedSeries) {
         this.watchedSeries = watchedSeries;
+    }
+
+    public List<Film> getPlannedFlms() {
+        return plannedFlms;
+    }
+
+    public void setPlannedFlms(List<Film> plannedFlms) {
+        this.plannedFlms = plannedFlms;
+    }
+
+    public List<Series> getPlannedSeries() {
+        return plannedSeries;
+    }
+
+    public void setPlannedSeries(List<Series> plannedSeries) {
+        this.plannedSeries = plannedSeries;
     }
 
     public List<Group> getGroupsUserIsIn() {

@@ -35,10 +35,26 @@ public class SeriesService {
     }
 
     @Transactional
-    public void deleteSeriesFromUser(long user_id, long series_id) {
+    public void deleteSeriesFromWatched(long user_id, long series_id) {
         User user = userService.getUserEntity(user_id);
         Series series = seriesRepository.findById(series_id).get();
         series.getUsersWatchedSeries().remove(user);
+        seriesRepository.save(series);
+    }
+
+    @Transactional
+    public void storeSeriesToPlanned(long user_id, long series_id) {
+        User user = userService.getUserEntity(user_id);
+        Series series = seriesRepository.findById(series_id).get();
+        series.getUsersPlannedSeries().add(user);
+        seriesRepository.save(series);
+    }
+
+    @Transactional
+    public void deleteSeriesFromPlanned(long user_id, long series_id) {
+        User user = userService.getUserEntity(user_id);
+        Series series = seriesRepository.findById(series_id).get();
+        series.getUsersPlannedSeries().remove(user);
         seriesRepository.save(series);
     }
 

@@ -41,6 +41,8 @@ public class GroupService {
             userGroupList.add(userService.getSearchedUser(user.getUser_id()));
         }
         groupDto.setUsersInGroup(userGroupList);
+        groupDto.setPlannedFilms(group.getPlannedFlms());
+        groupDto.setPlannedSeries(group.getPlannedSeries());
         return groupDto;
     }
 
@@ -59,6 +61,11 @@ public class GroupService {
     @Transactional
     public GroupGetRequest getGroup(long group_id) {
         return mapGroupToDto(group_id);
+    }
+
+    @Transactional
+    public Group getGroupEntity(long group_id) {
+        return groupRepository.findById(group_id).get();
     }
 
     @Transactional

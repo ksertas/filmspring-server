@@ -1,6 +1,7 @@
 package nl.serkanertas.filmspringserver.service;
 
 import nl.serkanertas.filmspringserver.model.Actor;
+import nl.serkanertas.filmspringserver.model.Group;
 import nl.serkanertas.filmspringserver.model.Series;
 import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.ActorRepository;
@@ -21,6 +22,9 @@ public class SeriesService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GroupService groupService;
 
     public Series getSeries(long series_id) { return seriesRepository.findById(series_id).get(); }
 
@@ -55,6 +59,22 @@ public class SeriesService {
         User user = userService.getUserEntity(user_id);
         Series series = seriesRepository.findById(series_id).get();
         series.getUsersPlannedSeries().remove(user);
+        seriesRepository.save(series);
+    }
+
+    @Transactional
+    public void storeSeriesToPlannedGroup(long group_id, long series_id) {
+        Group group = groupService.getGroupEntity(group_id);
+        Series series = seriesRepository.findById(series_id).get();
+        series.getGroupPlannedSeries().add(group);
+        seriesRepository.save(series);
+    }
+
+    @Transactional
+    public void deleteSeriesFromPlannedGroup(long group_id, long series_id) {
+        Group group = groupService.getGroupEntity(group_id);
+        Series series = seriesRepository.findById(series_id).get();
+        series.getGroupPlannedSeries().remove(group);
         seriesRepository.save(series);
     }
 

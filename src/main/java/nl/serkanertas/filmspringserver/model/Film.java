@@ -68,6 +68,15 @@ public class Film {
     )
     private List<User> usersPlannedFilm = new ArrayList<>();
 
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "group_filmPL",
+            joinColumns = @JoinColumn(name = "film_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
+    private List<Group> groupPlannedFilm = new ArrayList<>();
+
     public long getFilm_id() {
         return film_id;
     }
@@ -154,6 +163,14 @@ public class Film {
 
     public void setUsersPlannedFilm(List<User> usersPlannedFilm) {
         this.usersPlannedFilm = usersPlannedFilm;
+    }
+
+    public List<Group> getGroupPlannedFilm() {
+        return groupPlannedFilm;
+    }
+
+    public void setGroupPlannedFilm(List<Group> groupsPlannedFilm) {
+        this.groupPlannedFilm = groupsPlannedFilm;
     }
 
     public Poster getPosterFilm() {

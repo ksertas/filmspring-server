@@ -65,6 +65,15 @@ public class Series {
     private List<User> usersPlannedSeries = new ArrayList<>();
 
     @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "group_seriesPL",
+            joinColumns = @JoinColumn(name = "series_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
+    private List<Group> groupPlannedSeries = new ArrayList<>();
+
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinTable(name = "series_poster",
             joinColumns = { @JoinColumn(name = "series_id", referencedColumnName = "series_id")},
@@ -169,6 +178,14 @@ public class Series {
 
     public Poster getPosterSeries() {
         return posterSeries;
+    }
+
+    public List<Group> getGroupPlannedSeries() {
+        return groupPlannedSeries;
+    }
+
+    public void setGroupPlannedSeries(List<Group> groupPlannedSeries) {
+        this.groupPlannedSeries = groupPlannedSeries;
     }
 
     public void setPosterSeries(Poster posterSeries) {

@@ -1,6 +1,8 @@
 package nl.serkanertas.filmspringserver.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -31,6 +33,16 @@ public class Group {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> usersInGroup = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "groupPlannedFilm")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Film> plannedFlms = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "groupPlannedSeries")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Series> plannedSeries = new ArrayList<>();
 
     public long getGroup_id() {
         return group_id;
@@ -70,5 +82,21 @@ public class Group {
 
     public void setAvatarGroup(Avatar avatarGroup) {
         this.avatarGroup = avatarGroup;
+    }
+
+    public List<Film> getPlannedFlms() {
+        return plannedFlms;
+    }
+
+    public void setPlannedFlms(List<Film> plannedFlms) {
+        this.plannedFlms = plannedFlms;
+    }
+
+    public List<Series> getPlannedSeries() {
+        return plannedSeries;
+    }
+
+    public void setPlannedSeries(List<Series> plannedSeries) {
+        this.plannedSeries = plannedSeries;
     }
 }

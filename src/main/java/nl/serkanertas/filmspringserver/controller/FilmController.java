@@ -50,6 +50,20 @@ public class FilmController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/planned/{film_id}/groups/{group_id}")
+    ResponseEntity<Object> addFilmToPlannedGroup(@PathVariable("group_id") long group_id,
+                                            @PathVariable("film_id") long film_id) {
+        filmService.storeFilmToPlannedGroup(group_id, film_id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/planned/{film_id}/groups/{group_id}")
+    ResponseEntity<Object> deleteFilmFromPlannedGroup(@PathVariable("group_id") long group_id,
+                                                 @PathVariable("film_id") long film_id) {
+        filmService.deleteFilmFromPlannedGroup(group_id, film_id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/{film_id}/actors")
     ResponseEntity<Object> getAllActorsFromFilm(@PathVariable("film_id") long film_id) {
         return ResponseEntity.ok().body(filmService.getAllActorsFromFilm(film_id));

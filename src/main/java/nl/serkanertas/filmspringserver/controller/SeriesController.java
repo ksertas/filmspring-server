@@ -43,6 +43,20 @@ public class SeriesController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/planned/{series_id}/groups/{group_id}")
+    ResponseEntity<Object> addSeriesToPlannedGroup(@PathVariable("group_id") long group_id,
+                                              @PathVariable("series_id") long series_id) {
+        seriesService.storeSeriesToPlannedGroup(group_id, series_id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/planned/{series_id}/groups/{group_id}")
+    ResponseEntity<Object> deleteSeriesFromPlannedGroup(@PathVariable("group_id") long group_id,
+                                                   @PathVariable("series_id") long series_id) {
+        seriesService.deleteSeriesFromPlannedGroup(group_id, series_id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/{series_id}/actors")
     ResponseEntity<Object> getAllActorsFromSeries(@PathVariable("series_id") long series_id) {
         return ResponseEntity.ok().body(seriesService.getAllActorsFromSeries(series_id));

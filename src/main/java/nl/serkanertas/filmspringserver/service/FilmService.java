@@ -2,6 +2,7 @@ package nl.serkanertas.filmspringserver.service;
 
 import nl.serkanertas.filmspringserver.model.Actor;
 import nl.serkanertas.filmspringserver.model.Film;
+import nl.serkanertas.filmspringserver.model.Group;
 import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.ActorRepository;
 import nl.serkanertas.filmspringserver.repository.FilmRepository;
@@ -15,6 +16,9 @@ public class FilmService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GroupService groupService;
 
     @Autowired
     private FilmRepository filmRepository;
@@ -57,6 +61,22 @@ public class FilmService {
         User user = userService.getUserEntity(user_id);
         Film film = filmRepository.findById(film_id).get();
         film.getUsersPlannedFilm().remove(user);
+        filmRepository.save(film);
+    }
+
+    @Transactional
+    public void storeFilmToPlannedGroup(long group_id, long film_id){
+        Group group = groupService.getGroupEntity(group_id);
+        Film film = filmRepository.findById(film_id).get();
+        film.getGroupPlannedFilm().add(group);
+        filmRepository.save(film);
+    }
+
+    @Transactional
+    public void deleteFilmFromPlannedGroup(long group_id, long film_id) {
+        Group group = groupService.getGroupEntity(group_id);
+        Film film = filmRepository.findById(film_id).get();
+        film.getGroupPlannedFilm().remove(group);
         filmRepository.save(film);
     }
 

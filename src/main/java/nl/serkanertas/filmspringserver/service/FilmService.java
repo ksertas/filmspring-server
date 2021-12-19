@@ -37,12 +37,29 @@ public class FilmService {
     }
 
     @Transactional
-    public void deleteFilmFromUser(long user_id, long film_id) {
+    public void deleteFilmFromWatched(long user_id, long film_id) {
         User user = userService.getUserEntity(user_id);
         Film film = filmRepository.findById(film_id).get();
         film.getUsersWatchedFilm().remove(user);
         filmRepository.save(film);
     }
+
+    @Transactional
+    public void storeFilmToPlanned(long user_id, long film_id){
+        User user = userService.getUserEntity(user_id);
+        Film film = filmRepository.findById(film_id).get();
+        film.getUsersPlannedFilm().add(user);
+        filmRepository.save(film);
+    }
+
+    @Transactional
+    public void deleteFilmFromPlanned(long user_id, long film_id) {
+        User user = userService.getUserEntity(user_id);
+        Film film = filmRepository.findById(film_id).get();
+        film.getUsersPlannedFilm().remove(user);
+        filmRepository.save(film);
+    }
+
 
     public Iterable<Actor> getAllActorsFromFilm(long film_id) {
         return getFilm(film_id).getActorsInFilm();

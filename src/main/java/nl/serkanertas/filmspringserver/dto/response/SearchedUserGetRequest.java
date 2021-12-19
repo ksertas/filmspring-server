@@ -18,6 +18,10 @@ public class SearchedUserGetRequest {
 
     private List<Series> watchedSeries;
 
+    private List<Film> plannedFilms;
+
+    private List<Series> plannedSeries;
+
     public String getUsername() {
         return username;
     }
@@ -56,5 +60,21 @@ public class SearchedUserGetRequest {
 
     public void setWatchedSeries(List<Series> watchedSeries) {
         this.watchedSeries = watchedSeries;
+    }
+
+    public List<Film> getPlannedFilms() {
+        return plannedFilms;
+    }
+
+    public void setPlannedFilms(List<Film> plannedFilms) {
+        this.plannedFilms = plannedFilms;
+    }
+
+    public List<Series> getPlannedSeries() {
+        return plannedSeries;
+    }
+
+    public void setPlannedSeries(List<Series> plannedSeries) {
+        this.plannedSeries = plannedSeries;
     }
 }

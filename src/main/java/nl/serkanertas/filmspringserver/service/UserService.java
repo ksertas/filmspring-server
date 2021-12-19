@@ -31,6 +31,8 @@ public class UserService  {
         if (!user.isMediaHidden()) {
             userDto.setWatchedFilms(user.getWatchedFilms());
             userDto.setWatchedSeries(user.getWatchedSeries());
+            userDto.setPlannedFilms(user.getPlannedFlms());
+            userDto.setPlannedSeries(user.getPlannedSeries());
         }
         userDto.setMediaHidden(user.isMediaHidden());
         return userDto;

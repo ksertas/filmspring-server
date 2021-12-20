@@ -30,7 +30,7 @@ public class Group {
     @JoinTable(
             name = "user_group",
             joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            inverseJoinColumns = @JoinColumn(name = "username")
     )
     private List<User> usersInGroup = new ArrayList<>();
 

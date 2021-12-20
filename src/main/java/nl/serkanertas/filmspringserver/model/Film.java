@@ -55,7 +55,7 @@ public class Film {
     @JoinTable(
             name = "user_film",
             joinColumns = @JoinColumn(name = "film_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            inverseJoinColumns = @JoinColumn(name = "username")
     )
     private List<User> usersWatchedFilm = new ArrayList<>();
 
@@ -64,7 +64,7 @@ public class Film {
     @JoinTable(
             name = "user_filmPL",
             joinColumns = @JoinColumn(name = "film_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            inverseJoinColumns = @JoinColumn(name = "username")
     )
     private List<User> usersPlannedFilm = new ArrayList<>();
 

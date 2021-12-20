@@ -63,7 +63,7 @@ public class AvatarService {
     }
 
     @Transactional
-    public void storeAvatarUser(long user_id, MultipartFile file) throws IOException {
+    public void storeAvatarUser(String user_id, MultipartFile file) throws IOException {
         User user = userService.getUserEntity(user_id);
         Avatar avatar = new Avatar(
                 file.getOriginalFilename(),
@@ -75,12 +75,12 @@ public class AvatarService {
     }
 
     @Transactional
-    public Avatar getAvatarUser(long user_id) {
+    public Avatar getAvatarUser(String user_id) {
         User user = userService.getUserEntity(user_id);
         return user.getAvatarUser();
     }
 
-    public void deleteAvatarUser(long user_id) {
+    public void deleteAvatarUser(String user_id) {
         User user = userService.getUserEntity(user_id);
         Long currentAvatarId = user.getAvatarUser().getAvatar_id();
         user.setAvatarUser(null);

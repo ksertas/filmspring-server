@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @GetMapping("/{user_id}")
-    ResponseEntity<Object> getUser(@PathVariable long user_id) {
+    ResponseEntity<Object> getUser(@PathVariable String user_id) {
         return ResponseEntity.ok().body(userService.getSearchedUser(user_id));
     }
 
@@ -40,13 +40,13 @@ public class UserController {
     }
 
     @PatchMapping("/{user_id}")
-    ResponseEntity<Object> updateUser(@PathVariable long user_id, @Valid @RequestBody UpdateUserDetailsRequest updateDetailsDto) {
+    ResponseEntity<Object> updateUser(@PathVariable String user_id, @Valid @RequestBody UpdateUserDetailsRequest updateDetailsDto) {
         userService.updateDetails(user_id, updateDetailsDto);
         return ResponseEntity.ok().body("Updated account.");
     }
 
     @DeleteMapping("/{user_id}")
-    ResponseEntity<Object> deleteUser(@PathVariable long user_id) {
+    ResponseEntity<Object> deleteUser(@PathVariable String user_id) {
         userService.deleteUser(user_id);
         return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
     }

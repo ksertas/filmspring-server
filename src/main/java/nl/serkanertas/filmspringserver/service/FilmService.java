@@ -33,7 +33,7 @@ public class FilmService {
     }
 
     @Transactional
-    public void storeFilmToWatched(long user_id, long film_id){
+    public void storeFilmToWatched(String user_id, long film_id){
         User user = userService.getUserEntity(user_id);
         Film film = filmRepository.findById(film_id).get();
         film.getUsersWatchedFilm().add(user);
@@ -41,7 +41,7 @@ public class FilmService {
     }
 
     @Transactional
-    public void deleteFilmFromWatched(long user_id, long film_id) {
+    public void deleteFilmFromWatched(String user_id, long film_id) {
         User user = userService.getUserEntity(user_id);
         Film film = filmRepository.findById(film_id).get();
         film.getUsersWatchedFilm().remove(user);
@@ -49,7 +49,7 @@ public class FilmService {
     }
 
     @Transactional
-    public void storeFilmToPlanned(long user_id, long film_id){
+    public void storeFilmToPlanned(String user_id, long film_id){
         User user = userService.getUserEntity(user_id);
         Film film = filmRepository.findById(film_id).get();
         film.getUsersPlannedFilm().add(user);
@@ -57,7 +57,7 @@ public class FilmService {
     }
 
     @Transactional
-    public void deleteFilmFromPlanned(long user_id, long film_id) {
+    public void deleteFilmFromPlanned(String user_id, long film_id) {
         User user = userService.getUserEntity(user_id);
         Film film = filmRepository.findById(film_id).get();
         film.getUsersPlannedFilm().remove(user);

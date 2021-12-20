@@ -23,28 +23,28 @@ public class FilmController {
     }
 
     @PutMapping("/watched/{film_id}/users/{user_id}")
-    ResponseEntity<Object> addFilmToWatched(@PathVariable("user_id") long user_id,
+    ResponseEntity<Object> addFilmToWatched(@PathVariable("user_id") String user_id,
                                             @PathVariable("film_id") long film_id) {
         filmService.storeFilmToWatched(user_id, film_id);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/watched/{film_id}/users/{user_id}")
-    ResponseEntity<Object> deleteFilmFromWatched(@PathVariable("user_id") long user_id,
+    ResponseEntity<Object> deleteFilmFromWatched(@PathVariable("user_id") String user_id,
                                                  @PathVariable("film_id") long film_id) {
         filmService.deleteFilmFromWatched(user_id, film_id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/planned/{film_id}/users/{user_id}")
-    ResponseEntity<Object> addFilmToPlanned(@PathVariable("user_id") long user_id,
+    ResponseEntity<Object> addFilmToPlanned(@PathVariable("user_id") String user_id,
                                             @PathVariable("film_id") long film_id) {
         filmService.storeFilmToPlanned(user_id, film_id);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/planned/{film_id}/users/{user_id}")
-    ResponseEntity<Object> deleteFilmFromPlanned(@PathVariable("user_id") long user_id,
+    ResponseEntity<Object> deleteFilmFromPlanned(@PathVariable("user_id") String user_id,
                                                  @PathVariable("film_id") long film_id) {
         filmService.deleteFilmFromPlanned(user_id, film_id);
         return ResponseEntity.noContent().build();

@@ -23,7 +23,7 @@ public class UserService  {
         this.avatarService = avatarService;
     }
 
-    public SearchedUserGetRequest mapUserToSearchedUser(Long user_id) {
+    public SearchedUserGetRequest mapUserToSearchedUser(String user_id) {
         User user = userRepository.findById(user_id).get();
         SearchedUserGetRequest userDto = new SearchedUserGetRequest();
         userDto.setUsername(user.getUsername());
@@ -50,7 +50,7 @@ public class UserService  {
         return user.getUsername();
     }
 
-    public void updateDetails(Long user_id, UpdateUserDetailsRequest updateDetailsDto) {
+    public void updateDetails(String user_id, UpdateUserDetailsRequest updateDetailsDto) {
         User user = getUserEntity(user_id);
         if (!(updateDetailsDto.getEmail() == null)) {
             user.setEmail(updateDetailsDto.getEmail());
@@ -61,11 +61,11 @@ public class UserService  {
         userRepository.save(user);
     }
 
-    public User getUserEntity(Long user_id) {
+    public User getUserEntity(String user_id) {
         return userRepository.findById(user_id).get();
     }
 
-    public SearchedUserGetRequest getSearchedUser(long user_id) {
+    public SearchedUserGetRequest getSearchedUser(String user_id) {
         return mapUserToSearchedUser(user_id);
     }
 
@@ -73,7 +73,7 @@ public class UserService  {
         return userRepository.findAll();
     }
 
-    public void deleteUser(long user_id) {
+    public void deleteUser(String user_id) {
         User user = userRepository.findById(user_id).get();
         userRepository.delete(user);
     }

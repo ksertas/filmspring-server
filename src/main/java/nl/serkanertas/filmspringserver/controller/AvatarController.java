@@ -17,13 +17,13 @@ public class AvatarController {
 //    USERS
 
     @GetMapping("/users/{user_id}")
-    public ResponseEntity<Object> getAvatarUser(@PathVariable long user_id) {
+    public ResponseEntity<Object> getAvatarUser(@PathVariable String user_id) {
         return ResponseEntity.ok(avatarService.getAvatarUser(user_id));
     }
 
     @PutMapping("/users/{user_id}")
     public ResponseEntity<Object> uploadAvatarUser(@RequestParam("file") MultipartFile file,
-                                               @PathVariable long user_id) {
+                                               @PathVariable String user_id) {
         try {
             avatarService.storeAvatarUser(user_id, file);
             return ResponseEntity.status(HttpStatus.OK).body("Success");
@@ -34,7 +34,7 @@ public class AvatarController {
     }
 
     @DeleteMapping("/users/{user_id}")
-    public ResponseEntity<Object> deleteAvatarUser(@PathVariable long user_id) {
+    public ResponseEntity<Object> deleteAvatarUser(@PathVariable String user_id) {
         avatarService.deleteAvatarUser(user_id);
         return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
     }

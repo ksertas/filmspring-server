@@ -38,7 +38,7 @@ public class GroupService {
         groupDto.setAvatar(group.getAvatarGroup());
 
         for (User user : group.getUsersInGroup()) {
-            userGroupList.add(userService.getSearchedUser(user.getUser_id()));
+            userGroupList.add(userService.getSearchedUser(user.getUsername()));
         }
         groupDto.setUsersInGroup(userGroupList);
         groupDto.setPlannedFilms(group.getPlannedFlms());
@@ -84,14 +84,14 @@ public class GroupService {
     }
 
     @Transactional
-    public void addUserToGroup(long user_id, long group_id) {
+    public void addUserToGroup(String user_id, long group_id) {
         User user = userService.getUserEntity(user_id);
         Group group = groupRepository.findById(group_id).get();
         group.getUsersInGroup().add(user);
         groupRepository.save(group);
     }
 
-    public void removeUserFromGroup(long user_id, long group_id) {
+    public void removeUserFromGroup(String user_id, long group_id) {
         User user = userService.getUserEntity(user_id);
         Group group = groupRepository.findById(group_id).get();
         group.getUsersInGroup().remove(user);

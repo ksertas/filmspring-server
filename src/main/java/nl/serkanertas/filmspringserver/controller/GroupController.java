@@ -46,14 +46,14 @@ public class GroupController {
 
     @PutMapping("/{group_id}/users/{user_id}")
     ResponseEntity<Object> addUserToGroup(@PathVariable("group_id") long group_id,
-                                          @PathVariable("user_id") long user_id) {
+                                          @PathVariable("user_id") String user_id) {
         groupService.addUserToGroup(user_id, group_id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{group_id}/users/{user_id}")
     ResponseEntity<Object> removeUserFromGroup(@PathVariable("group_id") long group_id,
-                                               @PathVariable("user_id") long user_id) {
+                                               @PathVariable("user_id") String user_id) {
         groupService.removeUserFromGroup(user_id, group_id);
         return ResponseEntity.ok().build();
     }

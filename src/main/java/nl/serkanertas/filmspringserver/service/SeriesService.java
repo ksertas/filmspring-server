@@ -31,7 +31,7 @@ public class SeriesService {
     public Iterable<Series> getAllSeries() { return seriesRepository.findAll(); }
 
     @Transactional
-    public void storeSeriesToWatched(long user_id, long series_id) {
+    public void storeSeriesToWatched(String user_id, long series_id) {
         User user = userService.getUserEntity(user_id);
         Series series = seriesRepository.findById(series_id).get();
         series.getUsersWatchedSeries().add(user);
@@ -39,7 +39,7 @@ public class SeriesService {
     }
 
     @Transactional
-    public void deleteSeriesFromWatched(long user_id, long series_id) {
+    public void deleteSeriesFromWatched(String user_id, long series_id) {
         User user = userService.getUserEntity(user_id);
         Series series = seriesRepository.findById(series_id).get();
         series.getUsersWatchedSeries().remove(user);
@@ -47,7 +47,7 @@ public class SeriesService {
     }
 
     @Transactional
-    public void storeSeriesToPlanned(long user_id, long series_id) {
+    public void storeSeriesToPlanned(String user_id, long series_id) {
         User user = userService.getUserEntity(user_id);
         Series series = seriesRepository.findById(series_id).get();
         series.getUsersPlannedSeries().add(user);
@@ -55,7 +55,7 @@ public class SeriesService {
     }
 
     @Transactional
-    public void deleteSeriesFromPlanned(long user_id, long series_id) {
+    public void deleteSeriesFromPlanned(String user_id, long series_id) {
         User user = userService.getUserEntity(user_id);
         Series series = seriesRepository.findById(series_id).get();
         series.getUsersPlannedSeries().remove(user);

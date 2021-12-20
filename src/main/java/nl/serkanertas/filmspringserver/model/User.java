@@ -15,10 +15,7 @@ import java.util.Map;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long user_id;
-
-    @Column(name = "username", nullable = false)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
     @Column(name = "email", nullable = false)
@@ -26,7 +23,7 @@ public class User {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinTable(name = "user_avatar",
-    joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "user_id")},
+    joinColumns = { @JoinColumn(name = "username", referencedColumnName = "username")},
     inverseJoinColumns = {@JoinColumn(name = "avatar_id", referencedColumnName = "avatar_id")})
     private Avatar avatarUser;
 
@@ -55,14 +52,6 @@ public class User {
     @ManyToMany(mappedBy = "usersInGroup")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Group> groupsUserIsIn = new ArrayList<>();
-
-    public long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
-    }
 
     public String getUsername() {
         return username;

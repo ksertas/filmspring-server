@@ -51,7 +51,7 @@ public class Series {
     @JoinTable(
             name = "user_series",
             joinColumns = @JoinColumn(name = "series_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            inverseJoinColumns = @JoinColumn(name = "username")
     )
     private List<User> usersWatchedSeries = new ArrayList<>();
 
@@ -60,7 +60,7 @@ public class Series {
     @JoinTable(
             name = "user_seriesPL",
             joinColumns = @JoinColumn(name = "series_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            inverseJoinColumns = @JoinColumn(name = "username")
     )
     private List<User> usersPlannedSeries = new ArrayList<>();
 

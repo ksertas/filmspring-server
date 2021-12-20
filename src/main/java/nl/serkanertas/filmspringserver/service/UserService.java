@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService  {
@@ -69,7 +72,17 @@ public class UserService  {
         return mapUserToSearchedUser(user_id);
     }
 
-    public Iterable<User> getAllUsersEntity() {
+    @Transactional
+    public List<SearchedUserGetRequest> getSearchedUsers(String query) {
+        Iterable<User> users = userRepository.findUsersByUsernameContainsIgnoreCase(query);
+        ArrayList<SearchedUserGetRequest> toReturnUsers = new ArrayList<>();
+        for (User user : users) {
+            toReturnUsers.add(mapUserToSearchedUser(user.getUsername()));
+        }
+        return toReturnUsers;
+    }
+
+    public Iterable<User> getAllUsersEntities() {
         return userRepository.findAll();
     }
 

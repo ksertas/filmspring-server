@@ -1,15 +1,14 @@
 package nl.serkanertas.filmspringserver.service;
 
-import nl.serkanertas.filmspringserver.model.Actor;
-import nl.serkanertas.filmspringserver.model.Group;
-import nl.serkanertas.filmspringserver.model.Series;
-import nl.serkanertas.filmspringserver.model.User;
+import nl.serkanertas.filmspringserver.model.*;
 import nl.serkanertas.filmspringserver.repository.ActorRepository;
 import nl.serkanertas.filmspringserver.repository.SeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class SeriesService {
@@ -29,6 +28,16 @@ public class SeriesService {
     public Series getSeries(long series_id) { return seriesRepository.findById(series_id).get(); }
 
     public Iterable<Series> getAllSeries() { return seriesRepository.findAll(); }
+
+    @Transactional
+    public List<Series> getSearchedFilms(String query) {
+        Iterable<Series> foundSeries = seriesRepository.findSeriesByTitleContainsIgnoreCase(query);
+        ArrayList<Series> toReturnSeries = new ArrayList<>();
+        for (Series series : foundSeries) {
+            toReturnSeries.add(series);
+        }
+        return toReturnSeries;
+    }
 
     @Transactional
     public void storeSeriesToWatched(String user_id, long series_id) {

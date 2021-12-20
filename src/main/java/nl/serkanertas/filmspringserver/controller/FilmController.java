@@ -17,7 +17,12 @@ public class FilmController {
         return ResponseEntity.ok().body(filmService.getFilm(film_id));
     }
 
-    @GetMapping()
+    @GetMapping
+    ResponseEntity<Object> getSearchedFilms(@RequestParam("search") String query) {
+        return ResponseEntity.ok().body(filmService.getSearchedFilms(query));
+    }
+
+    @GetMapping("/raw")
     ResponseEntity<Object> getAllFilms() {
         return ResponseEntity.ok().body(filmService.getAllFilms());
     }

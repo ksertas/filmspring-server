@@ -1,5 +1,6 @@
 package nl.serkanertas.filmspringserver.service;
 
+import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
 import nl.serkanertas.filmspringserver.model.Actor;
 import nl.serkanertas.filmspringserver.model.Film;
 import nl.serkanertas.filmspringserver.model.Group;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class FilmService {
@@ -27,6 +30,16 @@ public class FilmService {
     private ActorRepository actorRepository;
 
     public Film getFilm(long film_id) { return filmRepository.findById(film_id).get(); }
+
+    @Transactional
+    public List<Film> getSearchedFilms(String query) {
+        Iterable<Film> films = filmRepository.findFIlmByTitleContainsIgnoreCase(query);
+        ArrayList<Film> toReturnFilms = new ArrayList<>();
+        for (Film film : films) {
+            toReturnFilms.add(film);
+        }
+        return toReturnFilms;
+    }
 
     public Iterable<Film> getAllFilms() {
         return filmRepository.findAll();

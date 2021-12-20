@@ -19,9 +19,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/raw")
+    ResponseEntity<Object> getAllUserEntities() {
+        return ResponseEntity.ok().body(userService.getAllUsersEntities());
+    }
+
     @GetMapping
-    ResponseEntity<Object> getAllUsers() {
-        return ResponseEntity.ok().body(userService.getAllUsersEntity());
+    ResponseEntity<Object> getSearchedUsers(@RequestParam("search") String query) {
+        return ResponseEntity.ok().body(userService.getSearchedUsers(query));
     }
 
     @GetMapping("/{user_id}")

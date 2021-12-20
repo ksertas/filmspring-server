@@ -12,8 +12,13 @@ public class SeriesController {
     @Autowired
     private SeriesService seriesService;
 
-    @GetMapping()
+    @GetMapping("/raw")
     ResponseEntity<Object> getAllSeries() { return ResponseEntity.ok().body(seriesService.getAllSeries()); }
+
+    @GetMapping
+    ResponseEntity<Object> getSearchedSeries(@RequestParam("search") String query) {
+        return ResponseEntity.ok().body(seriesService.getSearchedFilms(query));
+    }
 
     @PutMapping("/watched/{series_id}/users/{user_id}")
     ResponseEntity<Object> addSeriesToWatched(@PathVariable("user_id") String user_id,

@@ -1,5 +1,6 @@
 package nl.serkanertas.filmspringserver.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.context.annotation.Bean;
@@ -52,6 +53,17 @@ public class User {
     @ManyToMany(mappedBy = "usersInGroup")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Group> groupsUserIsIn = new ArrayList<>();
+
+    @ManyToMany
+    private List<GroupInvitation> groupInvitations;
+
+    public List<GroupInvitation> getGroupInvitations() {
+        return groupInvitations;
+    }
+
+    public void setGroupInvitations(List<GroupInvitation> groupInvitations) {
+        this.groupInvitations = groupInvitations;
+    }
 
     public String getUsername() {
         return username;

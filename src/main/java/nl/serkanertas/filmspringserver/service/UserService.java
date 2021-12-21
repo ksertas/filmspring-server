@@ -3,7 +3,10 @@ package nl.serkanertas.filmspringserver.service;
 import nl.serkanertas.filmspringserver.dto.request.CreateUserPostRequest;
 import nl.serkanertas.filmspringserver.dto.request.UpdateUserDetailsRequest;
 import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
+import nl.serkanertas.filmspringserver.model.Group;
+import nl.serkanertas.filmspringserver.model.GroupInvitation;
 import nl.serkanertas.filmspringserver.model.User;
+import nl.serkanertas.filmspringserver.repository.GroupInvitationRepository;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -20,10 +23,18 @@ public class UserService  {
     @Autowired
     private UserRepository userRepository;
 
+    private GroupService groupService;
+
+//    public UserService() {}
+//
+    @Autowired
+    private GroupInvitationRepository groupInvitationRepository;
+
     private AvatarService avatarService;
 
-    public UserService(@Lazy AvatarService avatarService) {
+    public UserService(@Lazy AvatarService avatarService, @Lazy GroupService groupService) {
         this.avatarService = avatarService;
+        this.groupService = groupService;
     }
 
     public SearchedUserGetRequest mapUserToSearchedUser(String user_id) {

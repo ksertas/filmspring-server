@@ -4,8 +4,11 @@ import nl.serkanertas.filmspringserver.dto.request.CreateGroupPostRequest;
 import nl.serkanertas.filmspringserver.dto.response.GroupGetRequest;
 import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
 import nl.serkanertas.filmspringserver.model.Group;
+import nl.serkanertas.filmspringserver.model.GroupInvitation;
 import nl.serkanertas.filmspringserver.model.User;
+import nl.serkanertas.filmspringserver.repository.GroupInvitationRepository;
 import nl.serkanertas.filmspringserver.repository.GroupRepository;
+import nl.serkanertas.filmspringserver.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -20,6 +24,12 @@ public class GroupService {
 
     @Autowired
     private GroupRepository groupRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private GroupInvitationRepository groupInvitationRepository;
 
     @Autowired
     private UserService userService;
@@ -91,6 +101,7 @@ public class GroupService {
         groupRepository.save(group);
     }
 
+    @Transactional
     public void removeUserFromGroup(String user_id, long group_id) {
         User user = userService.getUserEntity(user_id);
         Group group = groupRepository.findById(group_id).get();
@@ -98,4 +109,41 @@ public class GroupService {
         groupRepository.save(group);
     }
 
+    @Transactional
+    public void inviteUser(String user_id, long group_id) {
+        User user = userService.getUserEntity(user_id);
+        GroupInvitation groupInvitation = new GroupInvitation();
+        groupInvitation.setGroup_id(group_id);
+        groupInvitationRepository.save(groupInvitation);
+        user.getGroupInvitations().add(groupInvitation);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void acceptInvite(String user_id, long group_id) {
+        User user = userService.getUserEntity(user_id);
+//        List<GroupInvitation> copyGI = user.getGroupInvitations();
+        boolean isAdded = false;
+        GroupInvitation foundGroup = null;
+
+        for (GroupInvitation group : user.getGroupInvitations()) {
+            if (group.getGroup_id() == group_id) {
+                System.out.println("above add user");
+                addUserToGroup(user_id, group_id);
+                System.out.println("above save user");
+                userRepository.save(user);
+                isAdded = true;
+                foundGroup = group;
+                System.out.println("last line of 1st if statement");
+                break;
+            }
+        }
+                System.out.println("outside 2nd if statement");
+            if (isAdded) {
+                System.out.println("above user.getinvites remove found group");
+                user.getGroupInvitations().remove(foundGroup);
+                System.out.println("above delete from repo");
+                groupInvitationRepository.deleteById(foundGroup.getInvite_id());
+            }
+    }
 }

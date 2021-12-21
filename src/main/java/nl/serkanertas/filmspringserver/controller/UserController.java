@@ -2,7 +2,11 @@ package nl.serkanertas.filmspringserver.controller;
 
 import nl.serkanertas.filmspringserver.dto.request.CreateUserPostRequest;
 import nl.serkanertas.filmspringserver.dto.request.UpdateUserDetailsRequest;
-import nl.serkanertas.filmspringserver.service.UserService;
+import nl.serkanertas.filmspringserver.service.PlanMediaService;
+import nl.serkanertas.filmspringserver.service.WatchMediaService;
+import nl.serkanertas.filmspringserver.service.models.FilmService;
+import nl.serkanertas.filmspringserver.service.models.SeriesService;
+import nl.serkanertas.filmspringserver.service.models.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -16,24 +20,20 @@ import java.io.IOException;
 public class UserController {
 
     private final UserService userService;
+    private final WatchMediaService watchMediaService;
+    private final PlanMediaService planMediaService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService,
+                          WatchMediaService watchMediaService,
+                          PlanMediaService planMediaService) {
         this.userService = userService;
-    }
-
-    @GetMapping("/raw")
-    ResponseEntity<Object> getAllUserEntities() {
-        return ResponseEntity.ok().body(userService.getAllUsersEntities());
+        this.watchMediaService = watchMediaService;
+        this.planMediaService = planMediaService;
     }
 
     @GetMapping
     ResponseEntity<Object> getSearchedUsers(@RequestParam("search") String query) {
         return ResponseEntity.ok().body(userService.getSearchedUsers(query));
-    }
-
-    @GetMapping("/{user_id}")
-    ResponseEntity<Object> getUser(@PathVariable String user_id) {
-        return ResponseEntity.ok().body(userService.getSearchedUser(user_id));
     }
 
     @PostMapping
@@ -44,6 +44,16 @@ public class UserController {
             userService.createUser(newUserPostRequestDto);
             return ResponseEntity.ok("created successfully");
         }
+    }
+
+    @GetMapping("/raw")
+    ResponseEntity<Object> getAllUserEntities() {
+        return ResponseEntity.ok().body(userService.getAllUsersEntities());
+    }
+
+    @GetMapping("/{user_id}")
+    ResponseEntity<Object> getUser(@PathVariable String user_id) {
+        return ResponseEntity.ok().body(userService.getSearchedUser(user_id));
     }
 
     @PatchMapping("/{user_id}")

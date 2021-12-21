@@ -1,10 +1,11 @@
-package nl.serkanertas.filmspringserver.service;
+package nl.serkanertas.filmspringserver.service.models;
 
 import nl.serkanertas.filmspringserver.dto.request.CreateUserPostRequest;
 import nl.serkanertas.filmspringserver.dto.request.UpdateUserDetailsRequest;
 import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
 import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
+import nl.serkanertas.filmspringserver.service.EntityToDtoService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +18,16 @@ import java.util.List;
 public class UserService  {
 
     private final UserRepository userRepository;
-
     private final AvatarService avatarService;
+    private final EntityToDtoService entityToDtoService;
+
 
     public UserService(@Lazy AvatarService avatarService,
-                       UserRepository userRepository) {
+                       UserRepository userRepository,
+                       @Lazy EntityToDtoService entityToDtoService) {
         this.avatarService = avatarService;
         this.userRepository = userRepository;
+        this.entityToDtoService = entityToDtoService;
     }
 
     public void createUser(CreateUserPostRequest userDto) throws IOException {
@@ -57,7 +61,7 @@ public class UserService  {
     }
 
     public SearchedUserGetRequest getSearchedUser(String user_id) {
-        return mapUserToSearchedUser(user_id);
+        return entityToDtoService.mapUserToSearchedUser(user_id);
     }
 
     @Transactional
@@ -65,7 +69,7 @@ public class UserService  {
         Iterable<User> users = userRepository.findUsersByUsernameContainsIgnoreCase(query);
         ArrayList<SearchedUserGetRequest> toReturnUsers = new ArrayList<>();
         for (User user : users) {
-            toReturnUsers.add(mapUserToSearchedUser(user.getUsername()));
+            toReturnUsers.add(entityToDtoService.mapUserToSearchedUser(user.getUsername()));
         }
         return toReturnUsers;
     }

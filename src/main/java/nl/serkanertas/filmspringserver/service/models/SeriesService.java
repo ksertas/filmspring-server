@@ -1,4 +1,4 @@
-package nl.serkanertas.filmspringserver.service;
+package nl.serkanertas.filmspringserver.service.models;
 
 import nl.serkanertas.filmspringserver.model.*;
 import nl.serkanertas.filmspringserver.repository.ActorRepository;
@@ -47,9 +47,4 @@ public class SeriesService {
         }
         return toReturnSeries;
     }
-
-    public Iterable<Actor> getAllActorsFromSeries(long series_id) {
-        return getSeriesEntity(series_id).getActorsInSeries();
-    }
-
 }

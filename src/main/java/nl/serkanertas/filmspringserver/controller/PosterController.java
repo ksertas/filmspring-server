@@ -1,6 +1,6 @@
 package nl.serkanertas.filmspringserver.controller;
 
-import nl.serkanertas.filmspringserver.service.PosterService;
+import nl.serkanertas.filmspringserver.service.models.PosterService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

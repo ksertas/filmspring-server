@@ -1,4 +1,4 @@
-package nl.serkanertas.filmspringserver.service;
+package nl.serkanertas.filmspringserver.service.models;
 
 import nl.serkanertas.filmspringserver.model.Avatar;
 import nl.serkanertas.filmspringserver.model.Group;

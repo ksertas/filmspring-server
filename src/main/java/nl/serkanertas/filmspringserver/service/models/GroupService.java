@@ -1,4 +1,4 @@
-package nl.serkanertas.filmspringserver.service;
+package nl.serkanertas.filmspringserver.service.models;
 
 import nl.serkanertas.filmspringserver.dto.request.CreateGroupPostRequest;
 import nl.serkanertas.filmspringserver.dto.response.GroupGetRequest;
@@ -6,8 +6,9 @@ import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
 import nl.serkanertas.filmspringserver.model.*;
 import nl.serkanertas.filmspringserver.repository.GroupInvitationRepository;
 import nl.serkanertas.filmspringserver.repository.GroupRepository;
-import nl.serkanertas.filmspringserver.repository.SeriesRepository;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
+import nl.serkanertas.filmspringserver.service.EntityToDtoService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -29,7 +30,7 @@ public class GroupService {
                         GroupInvitationRepository groupInvitationRepository,
                         UserService userService,
                         AvatarService avatarService,
-                        EntityToDtoService entityToDtoService) {
+                        @Lazy EntityToDtoService entityToDtoService) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
         this.groupInvitationRepository = groupInvitationRepository;

@@ -1,6 +1,7 @@
 package nl.serkanertas.filmspringserver.controller;
 
-import nl.serkanertas.filmspringserver.service.SeriesService;
+import nl.serkanertas.filmspringserver.service.StoreActorService;
+import nl.serkanertas.filmspringserver.service.models.SeriesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,9 +10,11 @@ import org.springframework.web.bind.annotation.*;
 public class SeriesController {
 
     private final SeriesService seriesService;
+    private final StoreActorService storeActorService;
 
-    public SeriesController(SeriesService seriesService) {
+    public SeriesController(SeriesService seriesService, StoreActorService storeActorService) {
         this.seriesService = seriesService;
+        this.storeActorService = storeActorService;
     }
 
     @GetMapping("/raw")
@@ -22,65 +25,13 @@ public class SeriesController {
         return ResponseEntity.ok().body(seriesService.getSearchedSeries(query));
     }
 
-    @PutMapping("/watched/{series_id}/users/{user_id}")
-    ResponseEntity<Object> addSeriesToWatched(@PathVariable("user_id") String user_id,
-                                            @PathVariable("series_id") long series_id) {
-        seriesService.storeSeriesToWatched(user_id, series_id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/watched/{series_id}/users/{user_id}")
-    ResponseEntity<Object> deleteSeriesFromWatched(@PathVariable("user_id") String user_id,
-                                                 @PathVariable("series_id") long series_id) {
-        seriesService.deleteSeriesFromWatched(user_id, series_id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/planned/{series_id}/users/{user_id}")
-    ResponseEntity<Object> addSeriesToPlanned(@PathVariable("user_id") String user_id,
-                                              @PathVariable("series_id") long series_id) {
-        seriesService.storeSeriesToPlanned(user_id, series_id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/planned/{series_id}/users/{user_id}")
-    ResponseEntity<Object> deleteSeriesFromPlanned(@PathVariable("user_id") String user_id,
-                                                   @PathVariable("series_id") long series_id) {
-        seriesService.deleteSeriesFromPlanned(user_id, series_id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/planned/{series_id}/groups/{group_id}")
-    ResponseEntity<Object> addSeriesToPlannedGroup(@PathVariable("group_id") long group_id,
-                                              @PathVariable("series_id") long series_id) {
-        seriesService.storeSeriesToPlannedGroup(group_id, series_id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/planned/{series_id}/groups/{group_id}")
-    ResponseEntity<Object> deleteSeriesFromPlannedGroup(@PathVariable("group_id") long group_id,
-                                                   @PathVariable("series_id") long series_id) {
-        seriesService.deleteSeriesFromPlannedGroup(group_id, series_id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/{series_id}")
+    ResponseEntity<Object> getSeries(@PathVariable("series_id") long series_id) {
+        return ResponseEntity.ok().body(seriesService.getSeriesEntity(series_id));
     }
 
     @GetMapping("/{series_id}/actors")
     ResponseEntity<Object> getAllActorsFromSeries(@PathVariable("series_id") long series_id) {
-        return ResponseEntity.ok().body(seriesService.getAllActorsFromSeries(series_id));
+        return ResponseEntity.ok().body(storeActorService.getAllActorsFromSeries(series_id));
     }
-
-    @PutMapping("/{series_id}/actors/{actor_id}")
-    ResponseEntity<Object> storeActorToSeries(@PathVariable("series_id") long series_id,
-                                              @PathVariable("actor_id") long actor_id) {
-        seriesService.storeActorToSeries(actor_id, series_id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("{series_id}/actors/{actor_id}")
-    ResponseEntity<Object> deleteActorFromSeries(@PathVariable("series_id") long series_id,
-                                                 @PathVariable("actor_id") long actor_id) {
-        seriesService.deleteActorFromSeries(actor_id, series_id);
-        return ResponseEntity.noContent().build();
-    }
-
 }

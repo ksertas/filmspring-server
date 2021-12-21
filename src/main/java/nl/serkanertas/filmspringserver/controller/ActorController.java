@@ -1,7 +1,6 @@
 package nl.serkanertas.filmspringserver.controller;
 
 import nl.serkanertas.filmspringserver.service.ActorService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,8 +8,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/actors")
 public class ActorController {
 
-    @Autowired
-    private ActorService actorService;
+    private final ActorService actorService;
+
+    public ActorController(ActorService actorService) {
+        this.actorService = actorService;
+    }
 
     @GetMapping("/{actor_id}")
     ResponseEntity<Object> getActor(@PathVariable("actor_id") long actor_id) {

@@ -1,7 +1,6 @@
 package nl.serkanertas.filmspringserver.controller;
 
 import nl.serkanertas.filmspringserver.service.PosterService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +10,11 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/posters")
 public class PosterController {
 
-    @Autowired
-    private PosterService posterService;
+    private final PosterService posterService;
+
+    public PosterController(PosterService posterService) {
+        this.posterService = posterService;
+    }
 
     @GetMapping("/films/{film_id}")
     public ResponseEntity<Object> getPosterFilm(@PathVariable long film_id) {

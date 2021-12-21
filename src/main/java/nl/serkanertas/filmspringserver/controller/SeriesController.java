@@ -1,7 +1,6 @@
 package nl.serkanertas.filmspringserver.controller;
 
 import nl.serkanertas.filmspringserver.service.SeriesService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,15 +8,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/series")
 public class SeriesController {
 
-    @Autowired
-    private SeriesService seriesService;
+    private final SeriesService seriesService;
+
+    public SeriesController(SeriesService seriesService) {
+        this.seriesService = seriesService;
+    }
 
     @GetMapping("/raw")
     ResponseEntity<Object> getAllSeries() { return ResponseEntity.ok().body(seriesService.getAllSeries()); }
 
     @GetMapping
     ResponseEntity<Object> getSearchedSeries(@RequestParam("search") String query) {
-        return ResponseEntity.ok().body(seriesService.getSearchedFilms(query));
+        return ResponseEntity.ok().body(seriesService.getSearchedSeries(query));
     }
 
     @PutMapping("/watched/{series_id}/users/{user_id}")

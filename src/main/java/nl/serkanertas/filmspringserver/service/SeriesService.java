@@ -3,7 +3,6 @@ package nl.serkanertas.filmspringserver.service;
 import nl.serkanertas.filmspringserver.model.*;
 import nl.serkanertas.filmspringserver.repository.ActorRepository;
 import nl.serkanertas.filmspringserver.repository.SeriesRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,17 +12,23 @@ import java.util.List;
 @Service
 public class SeriesService {
 
-    @Autowired
-    private SeriesRepository seriesRepository;
+    private final SeriesRepository seriesRepository;
 
-    @Autowired
-    private ActorRepository actorRepository;
+    private final ActorRepository actorRepository;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private GroupService groupService;
+    private final GroupService groupService;
+
+    public SeriesService(SeriesRepository seriesRepository,
+                         ActorRepository actorRepository,
+                         UserService userService,
+                         GroupService groupService) {
+        this.seriesRepository = seriesRepository;
+        this.actorRepository = actorRepository;
+        this.userService = userService;
+        this.groupService = groupService;
+    }
 
     public Series getSeries(long series_id) { return seriesRepository.findById(series_id).get(); }
 

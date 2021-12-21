@@ -2,7 +2,6 @@ package nl.serkanertas.filmspringserver.service;
 
 import nl.serkanertas.filmspringserver.model.*;
 import nl.serkanertas.filmspringserver.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,21 +10,24 @@ import java.io.IOException;
 
 @Service
 public class PosterService {
+    private final PosterRepository posterRepository;
+    private final FilmService filmService;
+    private final FilmRepository filmRepository;
+    private final SeriesService seriesService;
+    private final SeriesRepository seriesRepository;
 
-    @Autowired
-    private PosterRepository posterRepository;
+    public PosterService(PosterRepository posterRepository,
+                         FilmService filmService,
+                         FilmRepository filmRepository,
+                         SeriesService seriesService,
+                         SeriesRepository seriesRepository) {
+        this.posterRepository = posterRepository;
+        this.filmService = filmService;
+        this.filmRepository = filmRepository;
+        this.seriesService = seriesService;
+        this.seriesRepository = seriesRepository;
+    }
 
-    @Autowired
-    private FilmService filmService;
-
-    @Autowired
-    private FilmRepository filmRepository;
-
-    @Autowired
-    private SeriesService seriesService;
-
-    @Autowired
-    private SeriesRepository seriesRepository;
 
     @Transactional
     public void storePosterFilm(long film_id, MultipartFile file) throws IOException {

@@ -3,12 +3,8 @@ package nl.serkanertas.filmspringserver.service;
 import nl.serkanertas.filmspringserver.dto.request.CreateUserPostRequest;
 import nl.serkanertas.filmspringserver.dto.request.UpdateUserDetailsRequest;
 import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
-import nl.serkanertas.filmspringserver.model.Group;
-import nl.serkanertas.filmspringserver.model.GroupInvitation;
 import nl.serkanertas.filmspringserver.model.User;
-import nl.serkanertas.filmspringserver.repository.GroupInvitationRepository;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -20,21 +16,14 @@ import java.util.List;
 @Service
 public class UserService  {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private GroupService groupService;
+    private final AvatarService avatarService;
 
-//    public UserService() {}
-//
-    @Autowired
-    private GroupInvitationRepository groupInvitationRepository;
-
-    private AvatarService avatarService;
-
-    public UserService(@Lazy AvatarService avatarService, @Lazy GroupService groupService) {
+    public UserService(@Lazy AvatarService avatarService,
+                       UserRepository userRepository) {
         this.avatarService = avatarService;
-        this.groupService = groupService;
+        this.userRepository = userRepository;
     }
 
     public SearchedUserGetRequest mapUserToSearchedUser(String user_id) {
@@ -52,7 +41,7 @@ public class UserService  {
         return userDto;
     }
 
-    public String createUser(CreateUserPostRequest userDto) throws IOException {
+    public void createUser(CreateUserPostRequest userDto) throws IOException {
         User user = new User();
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
@@ -61,7 +50,6 @@ public class UserService  {
         user.setAvatarUser(avatarService.setDefaultAvatarUser());
         userRepository.save(user);
 
-        return user.getUsername();
     }
 
     public void updateDetails(String user_id, UpdateUserDetailsRequest updateDetailsDto) {

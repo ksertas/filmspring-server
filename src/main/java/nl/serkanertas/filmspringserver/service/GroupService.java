@@ -9,36 +9,33 @@ import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.GroupInvitationRepository;
 import nl.serkanertas.filmspringserver.repository.GroupRepository;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Service
 public class GroupService {
+    private final GroupRepository groupRepository;
+    private final UserRepository userRepository;
+    private final GroupInvitationRepository groupInvitationRepository;
+    private final UserService userService;
+    private final AvatarService avatarService;
 
-    @Autowired
-    private GroupRepository groupRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private GroupInvitationRepository groupInvitationRepository;
-
-    @Autowired
-    private UserService userService;
-
-    private AvatarService avatarService;
-
-    public GroupService(@Lazy AvatarService avatarService) {
+    public GroupService(GroupRepository groupRepository,
+                        UserRepository userRepository,
+                        GroupInvitationRepository groupInvitationRepository,
+                        UserService userService,
+                        AvatarService avatarService) {
+        this.groupRepository = groupRepository;
+        this.userRepository = userRepository;
+        this.groupInvitationRepository = groupInvitationRepository;
+        this.userService = userService;
         this.avatarService = avatarService;
     }
+
 
     public GroupGetRequest mapGroupToDto(Long group_id){
         Group group = groupRepository.findById(group_id).get();

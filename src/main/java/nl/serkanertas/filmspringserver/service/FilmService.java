@@ -1,13 +1,11 @@
 package nl.serkanertas.filmspringserver.service;
 
-import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
 import nl.serkanertas.filmspringserver.model.Actor;
 import nl.serkanertas.filmspringserver.model.Film;
 import nl.serkanertas.filmspringserver.model.Group;
 import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.ActorRepository;
 import nl.serkanertas.filmspringserver.repository.FilmRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,18 +14,21 @@ import java.util.List;
 
 @Service
 public class FilmService {
+    private final UserService userService;
+    private final GroupService groupService;
+    private final FilmRepository filmRepository;
+    private final ActorRepository actorRepository;
 
-    @Autowired
-    private UserService userService;
+    public FilmService(UserService userService,
+                       GroupService groupService,
+                       FilmRepository filmRepository,
+                       ActorRepository actorRepository) {
+        this.userService = userService;
+        this.groupService = groupService;
+        this.filmRepository = filmRepository;
+        this.actorRepository = actorRepository;
+    }
 
-    @Autowired
-    private GroupService groupService;
-
-    @Autowired
-    private FilmRepository filmRepository;
-
-    @Autowired
-    private ActorRepository actorRepository;
 
     public Film getFilm(long film_id) { return filmRepository.findById(film_id).get(); }
 

@@ -26,21 +26,6 @@ public class UserService  {
         this.userRepository = userRepository;
     }
 
-    public SearchedUserGetRequest mapUserToSearchedUser(String user_id) {
-        User user = userRepository.findById(user_id).get();
-        SearchedUserGetRequest userDto = new SearchedUserGetRequest();
-        userDto.setUsername(user.getUsername());
-        userDto.setAvatar(user.getAvatarUser());
-        if (!user.isMediaHidden()) {
-            userDto.setWatchedFilms(user.getWatchedFilms());
-            userDto.setWatchedSeries(user.getWatchedSeries());
-            userDto.setPlannedFilms(user.getPlannedFlms());
-            userDto.setPlannedSeries(user.getPlannedSeries());
-        }
-        userDto.setMediaHidden(user.isMediaHidden());
-        return userDto;
-    }
-
     public void createUser(CreateUserPostRequest userDto) throws IOException {
         User user = new User();
         user.setUsername(userDto.getUsername());
@@ -65,6 +50,10 @@ public class UserService  {
 
     public User getUserEntity(String user_id) {
         return userRepository.findById(user_id).get();
+    }
+
+    public void saveUserEntity(User user) {
+        userRepository.save(user);
     }
 
     public SearchedUserGetRequest getSearchedUser(String user_id) {

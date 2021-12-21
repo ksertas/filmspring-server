@@ -3,11 +3,10 @@ package nl.serkanertas.filmspringserver.service;
 import nl.serkanertas.filmspringserver.dto.request.CreateGroupPostRequest;
 import nl.serkanertas.filmspringserver.dto.response.GroupGetRequest;
 import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
-import nl.serkanertas.filmspringserver.model.Group;
-import nl.serkanertas.filmspringserver.model.GroupInvitation;
-import nl.serkanertas.filmspringserver.model.User;
+import nl.serkanertas.filmspringserver.model.*;
 import nl.serkanertas.filmspringserver.repository.GroupInvitationRepository;
 import nl.serkanertas.filmspringserver.repository.GroupRepository;
+import nl.serkanertas.filmspringserver.repository.SeriesRepository;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,34 +22,20 @@ public class GroupService {
     private final GroupInvitationRepository groupInvitationRepository;
     private final UserService userService;
     private final AvatarService avatarService;
+    private final EntityToDtoService entityToDtoService;
 
     public GroupService(GroupRepository groupRepository,
                         UserRepository userRepository,
                         GroupInvitationRepository groupInvitationRepository,
                         UserService userService,
-                        AvatarService avatarService) {
+                        AvatarService avatarService,
+                        EntityToDtoService entityToDtoService) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
         this.groupInvitationRepository = groupInvitationRepository;
         this.userService = userService;
         this.avatarService = avatarService;
-    }
-
-
-    public GroupGetRequest mapGroupToDto(Long group_id){
-        Group group = groupRepository.findById(group_id).get();
-        GroupGetRequest groupDto = new GroupGetRequest();
-        ArrayList<SearchedUserGetRequest> userGroupList = new ArrayList<>();
-        groupDto.setGroupName(group.getName());
-        groupDto.setAvatar(group.getAvatarGroup());
-
-        for (User user : group.getUsersInGroup()) {
-            userGroupList.add(userService.getSearchedUser(user.getUsername()));
-        }
-        groupDto.setUsersInGroup(userGroupList);
-        groupDto.setPlannedFilms(group.getPlannedFlms());
-        groupDto.setPlannedSeries(group.getPlannedSeries());
-        return groupDto;
+        this.entityToDtoService = entityToDtoService;
     }
 
     public void createGroup(CreateGroupPostRequest groupDto) throws IOException {
@@ -67,7 +52,7 @@ public class GroupService {
 
     @Transactional
     public GroupGetRequest getGroup(long group_id) {
-        return mapGroupToDto(group_id);
+        return entityToDtoService.mapGroupToDto(group_id);
     }
 
     @Transactional
@@ -80,7 +65,7 @@ public class GroupService {
         List<GroupGetRequest> groupDtos = new ArrayList<>();
         Iterable<Group> groups = groupRepository.findAll();
         for (Group group : groups) {
-            groupDtos.add(mapGroupToDto(group.getGroup_id()));
+            groupDtos.add(entityToDtoService.mapGroupToDto(group.getGroup_id()));
         }
         return groupDtos;
     }
@@ -106,41 +91,4 @@ public class GroupService {
         groupRepository.save(group);
     }
 
-    @Transactional
-    public void inviteUser(String user_id, long group_id) {
-        User user = userService.getUserEntity(user_id);
-        GroupInvitation groupInvitation = new GroupInvitation();
-        groupInvitation.setGroup_id(group_id);
-        groupInvitationRepository.save(groupInvitation);
-        user.getGroupInvitations().add(groupInvitation);
-        userRepository.save(user);
-    }
-
-    @Transactional
-    public void acceptInvite(String user_id, long group_id) {
-        User user = userService.getUserEntity(user_id);
-//        List<GroupInvitation> copyGI = user.getGroupInvitations();
-        boolean isAdded = false;
-        GroupInvitation foundGroup = null;
-
-        for (GroupInvitation group : user.getGroupInvitations()) {
-            if (group.getGroup_id() == group_id) {
-                System.out.println("above add user");
-                addUserToGroup(user_id, group_id);
-                System.out.println("above save user");
-                userRepository.save(user);
-                isAdded = true;
-                foundGroup = group;
-                System.out.println("last line of 1st if statement");
-                break;
-            }
-        }
-                System.out.println("outside 2nd if statement");
-            if (isAdded) {
-                System.out.println("above user.getinvites remove found group");
-                user.getGroupInvitations().remove(foundGroup);
-                System.out.println("above delete from repo");
-                groupInvitationRepository.deleteById(foundGroup.getInvite_id());
-            }
-    }
 }

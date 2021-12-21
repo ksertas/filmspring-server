@@ -12,7 +12,7 @@ public class ActorService {
         this.actorRepository = actorRepository;
     }
 
-    public Actor getActor(long actor_id) {
+    public Actor getActorEntity(long actor_id) {
         return actorRepository.findById(actor_id).get();
     }
 

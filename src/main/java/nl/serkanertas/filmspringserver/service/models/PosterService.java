@@ -31,7 +31,7 @@ public class PosterService {
 
     @Transactional
     public void storePosterFilm(long film_id, MultipartFile file) throws IOException {
-        Film film = filmService.getFilm(film_id);
+        Film film = filmService.getFilmEntity(film_id);
         Poster poster = new Poster(
                 file.getOriginalFilename(),
                 file.getContentType(),
@@ -43,12 +43,12 @@ public class PosterService {
 
     @Transactional
     public Poster getPosterFilm(long film_id) {
-        Film film = filmService.getFilm(film_id);
+        Film film = filmService.getFilmEntity(film_id);
         return film.getPosterFilm();
     }
 
     public void deletePosterFilm(long film_id) {
-        Film film = filmService.getFilm(film_id);
+        Film film = filmService.getFilmEntity(film_id);
         Long currentPosterId = film.getPosterFilm().getPoster_id();
         film.setPosterFilm(null);
         posterRepository.deleteById(currentPosterId);
@@ -57,7 +57,7 @@ public class PosterService {
 
     @Transactional
     public void storePosterSeries(long series_id, MultipartFile file) throws IOException {
-        Series series = seriesService.getSeries(series_id);
+        Series series = seriesService.getSeriesEntity(series_id);
         Poster poster = new Poster(
                 file.getOriginalFilename(),
                 file.getContentType(),
@@ -69,12 +69,12 @@ public class PosterService {
 
     @Transactional
     public Poster getPosterSeries(long series_id) {
-        Series series = seriesService.getSeries(series_id);
+        Series series = seriesService.getSeriesEntity(series_id);
         return series.getPosterSeries();
     }
 
     public void deletePosterSeries(long series_id) {
-        Series series = seriesService.getSeries(series_id);
+        Series series = seriesService.getSeriesEntity(series_id);
         Long currentPosterId = series.getPosterSeries().getPoster_id();
         series.setPosterSeries(null);
         posterRepository.deleteById(currentPosterId);

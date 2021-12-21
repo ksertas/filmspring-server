@@ -1,4 +1,4 @@
-package nl.serkanertas.filmspringserver.service;
+package nl.serkanertas.filmspringserver.service.models;
 
 import nl.serkanertas.filmspringserver.model.Avatar;
 import nl.serkanertas.filmspringserver.model.Group;
@@ -6,7 +6,6 @@ import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.AvatarRepository;
 import nl.serkanertas.filmspringserver.repository.GroupRepository;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.mock.web.MockMultipartFile;
@@ -18,21 +17,20 @@ import java.io.IOException;
 
 @Service
 public class AvatarService {
+    private final UserService userService;
+    private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
+    private final AvatarRepository avatarRepository;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private GroupService groupService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private GroupRepository groupRepository;
-
-    @Autowired
-    private AvatarRepository avatarRepository;
+    public AvatarService(UserService userService,
+                         UserRepository userRepository,
+                         GroupRepository groupRepository,
+                         AvatarRepository avatarRepository) {
+        this.userService = userService;
+        this.userRepository = userRepository;
+        this.groupRepository = groupRepository;
+        this.avatarRepository = avatarRepository;
+    }
 
     public Avatar setDefaultAvatarUser() throws IOException {
         File file = new File("src/main/resources/static/img/default_pfp.png");

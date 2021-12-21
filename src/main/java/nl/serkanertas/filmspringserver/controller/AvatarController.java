@@ -1,7 +1,6 @@
 package nl.serkanertas.filmspringserver.controller;
 
-import nl.serkanertas.filmspringserver.service.AvatarService;
-import org.springframework.beans.factory.annotation.Autowired;
+import nl.serkanertas.filmspringserver.service.models.AvatarService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +10,11 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/avatars/")
 public class AvatarController {
 
-    @Autowired
-    AvatarService avatarService;
+    private final AvatarService avatarService;
+
+    public AvatarController(AvatarService avatarService) {
+        this.avatarService = avatarService;
+    }
 
 //    USERS
 

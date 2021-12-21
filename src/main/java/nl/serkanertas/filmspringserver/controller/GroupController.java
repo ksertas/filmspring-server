@@ -1,8 +1,8 @@
 package nl.serkanertas.filmspringserver.controller;
 
 import nl.serkanertas.filmspringserver.dto.request.CreateGroupPostRequest;
-import nl.serkanertas.filmspringserver.service.GroupService;
-import org.springframework.beans.factory.annotation.Autowired;
+import nl.serkanertas.filmspringserver.service.InviteService;
+import nl.serkanertas.filmspringserver.service.models.GroupService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +14,13 @@ import java.io.IOException;
 @RequestMapping("/api/groups")
 public class GroupController {
 
-    @Autowired
-    private GroupService groupService;
+    private final GroupService groupService;
+    private final InviteService inviteService;
+
+    public GroupController(GroupService groupService, InviteService inviteService) {
+        this.groupService = groupService;
+        this.inviteService = inviteService;
+    }
 
     @GetMapping
     ResponseEntity<Object> getAllGroups() {
@@ -61,15 +66,14 @@ public class GroupController {
     @PutMapping("/invite/{user_id}/{group_id}")
     ResponseEntity<Object> inviteUserToGroup(@PathVariable("user_id") String user_id,
                                              @PathVariable("group_id") long group_id) {
-        groupService.inviteUser(user_id, group_id);
+        inviteService.inviteUser(user_id, group_id);
         return ResponseEntity.ok().body("Invite success");
     }
 
     @PutMapping("/invite/{user_id}/{group_id}/accept")
     ResponseEntity<Object> acceptInvite(@PathVariable("user_id") String user_id,
                                         @PathVariable("group_id") long group_id) {
-        groupService.acceptInvite(user_id, group_id);
+        inviteService.acceptInvite(user_id, group_id);
         return ResponseEntity.ok().body("done");
     }
-
 }

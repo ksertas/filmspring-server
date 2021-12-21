@@ -1,14 +1,11 @@
-package nl.serkanertas.filmspringserver.service;
+package nl.serkanertas.filmspringserver.service.models;
 
 import nl.serkanertas.filmspringserver.dto.request.CreateUserPostRequest;
 import nl.serkanertas.filmspringserver.dto.request.UpdateUserDetailsRequest;
 import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
-import nl.serkanertas.filmspringserver.model.Group;
-import nl.serkanertas.filmspringserver.model.GroupInvitation;
 import nl.serkanertas.filmspringserver.model.User;
-import nl.serkanertas.filmspringserver.repository.GroupInvitationRepository;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import nl.serkanertas.filmspringserver.service.EntityToDtoService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -20,39 +17,20 @@ import java.util.List;
 @Service
 public class UserService  {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final AvatarService avatarService;
+    private final EntityToDtoService entityToDtoService;
 
-    private GroupService groupService;
 
-//    public UserService() {}
-//
-    @Autowired
-    private GroupInvitationRepository groupInvitationRepository;
-
-    private AvatarService avatarService;
-
-    public UserService(@Lazy AvatarService avatarService, @Lazy GroupService groupService) {
+    public UserService(@Lazy AvatarService avatarService,
+                       UserRepository userRepository,
+                       @Lazy EntityToDtoService entityToDtoService) {
         this.avatarService = avatarService;
-        this.groupService = groupService;
+        this.userRepository = userRepository;
+        this.entityToDtoService = entityToDtoService;
     }
 
-    public SearchedUserGetRequest mapUserToSearchedUser(String user_id) {
-        User user = userRepository.findById(user_id).get();
-        SearchedUserGetRequest userDto = new SearchedUserGetRequest();
-        userDto.setUsername(user.getUsername());
-        userDto.setAvatar(user.getAvatarUser());
-        if (!user.isMediaHidden()) {
-            userDto.setWatchedFilms(user.getWatchedFilms());
-            userDto.setWatchedSeries(user.getWatchedSeries());
-            userDto.setPlannedFilms(user.getPlannedFlms());
-            userDto.setPlannedSeries(user.getPlannedSeries());
-        }
-        userDto.setMediaHidden(user.isMediaHidden());
-        return userDto;
-    }
-
-    public String createUser(CreateUserPostRequest userDto) throws IOException {
+    public void createUser(CreateUserPostRequest userDto) throws IOException {
         User user = new User();
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
@@ -61,7 +39,6 @@ public class UserService  {
         user.setAvatarUser(avatarService.setDefaultAvatarUser());
         userRepository.save(user);
 
-        return user.getUsername();
     }
 
     public void updateDetails(String user_id, UpdateUserDetailsRequest updateDetailsDto) {
@@ -79,8 +56,12 @@ public class UserService  {
         return userRepository.findById(user_id).get();
     }
 
+    public void saveUserEntity(User user) {
+        userRepository.save(user);
+    }
+
     public SearchedUserGetRequest getSearchedUser(String user_id) {
-        return mapUserToSearchedUser(user_id);
+        return entityToDtoService.mapUserToSearchedUser(user_id);
     }
 
     @Transactional
@@ -88,7 +69,7 @@ public class UserService  {
         Iterable<User> users = userRepository.findUsersByUsernameContainsIgnoreCase(query);
         ArrayList<SearchedUserGetRequest> toReturnUsers = new ArrayList<>();
         for (User user : users) {
-            toReturnUsers.add(mapUserToSearchedUser(user.getUsername()));
+            toReturnUsers.add(entityToDtoService.mapUserToSearchedUser(user.getUsername()));
         }
         return toReturnUsers;
     }

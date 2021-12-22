@@ -37,7 +37,6 @@ public class InviteService {
     @Transactional
     public void acceptInvite(String user_id, long group_id) {
         User user = userService.getUserEntity(user_id);
-//        List<GroupInvitation> copyGI = user.getGroupInvitations();
         boolean isAdded = false;
         GroupInvitation foundGroup = null;
 
@@ -45,6 +44,7 @@ public class InviteService {
             if (group.getGroup_id() == group_id) {
                 groupService.addUserToGroup(user_id, group_id);
                 userService.saveUserEntity(user);
+                // needed to avoid ConcurrentModificationException
                 isAdded = true;
                 foundGroup = group;
                 break;
@@ -53,6 +53,21 @@ public class InviteService {
         if (isAdded) {
             user.getGroupInvitations().remove(foundGroup);
             groupInvitationService.deleteGroupInvitationEntity(foundGroup.getInvite_id());
+        }
+    }
+
+    @Transactional
+    public void rejectInvite(String user_id, long group_id) {
+        User user = userService.getUserEntity(user_id);
+
+        for (GroupInvitation group : user.getGroupInvitations()) {
+            if (group.getGroup_id() == group_id) {
+                GroupInvitation foundGroup = group;
+                user.getGroupInvitations().remove(foundGroup);
+                groupInvitationService.deleteGroupInvitationEntity(foundGroup.getInvite_id());
+                System.out.println("Removed invite successfully");
+                break;
+            }
         }
     }
 }

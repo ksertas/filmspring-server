@@ -74,6 +74,13 @@ public class GroupController {
     ResponseEntity<Object> acceptInviteToGroup(@PathVariable("user_id") String user_id,
                                         @PathVariable("group_id") long group_id) {
         inviteService.acceptInvite(user_id, group_id);
-        return ResponseEntity.ok().body("done");
+        return ResponseEntity.ok().body("Accepted invite");
+    }
+
+    @DeleteMapping("/{group_id}/invite/{user_id}/reject")
+    ResponseEntity<Object> rejectInviteToGroup(@PathVariable("user_id") String user_id,
+                                               @PathVariable("group_id") long group_id) {
+        inviteService.rejectInvite(user_id, group_id);
+        return ResponseEntity.ok().body("Rejected invite");
     }
 }

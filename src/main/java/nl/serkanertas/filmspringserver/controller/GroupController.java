@@ -63,15 +63,15 @@ public class GroupController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/invite/{user_id}/{group_id}")
+    @PutMapping("/{group_id}/invite/{user_id}")
     ResponseEntity<Object> inviteUserToGroup(@PathVariable("user_id") String user_id,
                                              @PathVariable("group_id") long group_id) {
         inviteService.inviteUser(user_id, group_id);
         return ResponseEntity.ok().body("Invite success");
     }
 
-    @PutMapping("/invite/{user_id}/{group_id}/accept")
-    ResponseEntity<Object> acceptInvite(@PathVariable("user_id") String user_id,
+    @PutMapping("/{group_id}/invite/{user_id}/accept")
+    ResponseEntity<Object> acceptInviteToGroup(@PathVariable("user_id") String user_id,
                                         @PathVariable("group_id") long group_id) {
         inviteService.acceptInvite(user_id, group_id);
         return ResponseEntity.ok().body("done");

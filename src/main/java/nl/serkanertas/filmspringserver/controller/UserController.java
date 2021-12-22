@@ -2,10 +2,6 @@ package nl.serkanertas.filmspringserver.controller;
 
 import nl.serkanertas.filmspringserver.dto.request.CreateUserPostRequest;
 import nl.serkanertas.filmspringserver.dto.request.UpdateUserDetailsRequest;
-import nl.serkanertas.filmspringserver.service.PlanMediaService;
-import nl.serkanertas.filmspringserver.service.WatchMediaService;
-import nl.serkanertas.filmspringserver.service.models.FilmService;
-import nl.serkanertas.filmspringserver.service.models.SeriesService;
 import nl.serkanertas.filmspringserver.service.models.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +16,9 @@ import java.io.IOException;
 public class UserController {
 
     private final UserService userService;
-    private final WatchMediaService watchMediaService;
-    private final PlanMediaService planMediaService;
 
-    public UserController(UserService userService,
-                          WatchMediaService watchMediaService,
-                          PlanMediaService planMediaService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.watchMediaService = watchMediaService;
-        this.planMediaService = planMediaService;
     }
 
     @GetMapping

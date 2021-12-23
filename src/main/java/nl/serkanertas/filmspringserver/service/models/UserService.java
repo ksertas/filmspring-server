@@ -7,6 +7,7 @@ import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
 import nl.serkanertas.filmspringserver.service.EntityToDtoService;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -20,24 +21,34 @@ public class UserService  {
     private final UserRepository userRepository;
     private final AvatarService avatarService;
     private final EntityToDtoService entityToDtoService;
+    private final PasswordEncoder passwordEncoder;
 
 
     public UserService(@Lazy AvatarService avatarService,
                        UserRepository userRepository,
-                       @Lazy EntityToDtoService entityToDtoService) {
+                       @Lazy EntityToDtoService entityToDtoService,
+                       PasswordEncoder passwordEncoder) {
         this.avatarService = avatarService;
         this.userRepository = userRepository;
         this.entityToDtoService = entityToDtoService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public void createUser(CreateUserPostRequest userDto) throws IOException {
+    public String createUser(CreateUserPostRequest userDto) throws IOException {
         User user = new User();
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
-        user.setEnabled(false);
+        String bCryptPassword = passwordEncoder.encode(userDto.getPassword());
+        user.setPassword(bCryptPassword);
+        user.setEnabled(true);
+        user.setVerified(false);
         user.setMediaHidden(false);
         user.setAvatarUser(avatarService.setDefaultAvatarUser());
+        user.addAuthority("ROLE_USER");
         userRepository.save(user);
+        System.out.println(userDto.getPassword());
+        System.out.println(bCryptPassword);
+        return ("User " + userDto.getUsername() + " created");
 
     }
 

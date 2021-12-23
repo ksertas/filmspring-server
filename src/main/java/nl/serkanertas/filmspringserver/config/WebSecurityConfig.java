@@ -65,16 +65,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
+
                 //HTTP Basic authentication
-                .httpBasic()
-                .and()
+//                .httpBasic()
+//                .and()
                 .authorizeRequests()
-                .antMatchers(PATCH,"/users/{^[\\w]$}/password").authenticated()
-                .antMatchers("/users/**").hasRole("ADMIN")
-                .antMatchers("/books/**").hasRole("USER")
-                .antMatchers("/persons/**").hasAnyRole("USER")
-                .antMatchers(HttpMethod.GET, "hello").authenticated()
-                .antMatchers(HttpMethod.GET, "goodbye").permitAll()
+//                .antMatchers(PATCH,"/users/{^[\\w]$}/password").authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .csrf().disable()
@@ -82,7 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     }
 

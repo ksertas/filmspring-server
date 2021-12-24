@@ -65,14 +65,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
 
                 //HTTP Basic authentication
-                .httpBasic()
-                .and()
-                .authorizeRequests()
-                .antMatchers("/api/users/login").permitAll()
-                .anyRequest().authenticated()
+//                .httpBasic()
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers("/api/users/login").permitAll()
+//                .anyRequest().authenticated()
 //                .antMatchers(PATCH,"/users/{^[\\w]$}/password").authenticated()
 //                .anyRequest().permitAll()
-                .and()
+//                .and()
                 .logout()
                 .logoutUrl("/api/logout")
                 .and()

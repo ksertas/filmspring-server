@@ -21,13 +21,16 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    ResponseEntity<Object> getSearchedUsers(@RequestParam("search") String query) {
-        return ResponseEntity.ok().body(userService.getSearchedUsers(query));
+//  logged in only
+    @GetMapping("/{user_id}")
+    ResponseEntity<Object> getUser(@PathVariable String user_id) {
+        return ResponseEntity.ok().body(userService.getSearchedUser(user_id));
     }
 
     @PostMapping
-    ResponseEntity<Object> createUser(@Valid @RequestBody CreateUserPostRequest newUserPostRequestDto, BindingResult result) throws IOException {
+    ResponseEntity<Object> createUser(@Valid @RequestBody CreateUserPostRequest
+                                              newUserPostRequestDto, BindingResult result)
+            throws IOException {
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body("Failed to register account");
         } else {
@@ -36,26 +39,28 @@ public class UserController {
         }
     }
 
-    @GetMapping("/raw")
-    ResponseEntity<Object> getAllUserEntities() {
-        return ResponseEntity.ok().body(userService.getAllUsersEntities());
-    }
-
-    @GetMapping("/{user_id}")
-    ResponseEntity<Object> getUser(@PathVariable String user_id) {
-        return ResponseEntity.ok().body(userService.getSearchedUser(user_id));
-    }
-
-    @PatchMapping("/{user_id}")
+    @PatchMapping("/{user_id}/account")
     ResponseEntity<Object> updateUser(@PathVariable String user_id, @Valid @RequestBody UpdateUserDetailsRequest updateDetailsDto) {
         userService.updateDetails(user_id, updateDetailsDto);
         return ResponseEntity.ok().body("Updated account.");
     }
 
-    @DeleteMapping("/{user_id}")
+    @DeleteMapping("/{user_id}/account")
     ResponseEntity<Object> deleteUser(@PathVariable String user_id) {
         userService.deleteUser(user_id);
         return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
+    }
+
+//    logged in only
+    @GetMapping
+    ResponseEntity<Object> getSearchedUsers(@RequestParam("search") String query) {
+        return ResponseEntity.ok().body(userService.getSearchedUsers(query));
+    }
+
+//    admin only
+    @GetMapping("/raw")
+    ResponseEntity<Object> getAllUserEntities() {
+        return ResponseEntity.ok().body(userService.getAllUsersEntities());
     }
 
 }

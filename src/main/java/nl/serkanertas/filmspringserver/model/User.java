@@ -5,7 +5,9 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -18,6 +20,9 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinTable(name = "user_avatar",
     joinColumns = { @JoinColumn(name = "username", referencedColumnName = "username")},
@@ -26,6 +31,18 @@ public class User {
 
     @Column(name = "enabled")
     private boolean enabled;
+
+    // TODO: update DTOs
+    @Column(name = "is_verified")
+    private boolean isVerified;
+
+    @OneToMany(
+            targetEntity = Authority.class,
+            mappedBy = "username",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
+    private Set<Authority> authorities = new HashSet<>();
 
     @Column(name = "hideMediaFromOthers")
     private boolean hideMedia;
@@ -77,6 +94,35 @@ public class User {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public void addAuthority(Authority authority) {
+        this.authorities.add(authority);
+    }
+    public void addAuthority(String authorityString) {
+        this.authorities.add(new Authority(this.username, authorityString));
+    }
+    public void removeAuthority(Authority authority) {
+        this.authorities.remove(authority);
+    }
+    public void removeAuthority(String authorityString) {
+        this.authorities.removeIf(authority -> authority.getAuthority().equalsIgnoreCase(authorityString));
+    }
+
     public Avatar getAvatarUser() {
         return avatarUser;
     }
@@ -91,6 +137,14 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
     }
 
     public boolean isMediaHidden() {

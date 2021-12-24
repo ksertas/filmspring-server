@@ -19,8 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.sql.DataSource;
 
-import static org.springframework.http.HttpMethod.PATCH;
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -67,18 +65,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
 
                 //HTTP Basic authentication
-//                .httpBasic()
-//                .and()
+                .httpBasic()
+                .and()
                 .authorizeRequests()
+                .antMatchers("/api/users/login").permitAll()
+                .anyRequest().authenticated()
 //                .antMatchers(PATCH,"/users/{^[\\w]$}/password").authenticated()
-                .anyRequest().permitAll()
+//                .anyRequest().permitAll()
+                .and()
+                .logout()
+                .logoutUrl("/api/logout")
                 .and()
                 .csrf().disable()
                 .formLogin().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-//        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     }
 

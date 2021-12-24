@@ -9,6 +9,7 @@ import nl.serkanertas.filmspringserver.repository.GroupRepository;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
 import nl.serkanertas.filmspringserver.service.EntityToDtoService;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -44,6 +45,12 @@ public class GroupService {
         group.setName(groupDto.getGroupName());
         group.setAvatarGroup(avatarService.setDefaultAvatarGroup());
         group.setWarned(false);
+        groupRepository.save(group);
+        String groupCreatorName = SecurityContextHolder.getContext().getAuthentication().getName();
+        User groupCreator = userService.getUserEntity(groupCreatorName);
+        groupCreator.addAuthority("ROLE_OWNER-GROUP-" + group.getGroup_id());
+        userService.saveUserEntity(groupCreator);
+        addUserToGroup(groupCreatorName, group.getGroup_id());
         groupRepository.save(group);
     }
 

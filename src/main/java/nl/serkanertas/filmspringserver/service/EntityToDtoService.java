@@ -62,6 +62,7 @@ public class EntityToDtoService {
         groupDto.setUsersInGroup(userGroupList);
         groupDto.setPlannedFilms(group.getPlannedFlms());
         groupDto.setPlannedSeries(group.getPlannedSeries());
+        groupDto.setWarned(group.isWarned());
         return groupDto;
     }
 }

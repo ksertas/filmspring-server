@@ -3,6 +3,7 @@ package nl.serkanertas.filmspringserver.service;
 import nl.serkanertas.filmspringserver.dto.response.*;
 import nl.serkanertas.filmspringserver.model.*;
 import nl.serkanertas.filmspringserver.service.models.*;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,11 +18,11 @@ public class EntityToDtoService {
     private final SeriesService seriesService;
     private final ActorService actorService;
 
-    public EntityToDtoService(UserService userService,
-                              GroupService groupService,
-                              FilmService filmService,
-                              SeriesService seriesService,
-                              ActorService actorService) {
+    public EntityToDtoService(@Lazy UserService userService,
+                              @Lazy GroupService groupService,
+                              @Lazy FilmService filmService,
+                              @Lazy SeriesService seriesService,
+                              @Lazy ActorService actorService) {
         this.userService = userService;
         this.groupService = groupService;
         this.filmService = filmService;
@@ -91,7 +92,7 @@ public class EntityToDtoService {
         return filmDto;
     }
 
-    public SeriesGetRequest SeriesGetRequest(long series_id) {
+    public SeriesGetRequest mapSeriesToDto(long series_id) {
         Series series = seriesService.getSeriesEntity(series_id);
         SeriesGetRequest seriesDto = new SeriesGetRequest();
         List<ActorGetRequest> actorsList = new ArrayList<>();
@@ -104,8 +105,10 @@ public class EntityToDtoService {
         seriesDto.setRuntime(String.valueOf(series.getRuntime()));
         seriesDto.setDirector(series.getDirector());
         seriesDto.setYearReleased(series.getYearReleased());
+        seriesDto.setSeasons(series.getSeasons());
         seriesDto.setGenre(series.getGenre());
         seriesDto.setActors(actorsList);
         return seriesDto;
     }
+
 }

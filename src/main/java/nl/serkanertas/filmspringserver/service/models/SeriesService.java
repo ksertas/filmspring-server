@@ -1,8 +1,10 @@
 package nl.serkanertas.filmspringserver.service.models;
 
+import nl.serkanertas.filmspringserver.dto.response.SeriesGetRequest;
 import nl.serkanertas.filmspringserver.model.*;
 import nl.serkanertas.filmspringserver.repository.ActorRepository;
 import nl.serkanertas.filmspringserver.repository.SeriesRepository;
+import nl.serkanertas.filmspringserver.service.EntityToDtoService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -20,14 +22,22 @@ public class SeriesService {
 
     private final GroupService groupService;
 
+    private final EntityToDtoService entityToDtoService;
+
     public SeriesService(SeriesRepository seriesRepository,
                          ActorRepository actorRepository,
                          UserService userService,
-                         GroupService groupService) {
+                         GroupService groupService,
+                         EntityToDtoService entityToDtoService) {
         this.seriesRepository = seriesRepository;
         this.actorRepository = actorRepository;
         this.userService = userService;
         this.groupService = groupService;
+        this.entityToDtoService = entityToDtoService;
+    }
+
+    public SeriesGetRequest getSearchedSeries(long series_id) {
+        return entityToDtoService.mapSeriesToDto(series_id);
     }
 
     public Series getSeriesEntity(long series_id) { return seriesRepository.findById(series_id).get(); }

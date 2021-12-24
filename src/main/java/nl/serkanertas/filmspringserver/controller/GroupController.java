@@ -22,14 +22,19 @@ public class GroupController {
         this.inviteService = inviteService;
     }
 
+    @GetMapping("/{group_id}")
+    ResponseEntity<Object> getSearchedGroup(@PathVariable("group_id") long group_id) {
+        return ResponseEntity.ok().body(groupService.getGroup(group_id));
+    }
+
     @GetMapping
     ResponseEntity<Object> getAllGroups() {
         return ResponseEntity.ok().body(groupService.getAllGroups());
     }
 
-    @GetMapping("/{group_id}")
-    ResponseEntity<Object> getGroup(@PathVariable("group_id") long group_id) {
-        return ResponseEntity.ok().body(groupService.getGroup(group_id));
+    @GetMapping("/raw/{group_id}")
+    ResponseEntity<Object> getGroupEntity(@PathVariable("group_id") long group_id) {
+        return ResponseEntity.ok().body(groupService.getGroupEntity(group_id));
     }
 
     @PostMapping

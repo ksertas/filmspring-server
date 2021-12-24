@@ -20,13 +20,18 @@ public class SeriesController {
     @GetMapping("/raw")
     ResponseEntity<Object> getAllSeries() { return ResponseEntity.ok().body(seriesService.getAllSeries()); }
 
+    @GetMapping("/{series_id}")
+    ResponseEntity<Object> getSearchedFilm(@PathVariable("series_id") long series_id) {
+        return ResponseEntity.ok().body(seriesService.getSearchedSeries(series_id));
+    }
+
     @GetMapping
     ResponseEntity<Object> getSearchedSeries(@RequestParam("search") String query) {
         return ResponseEntity.ok().body(seriesService.getSearchedSeries(query));
     }
 
-    @GetMapping("/{series_id}")
-    ResponseEntity<Object> getSeries(@PathVariable("series_id") long series_id) {
+    @GetMapping("/raw/{series_id}")
+    ResponseEntity<Object> getSeriesEntity(@PathVariable("series_id") long series_id) {
         return ResponseEntity.ok().body(seriesService.getSeriesEntity(series_id));
     }
 

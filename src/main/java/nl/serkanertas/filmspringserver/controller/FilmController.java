@@ -18,6 +18,11 @@ public class FilmController {
         this.storeActorService = storeActorService;
     }
 
+    @GetMapping("/{film_id}")
+    ResponseEntity<Object> getSearchedFilm(@PathVariable("film_id") long film_id) {
+        return ResponseEntity.ok().body(filmService.getSearchedFilm(film_id));
+    }
+
     @GetMapping
     ResponseEntity<Object> getSearchedFilms(@RequestParam("search") String query) {
         return ResponseEntity.ok().body(filmService.getSearchedFilms(query));
@@ -28,8 +33,8 @@ public class FilmController {
         return ResponseEntity.ok().body(filmService.getAllFilms());
     }
 
-    @GetMapping("/{film_id}")
-    ResponseEntity<Object> getFilm(@PathVariable("film_id") long film_id) {
+    @GetMapping("/raw/{film_id}")
+    ResponseEntity<Object> getFilmEntity(@PathVariable("film_id") long film_id) {
         return ResponseEntity.ok().body(filmService.getFilmEntity(film_id));
     }
 

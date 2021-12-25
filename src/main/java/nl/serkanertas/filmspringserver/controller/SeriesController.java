@@ -3,6 +3,7 @@ package nl.serkanertas.filmspringserver.controller;
 import nl.serkanertas.filmspringserver.service.StoreActorService;
 import nl.serkanertas.filmspringserver.service.models.SeriesService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,24 +19,23 @@ public class SeriesController {
     }
 
     @GetMapping("/raw")
+    @PreAuthorize("hasRole(\"ROLE_ADMIN\")")
     ResponseEntity<Object> getAllSeries() { return ResponseEntity.ok().body(seriesService.getAllSeries()); }
 
-    @GetMapping("/{series_id}")
-    ResponseEntity<Object> getSearchedFilm(@PathVariable("series_id") long series_id) {
-        return ResponseEntity.ok().body(seriesService.getSearchedSeries(series_id));
-    }
-
     @GetMapping
+    @PreAuthorize("hasRole(\"ROLE_USER\")")
     ResponseEntity<Object> getSearchedSeries(@RequestParam("search") String query) {
         return ResponseEntity.ok().body(seriesService.getSearchedSeries(query));
     }
 
     @GetMapping("/raw/{series_id}")
+    @PreAuthorize("hasRole(\"ROLE_ADMIN\")")
     ResponseEntity<Object> getSeriesEntity(@PathVariable("series_id") long series_id) {
         return ResponseEntity.ok().body(seriesService.getSeriesEntity(series_id));
     }
 
     @GetMapping("/{series_id}/actors")
+    @PreAuthorize("hasRole(\"ROLE_USER\")")
     ResponseEntity<Object> getAllActorsFromSeries(@PathVariable("series_id") long series_id) {
         return ResponseEntity.ok().body(storeActorService.getAllActorsFromSeries(series_id));
     }

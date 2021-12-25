@@ -3,6 +3,7 @@ package nl.serkanertas.filmspringserver.controller;
 import nl.serkanertas.filmspringserver.service.models.PosterService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,11 +18,13 @@ public class PosterController {
     }
 
     @GetMapping("/films/{film_id}")
+    @PreAuthorize("hasRole(\"ROLE_USER\")")
     public ResponseEntity<Object> getPosterFilm(@PathVariable long film_id) {
         return ResponseEntity.ok(posterService.getPosterFilm(film_id));
     }
 
     @PutMapping("/films/{film_id}")
+    @PreAuthorize("hasRole(\"ROLE_ADMIN\")")
     public ResponseEntity<Object> uploadPosterFilm(@RequestParam("file") MultipartFile file,
                                                    @PathVariable long film_id) {
         try {
@@ -34,17 +37,20 @@ public class PosterController {
     }
 
     @DeleteMapping("/films/{film_id}")
-    public ResponseEntity<Object> deletePosterUser(@PathVariable long film_id) {
+    @PreAuthorize("hasRole(\"ROLE_ADMIN\")")
+    public ResponseEntity<Object> deletePosterFilm(@PathVariable long film_id) {
         posterService.deletePosterFilm(film_id);
         return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/series/{series_id}")
+    @PreAuthorize("hasRole(\"ROLE_USER\")")
     public ResponseEntity<Object> getPosterSeries(@PathVariable long series_id) {
         return ResponseEntity.ok(posterService.getPosterSeries(series_id));
     }
 
     @PutMapping("/series/{series_id}")
+    @PreAuthorize("hasRole(\"ROLE_ADMIN\")")
     public ResponseEntity<Object> uploadPosterSeries(@RequestParam("file") MultipartFile file,
                                                     @PathVariable long series_id) {
         try {
@@ -57,6 +63,7 @@ public class PosterController {
     }
 
     @DeleteMapping("/series/{series_id}")
+    @PreAuthorize("hasRole(\"ROLE_ADMIN\")")
     public ResponseEntity<Object> deletePosterSeries(@PathVariable long  series_id) {
         posterService.deletePosterSeries(series_id);
         return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);

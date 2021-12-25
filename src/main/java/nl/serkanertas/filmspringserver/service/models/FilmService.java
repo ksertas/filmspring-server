@@ -53,7 +53,7 @@ public class FilmService {
         return toReturnFilms;
     }
 
-    public Iterable<Film> getAllFilms() {
+    public Iterable<Film> getAllFilmEntities() {
         return filmRepository.findAll();
     }
 

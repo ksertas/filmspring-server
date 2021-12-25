@@ -27,12 +27,18 @@ public class FilmController {
         this.ratingService = ratingService;
     }
 
-    @PostMapping("/{film_id}/rate/{user_id}")
+    @PostMapping("/{film_id}/rating/{user_id}")
     ResponseEntity<Object> rateFilm(@PathVariable("film_id") long film_id,
                                     @PathVariable("user_id") String user_id,
                                     @Valid @RequestBody RatingDto ratingDto) {
         ratingService.addFilmRating(user_id, film_id, ratingDto);
         return ResponseEntity.ok().body("Rating: " + ratingDto.getRating());
+    }
+
+    @GetMapping("/{film_id}/rating/{user_id}")
+    ResponseEntity<Object> getFilmRating(@PathVariable("film_id") long film_id,
+                                         @PathVariable("user_id") String user_id) {
+        return ResponseEntity.ok().body(ratingService.getFilmRating(user_id, film_id));
     }
 
     @GetMapping("/{film_id}")

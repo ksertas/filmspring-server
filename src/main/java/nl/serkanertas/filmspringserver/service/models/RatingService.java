@@ -32,4 +32,11 @@ public class RatingService {
         ratingEntity.setRating(rating);
         ratingRepository.save(ratingEntity);
     }
+
+    public int getFilmRating(String user_id, long film_id) {
+        User user = userService.getUserEntity(user_id);
+        Film film = filmService.getFilmEntity(film_id);
+        Rating rating = ratingRepository.findRatingByFilmAndUsername(film, user);
+        return rating.getRating();
+    }
 }

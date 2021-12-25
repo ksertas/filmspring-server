@@ -13,6 +13,7 @@ public class Rating {
     @JoinColumn(name = "username")
     private User username;
 
+    @Column(name = "rating")
     private int rating;
 
     @ManyToOne

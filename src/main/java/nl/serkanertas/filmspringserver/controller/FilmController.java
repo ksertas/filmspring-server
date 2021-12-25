@@ -1,10 +1,15 @@
 package nl.serkanertas.filmspringserver.controller;
 
+import nl.serkanertas.filmspringserver.dto.request.RatingDto;
 import nl.serkanertas.filmspringserver.service.StoreActorService;
 import nl.serkanertas.filmspringserver.service.models.FilmService;
+import nl.serkanertas.filmspringserver.service.models.RatingService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/films")
@@ -12,11 +17,22 @@ public class FilmController {
 
     private final FilmService filmService;
     private final StoreActorService storeActorService;
+    private final RatingService ratingService;
 
     public FilmController(FilmService filmService,
-                          StoreActorService storeActorService) {
+                          StoreActorService storeActorService,
+                          @Lazy RatingService ratingService) {
         this.filmService = filmService;
         this.storeActorService = storeActorService;
+        this.ratingService = ratingService;
+    }
+
+    @PostMapping("/{film_id}/rate/{user_id}")
+    ResponseEntity<Object> rateFilm(@PathVariable("film_id") long film_id,
+                                    @PathVariable("user_id") String user_id,
+                                    @Valid @RequestBody RatingDto ratingDto) {
+        ratingService.addFilmRating(user_id, film_id, ratingDto);
+        return ResponseEntity.ok().body("Rating: " + ratingDto.getRating());
     }
 
     @GetMapping("/{film_id}")

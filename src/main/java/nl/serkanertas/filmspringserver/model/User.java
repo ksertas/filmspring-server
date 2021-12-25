@@ -1,5 +1,6 @@
 package nl.serkanertas.filmspringserver.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -76,6 +77,18 @@ public class User {
 
     public void setGroupInvitations(List<GroupInvitation> groupInvitations) {
         this.groupInvitations = groupInvitations;
+    }
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "rating", fetch = FetchType.LAZY)
+    private List<Rating> ratings;
+
+    public List<Rating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<Rating> ratings) {
+        this.ratings = ratings;
     }
 
     public String getUsername() {

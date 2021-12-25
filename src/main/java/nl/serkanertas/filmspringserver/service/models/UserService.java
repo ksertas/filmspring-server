@@ -46,21 +46,33 @@ public class UserService  {
         user.setAvatarUser(avatarService.setDefaultAvatarUser());
         user.addAuthority("ROLE_USER");
         userRepository.save(user);
-        System.out.println(userDto.getPassword());
-        System.out.println(bCryptPassword);
         return ("User " + userDto.getUsername() + " created");
 
     }
 
-    public void updateDetails(String user_id, UpdateUserDetailsRequest updateDetailsDto) {
+    public String updateDetails(String user_id, UpdateUserDetailsRequest updateDetailsDto) {
         User user = getUserEntity(user_id);
         if (!(updateDetailsDto.getEmail() == null)) {
             user.setEmail(updateDetailsDto.getEmail());
+        }
+        if (!(updateDetailsDto.getNewPassword() == null)) {
+            String currentPassHash = user.getPassword();
+            String oldPassRaw = updateDetailsDto.getOldPassword();
+            String newPassRaw = updateDetailsDto.getNewPassword();
+            if (passwordEncoder.matches(oldPassRaw, currentPassHash)) {
+                String bCryptPassword = passwordEncoder.encode(newPassRaw);
+                user.setPassword(bCryptPassword);
+                System.out.println("yes match");
+            } else {
+                System.out.println("No match");
+                return "Current password doesn't match";
+            }
         }
         // preference will be 'false' if not sent
         user.setMediaHidden(updateDetailsDto.isHideMediaPreference());
 
         userRepository.save(user);
+        return user_id;
     }
 
     public User getUserEntity(String user_id) {

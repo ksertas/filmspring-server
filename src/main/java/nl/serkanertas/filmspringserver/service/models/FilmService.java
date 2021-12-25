@@ -1,9 +1,11 @@
 package nl.serkanertas.filmspringserver.service.models;
 
+import nl.serkanertas.filmspringserver.dto.response.FilmGetRequest;
 import nl.serkanertas.filmspringserver.model.Actor;
 import nl.serkanertas.filmspringserver.model.Film;
 import nl.serkanertas.filmspringserver.repository.ActorRepository;
 import nl.serkanertas.filmspringserver.repository.FilmRepository;
+import nl.serkanertas.filmspringserver.service.EntityToDtoService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -17,16 +19,23 @@ public class FilmService {
     private final FilmRepository filmRepository;
     private final ActorRepository actorRepository;
 
+    private final EntityToDtoService entityToDtoService;
+
     public FilmService(UserService userService,
                        GroupService groupService,
                        FilmRepository filmRepository,
-                       ActorRepository actorRepository) {
+                       ActorRepository actorRepository,
+                       EntityToDtoService entityToDtoService) {
         this.userService = userService;
         this.groupService = groupService;
         this.filmRepository = filmRepository;
         this.actorRepository = actorRepository;
+        this.entityToDtoService = entityToDtoService;
     }
 
+    public FilmGetRequest getSearchedFilm(long film_id) {
+        return entityToDtoService.mapFilmToDto(film_id);
+    }
 
     public Film getFilmEntity(long film_id) { return filmRepository.findById(film_id).get(); }
 

@@ -8,7 +8,9 @@ import nl.serkanertas.filmspringserver.repository.GroupInvitationRepository;
 import nl.serkanertas.filmspringserver.repository.GroupRepository;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
 import nl.serkanertas.filmspringserver.service.EntityToDtoService;
+import nl.serkanertas.filmspringserver.service.PostAuthService;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -25,19 +27,22 @@ public class GroupService {
     private final UserService userService;
     private final AvatarService avatarService;
     private final EntityToDtoService entityToDtoService;
+    private final PostAuthService postAuthService;
 
     public GroupService(GroupRepository groupRepository,
                         UserRepository userRepository,
                         GroupInvitationRepository groupInvitationRepository,
                         UserService userService,
                         AvatarService avatarService,
-                        @Lazy EntityToDtoService entityToDtoService) {
+                        @Lazy EntityToDtoService entityToDtoService,
+                        @Lazy PostAuthService postAuthService) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
         this.groupInvitationRepository = groupInvitationRepository;
         this.userService = userService;
         this.avatarService = avatarService;
         this.entityToDtoService = entityToDtoService;
+        this.postAuthService = postAuthService;
     }
 
     public void createGroup(CreateGroupPostRequest groupDto) throws IOException {
@@ -59,6 +64,7 @@ public class GroupService {
     }
 
     @Transactional
+    @PreAuthorize("@postAuthService.isGroupOwner(#group_id)")
     public GroupGetRequest getGroup(long group_id) {
         return entityToDtoService.mapGroupToDto(group_id);
     }

@@ -2,12 +2,15 @@ package nl.serkanertas.filmspringserver.dto.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class CreateUserPostRequest {
 
+    // Username regex from https://stackoverflow.com/a/12019115
     @NotBlank
     @Size(min = 3, max = 32, message = "Username must be between 3 and 32 characters long.")
+    @Pattern(regexp = "^(?=.{3,32}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$")
     private String username;
 
     // Email regex from: http://emailregex.com/

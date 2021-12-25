@@ -4,6 +4,7 @@ import nl.serkanertas.filmspringserver.dto.request.UserAuthenticationRequestDto;
 import nl.serkanertas.filmspringserver.dto.response.UserAuthenticationResponseDto;
 import nl.serkanertas.filmspringserver.service.UserAuthenticateService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @PreAuthorize("hasRole(\"ROLE_ANONYMOUS\")")
     public ResponseEntity<Object> loginAndSendToken(@RequestBody UserAuthenticationRequestDto
                                                                 userAuthenticationRequestDto) {
         UserAuthenticationResponseDto userAuthenticationResponseDto =

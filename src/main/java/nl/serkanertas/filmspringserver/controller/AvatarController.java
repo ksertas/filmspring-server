@@ -3,6 +3,7 @@ package nl.serkanertas.filmspringserver.controller;
 import nl.serkanertas.filmspringserver.service.models.AvatarService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +25,7 @@ public class AvatarController {
     }
 
     @PutMapping("/users/{user_id}")
+    @PreAuthorize("@postAuthService.isVerified()")
     public ResponseEntity<Object> uploadAvatarUser(@RequestParam("file") MultipartFile file,
                                                @PathVariable String user_id) {
         try {
@@ -36,6 +38,7 @@ public class AvatarController {
     }
 
     @DeleteMapping("/users/{user_id}")
+    @PreAuthorize("@postAuthService.isVerified()")
     public ResponseEntity<Object> deleteAvatarUser(@PathVariable String user_id) {
         avatarService.deleteAvatarUser(user_id);
         return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
@@ -49,6 +52,7 @@ public class AvatarController {
     }
 
     @PutMapping("/groups/{group_id}")
+    @PreAuthorize("@postAuthService.isGroupOwner(#group_id)")
     public ResponseEntity<Object> uploadAvatarGroup(@RequestParam("file") MultipartFile file,
                                                @PathVariable long group_id) {
         try {
@@ -61,6 +65,7 @@ public class AvatarController {
     }
 
     @DeleteMapping("/groups/{group_id}")
+    @PreAuthorize("@postAuthService.isGroupOwner(#group_id)")
     public ResponseEntity<Object> deleteAvatarGroup(@PathVariable long group_id) {
         avatarService.deleteAvatarGroup(group_id);
         return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);

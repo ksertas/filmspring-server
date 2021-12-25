@@ -45,7 +45,6 @@ public class GroupService {
         this.postAuthService = postAuthService;
     }
 
-    @PreAuthorize("@postAuthService.isVerified()")
     public void createGroup(CreateGroupPostRequest groupDto) throws IOException {
         Group group = new Group();
         group.setName(groupDto.getGroupName());
@@ -65,19 +64,16 @@ public class GroupService {
     }
 
     @Transactional
-    @PreAuthorize("@postAuthService.isGroupOwner(#group_id)")
     public GroupGetRequest getGroup(long group_id) {
         return entityToDtoService.mapGroupToDto(group_id);
     }
 
     @Transactional
-    @PreAuthorize("hasRole(\"ROLE_ADMIN\")")
     public Group getGroupEntity(long group_id) {
         return groupRepository.findById(group_id).get();
     }
 
     @Transactional
-    @PreAuthorize("hasRole(\"ROLE_ADMIN\")")
     public List<GroupGetRequest> getAllGroups() {
         List<GroupGetRequest> groupDtos = new ArrayList<>();
         Iterable<Group> groups = groupRepository.findAll();
@@ -93,20 +89,20 @@ public class GroupService {
     }
 
     @Transactional
-    @PreAuthorize("@postAuthService.isGroupOwner(#group_id)")
     public void addUserToGroup(String user_id, long group_id) {
         User user = userService.getUserEntity(user_id);
         Group group = groupRepository.findById(group_id).get();
         group.getUsersInGroup().add(user);
+        user.addAuthority("ROLE_MEMBER-GROUP-" + group.getGroup_id());
         groupRepository.save(group);
     }
 
     @Transactional
-    @PreAuthorize("@postAuthService.isGroupOwner(#group_id)")
     public void removeUserFromGroup(String user_id, long group_id) {
         User user = userService.getUserEntity(user_id);
         Group group = groupRepository.findById(group_id).get();
         group.getUsersInGroup().remove(user);
+        user.removeAuthority("ROLE_MEMBER-GROUP-" + group.getGroup_id());
         groupRepository.save(group);
     }
 

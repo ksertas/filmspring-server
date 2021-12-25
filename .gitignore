@@ -36,3 +36,4 @@ build/
 /src/main/java/nl/serkanertas/filmspringserver/Todo.md
 /src/main/resources/application.properties
 /src/main/resources/data.sql
+/src/main/java/nl/serkanertas/filmspringserver/users.md

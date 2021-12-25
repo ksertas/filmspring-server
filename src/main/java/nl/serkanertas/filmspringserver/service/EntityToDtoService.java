@@ -35,13 +35,19 @@ public class EntityToDtoService {
     public SearchedUserGetRequest mapUserToSearchedUser(String user_id) {
         User user = userService.getUserEntity(user_id);
         SearchedUserGetRequest userDto = new SearchedUserGetRequest();
+
+//        List<FilmGetRequest> watchedFilms = new ArrayList<>();
+//        List<SeriesGetRequest> watchedSeries = new ArrayList<>();
+//        List<FilmGetRequest> plannedFilms = new ArrayList<>();
+//        List<SeriesGetRequest> plannedSeries = new ArrayList<>();
+
         userDto.setUsername(user.getUsername());
         userDto.setAvatar(user.getAvatarUser());
         if (!user.isMediaHidden()) {
-            userDto.setWatchedFilms(user.getWatchedFilms());
-            userDto.setWatchedSeries(user.getWatchedSeries());
-            userDto.setPlannedFilms(user.getPlannedFlms());
-            userDto.setPlannedSeries(user.getPlannedSeries());
+            userDto.setWatchedFilms(mapListOfFilmsToDto(user.getWatchedFilms()));
+            userDto.setWatchedSeries(mapListOfSeriesToDto(user.getWatchedSeries()));
+            userDto.setPlannedFilms(mapListOfFilmsToDto(user.getPlannedFlms()));
+            userDto.setPlannedSeries(mapListOfSeriesToDto(user.getPlannedSeries()));
         }
         userDto.setMediaHidden(user.isMediaHidden());
         return userDto;
@@ -109,6 +115,22 @@ public class EntityToDtoService {
         seriesDto.setGenre(series.getGenre());
         seriesDto.setActors(actorsList);
         return seriesDto;
+    }
+
+    public List<FilmGetRequest> mapListOfFilmsToDto(List<Film> films) {
+        List<FilmGetRequest> toReturnList = new ArrayList<>();
+        for (Film film : films) {
+            toReturnList.add(mapFilmToDto(film.getFilm_id()));
+        }
+        return toReturnList;
+    }
+
+    public List<SeriesGetRequest> mapListOfSeriesToDto(List<Series> series) {
+        List<SeriesGetRequest> toReturnList = new ArrayList<>();
+        for (Series singularSeries : series) {
+            toReturnList.add(mapSeriesToDto(singularSeries.getSeries_id()));
+        }
+        return toReturnList;
     }
 
 }

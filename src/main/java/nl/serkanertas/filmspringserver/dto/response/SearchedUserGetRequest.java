@@ -14,13 +14,13 @@ public class SearchedUserGetRequest {
 
     private boolean mediaHidden;
 
-    private List<Film> watchedFilms;
+    private List<FilmGetRequest> watchedFilms;
 
-    private List<Series> watchedSeries;
+    private List<SeriesGetRequest> watchedSeries;
 
-    private List<Film> plannedFilms;
+    private List<FilmGetRequest> plannedFilms;
 
-    private List<Series> plannedSeries;
+    private List<SeriesGetRequest> plannedSeries;
 
     public String getUsername() {
         return username;
@@ -46,35 +46,31 @@ public class SearchedUserGetRequest {
         this.mediaHidden = mediaHidden;
     }
 
-    public List<Film> getWatchedFilms() {
-        return watchedFilms;
-    }
-
-    public void setWatchedFilms(List<Film> watchedFilms) {
+    public void setWatchedFilms(List<FilmGetRequest> watchedFilms) {
         this.watchedFilms = watchedFilms;
     }
 
-    public List<Series> getWatchedSeries() {
+    public List<SeriesGetRequest> getWatchedSeries() {
         return watchedSeries;
     }
 
-    public void setWatchedSeries(List<Series> watchedSeries) {
+    public void setWatchedSeries(List<SeriesGetRequest> watchedSeries) {
         this.watchedSeries = watchedSeries;
     }
 
-    public List<Film> getPlannedFilms() {
+    public List<FilmGetRequest> getPlannedFilms() {
         return plannedFilms;
     }
 
-    public void setPlannedFilms(List<Film> plannedFilms) {
+    public void setPlannedFilms(List<FilmGetRequest> plannedFilms) {
         this.plannedFilms = plannedFilms;
     }
 
-    public List<Series> getPlannedSeries() {
+    public List<SeriesGetRequest> getPlannedSeries() {
         return plannedSeries;
     }
 
-    public void setPlannedSeries(List<Series> plannedSeries) {
+    public void setPlannedSeries(List<SeriesGetRequest> plannedSeries) {
         this.plannedSeries = plannedSeries;
     }
 }

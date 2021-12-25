@@ -81,14 +81,14 @@ public class User {
 
     @JsonIgnore
     @OneToMany(mappedBy = "rating", fetch = FetchType.LAZY)
-    private List<Rating> ratings;
+    private List<FilmRating> filmRatings;
 
-    public List<Rating> getRatings() {
-        return ratings;
+    public List<FilmRating> getRatings() {
+        return filmRatings;
     }
 
-    public void setRatings(List<Rating> ratings) {
-        this.ratings = ratings;
+    public void setRatings(List<FilmRating> filmRatings) {
+        this.filmRatings = filmRatings;
     }
 
     public String getUsername() {

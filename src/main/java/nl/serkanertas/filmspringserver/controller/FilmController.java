@@ -3,7 +3,7 @@ package nl.serkanertas.filmspringserver.controller;
 import nl.serkanertas.filmspringserver.dto.request.RatingDto;
 import nl.serkanertas.filmspringserver.service.StoreActorService;
 import nl.serkanertas.filmspringserver.service.models.FilmService;
-import nl.serkanertas.filmspringserver.service.models.RatingService;
+import nl.serkanertas.filmspringserver.service.models.FilmRatingService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,34 +17,15 @@ public class FilmController {
 
     private final FilmService filmService;
     private final StoreActorService storeActorService;
-    private final RatingService ratingService;
+    private final FilmRatingService filmRatingService;
 
     public FilmController(FilmService filmService,
                           StoreActorService storeActorService,
-                          @Lazy RatingService ratingService) {
+                          @Lazy FilmRatingService filmRatingService) {
         this.filmService = filmService;
         this.storeActorService = storeActorService;
-        this.ratingService = ratingService;
+        this.filmRatingService = filmRatingService;
     }
-
-    @GetMapping("/{film_id}/rating/{user_id}")
-    @PreAuthorize("@postAuthService.isCurrentUser(#user_id)")
-    ResponseEntity<Object> getFilmRating(@PathVariable("film_id") long film_id,
-                                         @PathVariable("user_id") String user_id) {
-        return ResponseEntity.ok().body(ratingService.getFilmRating(user_id, film_id));
-    }
-
-    @PutMapping("/{film_id}/rating/{user_id}")
-    @PreAuthorize("@postAuthService.userHasWatchedFilm(#user_id, #film_id) and " +
-            "@postAuthService.isCurrentUser(#user_id)")
-    ResponseEntity<Object> rateWatchedFilm(@PathVariable("film_id") long film_id,
-                                    @PathVariable("user_id") String user_id,
-                                    @Valid @RequestBody RatingDto ratingDto) {
-        ratingService.updateFilmRating(user_id, film_id, ratingDto);
-        return ResponseEntity.ok().body("Rating: " + ratingDto.getRating());
-    }
-
-
 
     @GetMapping("/{film_id}")
     @PreAuthorize("hasRole(\"ROLE_USER\")")
@@ -58,9 +39,26 @@ public class FilmController {
         return ResponseEntity.ok().body(filmService.getSearchedFilms(query));
     }
 
+    @GetMapping("/{film_id}/rating/{user_id}")
+    @PreAuthorize("@postAuthService.isCurrentUser(#user_id)")
+    ResponseEntity<Object> getFilmRating(@PathVariable("film_id") long film_id,
+                                         @PathVariable("user_id") String user_id) {
+        return ResponseEntity.ok().body(filmRatingService.getFilmRating(user_id, film_id));
+    }
+
+    @PutMapping("/{film_id}/rating/{user_id}")
+    @PreAuthorize("@postAuthService.userHasWatchedFilm(#user_id, #film_id) and " +
+            "@postAuthService.isCurrentUser(#user_id)")
+    ResponseEntity<Object> rateWatchedFilm(@PathVariable("film_id") long film_id,
+                                           @PathVariable("user_id") String user_id,
+                                           @Valid @RequestBody RatingDto ratingDto) {
+        filmRatingService.updateFilmRating(user_id, film_id, ratingDto);
+        return ResponseEntity.ok().body("Rating: " + ratingDto.getRating());
+    }
+
     @GetMapping("/raw")
     @PreAuthorize("hasRole(\"ROLE_ADMIN\")")
-    ResponseEntity<Object> getAllFilms() {
+    ResponseEntity<Object> getAllFilmEntities() {
         return ResponseEntity.ok().body(filmService.getAllFilmEntities());
     }
 

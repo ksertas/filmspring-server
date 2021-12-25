@@ -3,8 +3,8 @@ package nl.serkanertas.filmspringserver.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ratings")
-public class Rating {
+@Table(name = "film_ratings")
+public class FilmRating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long rating_id;

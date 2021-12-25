@@ -79,26 +79,15 @@ public class Film {
 
     @JsonIgnore
     @OneToMany(mappedBy = "rating", fetch = FetchType.LAZY)
-    private List<Rating> ratings;
+    private List<FilmRating> filmRatings;
 
-//    @Column(name = "rating")
-//    private int rating;
-
-    public List<Rating> getRatings() {
-        return ratings;
+    public List<FilmRating> getRatings() {
+        return filmRatings;
     }
 
-    public void setRatings(List<Rating> ratings) {
-        this.ratings = ratings;
+    public void setRatings(List<FilmRating> filmRatings) {
+        this.filmRatings = filmRatings;
     }
-
-//    public int getRating() {
-//        return rating;
-//    }
-//
-//    public void setRating(int rating) {
-//        this.rating = rating;
-//    }
 
     public long getFilm_id() {
         return film_id;

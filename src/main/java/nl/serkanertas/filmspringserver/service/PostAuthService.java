@@ -1,12 +1,7 @@
 package nl.serkanertas.filmspringserver.service;
 
-import nl.serkanertas.filmspringserver.model.Film;
-import nl.serkanertas.filmspringserver.model.Rating;
-import nl.serkanertas.filmspringserver.model.User;
-import nl.serkanertas.filmspringserver.service.models.FilmService;
-import nl.serkanertas.filmspringserver.service.models.RatingService;
-import nl.serkanertas.filmspringserver.service.models.SeriesService;
-import nl.serkanertas.filmspringserver.service.models.UserService;
+import nl.serkanertas.filmspringserver.model.*;
+import nl.serkanertas.filmspringserver.service.models.*;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,16 +16,19 @@ public class PostAuthService {
     private final UserService userService;
     private final FilmService filmService;
     private final SeriesService seriesService;
-    private final RatingService ratingService;
+    private final FilmRatingService filmRatingService;
+    private final SeriesRatingService seriesRatingService;
 
     public PostAuthService(@Lazy UserService userService,
                            @Lazy FilmService filmService,
                            @Lazy SeriesService seriesService,
-                           @Lazy RatingService ratingService) {
+                           @Lazy FilmRatingService filmRatingService,
+                           @Lazy SeriesRatingService seriesRatingService) {
         this.userService = userService;
         this.filmService = filmService;
         this.seriesService = seriesService;
-        this.ratingService = ratingService;
+        this.filmRatingService = filmRatingService;
+        this.seriesRatingService = seriesRatingService;
     }
 
     public boolean isGroupOwner(long group_id) {
@@ -74,12 +72,13 @@ public class PostAuthService {
     public boolean userHasWatchedFilm(String user_id, long film_id) {
         User user = userService.getUserEntity(user_id);
         Film film = filmService.getFilmEntity(film_id);
-        Rating rating = ratingService.getFilmRatingEntity(user_id, film_id);
-        if (user.getWatchedFilms().contains(film)) {
-            return true;
-        } else {
-            return false;
-        }
+        return user.getWatchedFilms().contains(film);
+    }
+
+    public boolean userHasWatchedSeries(String user_id, long series_id) {
+        User user = userService.getUserEntity(user_id);
+        Series series = seriesService.getSeriesEntity(series_id);
+        return user.getWatchedSeries().contains(series);
     }
 
 }

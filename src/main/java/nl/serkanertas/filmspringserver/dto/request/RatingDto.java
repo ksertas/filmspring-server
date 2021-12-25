@@ -4,7 +4,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 public class RatingDto {
-    @Min(0)
+    @Min(1)
     @Max(5)
     private int rating;
 

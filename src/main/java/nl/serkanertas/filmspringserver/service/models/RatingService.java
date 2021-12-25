@@ -34,9 +34,28 @@ public class RatingService {
     }
 
     public int getFilmRating(String user_id, long film_id) {
+        Rating rating = getFilmRatingEntity(user_id, film_id);
+        if (rating != null) {
+            return rating.getRating();
+        }
+        return 0;
+    }
+
+    public Rating getFilmRatingEntity(String user_id, long film_id) {
         User user = userService.getUserEntity(user_id);
         Film film = filmService.getFilmEntity(film_id);
-        Rating rating = ratingRepository.findRatingByFilmAndUsername(film, user);
+        return ratingRepository.findRatingByFilmAndUsername(film, user);
+    }
+
+    public void deleteFilmRating(String user_id, long film_id) {
+        Rating rating = getFilmRatingEntity(user_id, film_id);
+        ratingRepository.delete(rating);
+    }
+
+    public int updateFilmRating(String user_id, long film_id, RatingDto ratingDto) {
+        Rating rating = getFilmRatingEntity(user_id, film_id);
+        rating.setRating(ratingDto.getRating());
+        ratingRepository.save(rating);
         return rating.getRating();
     }
 }

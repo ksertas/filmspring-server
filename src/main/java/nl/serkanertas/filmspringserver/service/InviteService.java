@@ -1,10 +1,12 @@
 package nl.serkanertas.filmspringserver.service;
 
+import nl.serkanertas.filmspringserver.model.Authority;
 import nl.serkanertas.filmspringserver.model.GroupInvitation;
 import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.service.models.GroupInvitationService;
 import nl.serkanertas.filmspringserver.service.models.GroupService;
 import nl.serkanertas.filmspringserver.service.models.UserService;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -27,47 +29,24 @@ public class InviteService {
     @Transactional
     public void inviteUser(String user_id, long group_id) {
         User user = userService.getUserEntity(user_id);
-        GroupInvitation groupInvitation = new GroupInvitation();
-        groupInvitation.setGroup_id(group_id);
-        groupInvitationService.saveGroupInvitationEntity(groupInvitation);
-        user.getGroupInvitations().add(groupInvitation);
+        user.addAuthority("ROLE_INVITED-" + group_id);
         userService.saveUserEntity(user);
     }
 
     @Transactional
     public void acceptInvite(String user_id, long group_id) {
         User user = userService.getUserEntity(user_id);
-        boolean isAdded = false;
-        GroupInvitation foundGroup = null;
-
-        for (GroupInvitation group : user.getGroupInvitations()) {
-            if (group.getGroup_id() == group_id) {
-                groupService.addUserToGroup(user_id, group_id);
-                userService.saveUserEntity(user);
-                // needed to avoid ConcurrentModificationException
-                isAdded = true;
-                foundGroup = group;
-                break;
-            }
-        }
-        if (isAdded) {
-            user.getGroupInvitations().remove(foundGroup);
-            groupInvitationService.deleteGroupInvitationEntity(foundGroup.getInvite_id());
-        }
+        String searchInviteRole = "ROLE_INVITED-" + group_id;
+        groupService.addUserToGroup(user_id, group_id);
+        user.removeAuthority(searchInviteRole);
+        userService.saveUserEntity(user);
     }
 
     @Transactional
     public void rejectInvite(String user_id, long group_id) {
         User user = userService.getUserEntity(user_id);
-
-        for (GroupInvitation group : user.getGroupInvitations()) {
-            if (group.getGroup_id() == group_id) {
-                GroupInvitation foundGroup = group;
-                user.getGroupInvitations().remove(foundGroup);
-                groupInvitationService.deleteGroupInvitationEntity(foundGroup.getInvite_id());
-                System.out.println("Removed invite successfully");
-                break;
-            }
-        }
+        String searchInviteRole = "ROLE_INVITED-" + group_id;
+        user.removeAuthority(searchInviteRole);
+        userService.saveUserEntity(user);
     }
 }

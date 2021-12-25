@@ -86,7 +86,7 @@ public class GroupController {
     }
 
     @PutMapping("/{group_id}/invite/{user_id}/accept")
-    @PreAuthorize("hasRole(\"ROLE_USER\")")
+    @PreAuthorize("@postAuthService.currentUserIsInvited(#group_id)")
     ResponseEntity<Object> acceptInviteToGroup(@PathVariable("user_id") String user_id,
                                         @PathVariable("group_id") long group_id) {
         inviteService.acceptInvite(user_id, group_id);
@@ -95,7 +95,7 @@ public class GroupController {
 
     // TODO: preauthorize user with INVITED-id role
     @DeleteMapping("/{group_id}/invite/{user_id}/reject")
-    @PreAuthorize("hasRole(\"ROLE_USER\")")
+    @PreAuthorize("@postAuthService.currentUserIsInvited(#group_id)")
     ResponseEntity<Object> rejectInviteToGroup(@PathVariable("user_id") String user_id,
                                                @PathVariable("group_id") long group_id) {
         inviteService.rejectInvite(user_id, group_id);

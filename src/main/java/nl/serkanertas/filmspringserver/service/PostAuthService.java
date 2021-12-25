@@ -1,6 +1,5 @@
 package nl.serkanertas.filmspringserver.service;
 
-import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.service.models.UserService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -33,8 +32,15 @@ public class PostAuthService {
         String ownerGroupAuthority = "ROLE_MEMBER-GROUP-";
         String groupIdPart = String.valueOf(group_id);
         String completeGroupAuthority = ownerGroupAuthority.concat(groupIdPart);
-        System.out.println();
-        System.out.println("BOOLEAN: " + userAuthorities.contains(new SimpleGrantedAuthority(completeGroupAuthority)));
+        return userAuthorities.contains(new SimpleGrantedAuthority(completeGroupAuthority));
+    }
+
+    public boolean currentUserIsInvited(long group_id) {
+        Collection<? extends GrantedAuthority> userAuthorities = SecurityContextHolder.getContext().
+                getAuthentication().getAuthorities();
+        String ownerGroupAuthority = "ROLE_INVITED-";
+        String groupIdPart = String.valueOf(group_id);
+        String completeGroupAuthority = ownerGroupAuthority.concat(groupIdPart);
         return userAuthorities.contains(new SimpleGrantedAuthority(completeGroupAuthority));
     }
 

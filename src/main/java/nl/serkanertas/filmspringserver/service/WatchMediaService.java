@@ -1,11 +1,11 @@
 package nl.serkanertas.filmspringserver.service;
 
+import nl.serkanertas.filmspringserver.dto.request.RatingDto;
 import nl.serkanertas.filmspringserver.model.Film;
 import nl.serkanertas.filmspringserver.model.Series;
 import nl.serkanertas.filmspringserver.model.User;
-import nl.serkanertas.filmspringserver.service.models.FilmService;
-import nl.serkanertas.filmspringserver.service.models.SeriesService;
-import nl.serkanertas.filmspringserver.service.models.UserService;
+import nl.serkanertas.filmspringserver.service.models.*;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,13 +16,19 @@ public class WatchMediaService {
     private final UserService userService;
     private final FilmService filmService;
     private final SeriesService seriesService;
+    private final FilmRatingService filmRatingService;
+    private final SeriesRatingService seriesRatingService;
 
     public WatchMediaService(UserService userService,
                              FilmService filmService,
-                             SeriesService seriesService) {
+                             SeriesService seriesService,
+                             @Lazy FilmRatingService filmRatingService,
+                             @Lazy SeriesRatingService seriesRatingService) {
         this.userService = userService;
         this.filmService = filmService;
         this.seriesService = seriesService;
+        this.filmRatingService = filmRatingService;
+        this.seriesRatingService = seriesRatingService;
     }
 
 //    Users
@@ -33,6 +39,9 @@ public class WatchMediaService {
         Film film = filmService.getFilmEntity(film_id);
         film.getUsersWatchedFilm().add(user);
         filmService.saveFilmEntity(film);
+        RatingDto ratingDto = new RatingDto();
+        ratingDto.setRating(0);
+        filmRatingService.addFilmRating(user_id, film_id, ratingDto);
     }
 
     @Transactional
@@ -41,6 +50,7 @@ public class WatchMediaService {
         Film film = filmService.getFilmEntity(film_id);
         film.getUsersWatchedFilm().remove(user);
         filmService.saveFilmEntity(film);
+        filmRatingService.deleteFilmRating(user_id, film_id);
     }
 
     @Transactional
@@ -49,6 +59,9 @@ public class WatchMediaService {
         Series series = seriesService.getSeriesEntity(series_id);
         series.getUsersWatchedSeries().add(user);
         seriesService.saveSeriesEntity(series);
+        RatingDto ratingDto = new RatingDto();
+        ratingDto.setRating(0);
+        seriesRatingService.addSeriesRating(user_id, series_id, ratingDto);
     }
 
     @Transactional
@@ -57,5 +70,6 @@ public class WatchMediaService {
         Series series = seriesService.getSeriesEntity(series_id);
         series.getUsersWatchedSeries().remove(user);
         seriesService.saveSeriesEntity(series);
+        seriesRatingService.deleteSeriesRating(user_id, series_id);
     }
 }

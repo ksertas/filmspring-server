@@ -77,6 +77,18 @@ public class Film {
     )
     private List<Group> groupPlannedFilm = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "rating", fetch = FetchType.LAZY)
+    private List<FilmRating> filmRatings;
+
+    public List<FilmRating> getRatings() {
+        return filmRatings;
+    }
+
+    public void setRatings(List<FilmRating> filmRatings) {
+        this.filmRatings = filmRatings;
+    }
+
     public long getFilm_id() {
         return film_id;
     }

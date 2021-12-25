@@ -46,7 +46,7 @@ public class SeriesService {
         seriesRepository.save(series);
     }
 
-    public Iterable<Series> getAllSeries() { return seriesRepository.findAll(); }
+    public Iterable<Series> getAllSeriesEntities() { return seriesRepository.findAll(); }
 
     @Transactional
     public List<Series> getSearchedSeries(String query) {

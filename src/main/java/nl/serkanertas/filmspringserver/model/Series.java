@@ -80,6 +80,10 @@ public class Series {
             inverseJoinColumns = {@JoinColumn(name = "poster_id", referencedColumnName = "poster_id")})
     private Poster posterSeries;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "rating", fetch = FetchType.LAZY)
+    private List<SeriesRating> seriesRatings;
+
     public long getSeries_id() {
         return series_id;
     }
@@ -190,5 +194,13 @@ public class Series {
 
     public void setPosterSeries(Poster posterSeries) {
         this.posterSeries = posterSeries;
+    }
+
+    public List<SeriesRating> getSeriesRatings() {
+        return seriesRatings;
+    }
+
+    public void setSeriesRatings(List<SeriesRating> seriesRatings) {
+        this.seriesRatings = seriesRatings;
     }
 }

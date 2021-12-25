@@ -35,12 +35,6 @@ public class EntityToDtoService {
     public SearchedUserGetRequest mapUserToSearchedUser(String user_id) {
         User user = userService.getUserEntity(user_id);
         SearchedUserGetRequest userDto = new SearchedUserGetRequest();
-
-//        List<FilmGetRequest> watchedFilms = new ArrayList<>();
-//        List<SeriesGetRequest> watchedSeries = new ArrayList<>();
-//        List<FilmGetRequest> plannedFilms = new ArrayList<>();
-//        List<SeriesGetRequest> plannedSeries = new ArrayList<>();
-
         userDto.setUsername(user.getUsername());
         userDto.setAvatar(user.getAvatarUser());
         if (!user.isMediaHidden()) {

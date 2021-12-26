@@ -1,5 +1,6 @@
 package nl.serkanertas.filmspringserver.controller;
 
+import nl.serkanertas.filmspringserver.service.FavoriteMediaService;
 import nl.serkanertas.filmspringserver.service.PlanMediaService;
 import nl.serkanertas.filmspringserver.service.WatchMediaService;
 import org.springframework.http.ResponseEntity;
@@ -12,16 +13,18 @@ public class MediaUsersController {
 
     private final WatchMediaService watchMediaService;
     private final PlanMediaService planMediaService;
+    private final FavoriteMediaService favoriteMediaService;
 
     public MediaUsersController(WatchMediaService watchMediaService,
-                                 PlanMediaService planMediaService) {
+                                 PlanMediaService planMediaService,
+                                FavoriteMediaService favoriteMediaService) {
         this.watchMediaService = watchMediaService;
         this.planMediaService = planMediaService;
+        this.favoriteMediaService = favoriteMediaService;
     }
 
     // films
 
-    // {user_id} will be replaced with current user from security context
     @PutMapping("/{user_id}/films/watched/{film_id}")
     @PreAuthorize("@postAuthService.isCurrentUser(#user_id)")
     ResponseEntity<Object> addFilmToWatched(@PathVariable("user_id") String user_id,
@@ -52,6 +55,22 @@ public class MediaUsersController {
                                                  @PathVariable("film_id") long film_id) {
         planMediaService.deleteFilmFromPlanned(user_id, film_id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{user_id}/films/favorites/{film_id}")
+    @PreAuthorize("@postAuthService.userHasWatchedFilm(#user_id, #film_id)")
+    ResponseEntity<Object> addFilmToFavorites(@PathVariable("user_id") String user_id,
+                                              @PathVariable("film_id") long film_id) {
+        favoriteMediaService.storeFilmToFavorites(user_id, film_id);
+        return ResponseEntity.ok().body("Film added to favorites");
+    }
+
+    @DeleteMapping("/{user_id}/films/favorites/{film_id}")
+    @PreAuthorize("@postAuthService.userHasWatchedFilm(#user_id, #film_id)")
+    ResponseEntity<Object> removeFilmToFavorites(@PathVariable("user_id") String user_id,
+                                              @PathVariable("film_id") long film_id) {
+        favoriteMediaService.deleteFilmFromFavorites(user_id, film_id);
+        return ResponseEntity.ok().body("Film removed from favorites");
     }
 
     // series
@@ -88,6 +107,20 @@ public class MediaUsersController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{user_id}/series/favorites/{series_id}")
+    @PreAuthorize("@postAuthService.userHasWatchedSeries(#user_id, #series_id)")
+    ResponseEntity<Object> addSeriesToFavorites(@PathVariable("user_id") String user_id,
+                                              @PathVariable("series_id") long series_id) {
+        favoriteMediaService.storeSeriesToFavorites(user_id, series_id);
+        return ResponseEntity.ok().body("Series added to favorites");
+    }
 
+    @DeleteMapping("/{user_id}/series/favorites/{series_id}")
+    @PreAuthorize("@postAuthService.userHasWatchedSeries(#user_id, #series_id)")
+    ResponseEntity<Object> removeSeriesToFavorites(@PathVariable("user_id") String user_id,
+                                                 @PathVariable("series_id") long series_id) {
+        favoriteMediaService.deleteSeriesFromFavorites(user_id, series_id);
+        return ResponseEntity.ok().body("Series removed from favorites");
+    }
 
 }

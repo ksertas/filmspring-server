@@ -64,6 +64,14 @@ public class User {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Series> plannedSeries = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "usersFavoriteFilm")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Film> favoriteFilms = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "usersFavoriteSeries")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Series> favoriteSeries = new ArrayList<>();
+
     @ManyToMany(mappedBy = "usersInGroup")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Group> groupsUserIsIn = new ArrayList<>();
@@ -178,6 +186,22 @@ public class User {
 
     public List<Series> getWatchedSeries() {
         return watchedSeries;
+    }
+
+    public List<Film> getFavoriteFilms() {
+        return favoriteFilms;
+    }
+
+    public void setFavoriteFilms(List<Film> favoriteFilms) {
+        this.favoriteFilms = favoriteFilms;
+    }
+
+    public List<Series> getFavoriteSeries() {
+        return favoriteSeries;
+    }
+
+    public void setFavoriteSeries(List<Series> favoriteSeries) {
+        this.favoriteSeries = favoriteSeries;
     }
 
     public void setWatchedSeries(List<Series> watchedSeries) {

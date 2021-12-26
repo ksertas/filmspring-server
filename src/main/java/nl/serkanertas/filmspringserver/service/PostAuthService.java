@@ -16,19 +16,18 @@ public class PostAuthService {
     private final UserService userService;
     private final FilmService filmService;
     private final SeriesService seriesService;
-    private final FilmRatingService filmRatingService;
-    private final SeriesRatingService seriesRatingService;
 
     public PostAuthService(@Lazy UserService userService,
                            @Lazy FilmService filmService,
-                           @Lazy SeriesService seriesService,
-                           @Lazy FilmRatingService filmRatingService,
-                           @Lazy SeriesRatingService seriesRatingService) {
+                           @Lazy SeriesService seriesService) {
         this.userService = userService;
         this.filmService = filmService;
         this.seriesService = seriesService;
-        this.filmRatingService = filmRatingService;
-        this.seriesRatingService = seriesRatingService;
+    }
+
+    public boolean isCurrentUser(String user_id) {
+        return SecurityContextHolder.getContext().getAuthentication()
+                .getName().equals(user_id);
     }
 
     public boolean isGroupOwner(long group_id) {
@@ -64,21 +63,23 @@ public class PostAuthService {
         return userService.getUserEntity(currentUserName).isVerified();
     }
 
-    public boolean isCurrentUser(String user_id) {
-        return SecurityContextHolder.getContext().getAuthentication()
-                .getName().equals(user_id);
+    public boolean isVerified(String user_id) {
+        String currentUserName = SecurityContextHolder.getContext()
+                .getAuthentication().getName();
+        return userService.getUserEntity(currentUserName).isVerified() &&
+                isCurrentUser(user_id);
     }
 
     public boolean userHasWatchedFilm(String user_id, long film_id) {
         User user = userService.getUserEntity(user_id);
         Film film = filmService.getFilmEntity(film_id);
-        return user.getWatchedFilms().contains(film);
+        return user.getWatchedFilms().contains(film) && isCurrentUser(user_id);
     }
 
     public boolean userHasWatchedSeries(String user_id, long series_id) {
         User user = userService.getUserEntity(user_id);
         Series series = seriesService.getSeriesEntity(series_id);
-        return user.getWatchedSeries().contains(series);
+        return user.getWatchedSeries().contains(series) && isCurrentUser(user_id);
     }
 
 }

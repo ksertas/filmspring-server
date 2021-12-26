@@ -22,6 +22,10 @@ public class SearchedUserGetRequest {
 
     private List<SeriesGetRequest> plannedSeries;
 
+    private List<FilmGetRequest> favoriteFilms;
+
+    private List<SeriesGetRequest> favoriteSeries;
+
     public String getUsername() {
         return username;
     }
@@ -44,6 +48,10 @@ public class SearchedUserGetRequest {
 
     public void setMediaHidden(boolean mediaHidden) {
         this.mediaHidden = mediaHidden;
+    }
+
+    public List<FilmGetRequest> getWatchedFilms() {
+        return watchedFilms;
     }
 
     public void setWatchedFilms(List<FilmGetRequest> watchedFilms) {
@@ -72,5 +80,21 @@ public class SearchedUserGetRequest {
 
     public void setPlannedSeries(List<SeriesGetRequest> plannedSeries) {
         this.plannedSeries = plannedSeries;
+    }
+
+    public List<FilmGetRequest> getFavoriteFilms() {
+        return favoriteFilms;
+    }
+
+    public void setFavoriteFilms(List<FilmGetRequest> favoriteFilms) {
+        this.favoriteFilms = favoriteFilms;
+    }
+
+    public List<SeriesGetRequest> getFavoriteSeries() {
+        return favoriteSeries;
+    }
+
+    public void setFavoriteSeries(List<SeriesGetRequest> favoriteSeries) {
+        this.favoriteSeries = favoriteSeries;
     }
 }

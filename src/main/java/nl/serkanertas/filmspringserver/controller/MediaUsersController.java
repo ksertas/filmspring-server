@@ -58,6 +58,7 @@ public class MediaUsersController {
     }
 
     @PutMapping("/{user_id}/films/favorites/{film_id}")
+    @PreAuthorize("@postAuthService.userHasWatchedFilm(#user_id, #film_id)")
     ResponseEntity<Object> addFilmToFavorites(@PathVariable("user_id") String user_id,
                                               @PathVariable("film_id") long film_id) {
         favoriteMediaService.storeFilmToFavorites(user_id, film_id);
@@ -65,6 +66,7 @@ public class MediaUsersController {
     }
 
     @DeleteMapping("/{user_id}/films/favorites/{film_id}")
+    @PreAuthorize("@postAuthService.userHasWatchedFilm(#user_id, #film_id)")
     ResponseEntity<Object> removeFilmToFavorites(@PathVariable("user_id") String user_id,
                                               @PathVariable("film_id") long film_id) {
         favoriteMediaService.deleteFilmFromFavorites(user_id, film_id);
@@ -106,6 +108,7 @@ public class MediaUsersController {
     }
 
     @PutMapping("/{user_id}/series/favorites/{series_id}")
+    @PreAuthorize("@postAuthService.userHasWatchedSeries(#user_id, #series_id)")
     ResponseEntity<Object> addSeriesToFavorites(@PathVariable("user_id") String user_id,
                                               @PathVariable("series_id") long series_id) {
         favoriteMediaService.storeSeriesToFavorites(user_id, series_id);
@@ -113,6 +116,7 @@ public class MediaUsersController {
     }
 
     @DeleteMapping("/{user_id}/series/favorites/{series_id}")
+    @PreAuthorize("@postAuthService.userHasWatchedSeries(#user_id, #series_id)")
     ResponseEntity<Object> removeSeriesToFavorites(@PathVariable("user_id") String user_id,
                                                  @PathVariable("series_id") long series_id) {
         favoriteMediaService.deleteSeriesFromFavorites(user_id, series_id);

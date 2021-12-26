@@ -25,7 +25,7 @@ public class AvatarController {
     }
 
     @PutMapping("/users/{user_id}")
-    @PreAuthorize("@postAuthService.isVerified()")
+    @PreAuthorize("@postAuthService.isVerified(#user_id)")
     public ResponseEntity<Object> uploadAvatarUser(@RequestParam("file") MultipartFile file,
                                                @PathVariable String user_id) {
         try {
@@ -38,7 +38,7 @@ public class AvatarController {
     }
 
     @DeleteMapping("/users/{user_id}")
-    @PreAuthorize("@postAuthService.isVerified()")
+    @PreAuthorize("@postAuthService.isVerified(#user_id)")
     public ResponseEntity<Object> deleteAvatarUser(@PathVariable String user_id) {
         avatarService.deleteAvatarUser(user_id);
         return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);

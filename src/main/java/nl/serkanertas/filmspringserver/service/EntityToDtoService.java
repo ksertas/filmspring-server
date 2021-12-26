@@ -6,6 +6,7 @@ import nl.serkanertas.filmspringserver.service.models.*;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,26 @@ public class EntityToDtoService {
 
     //    Users
 
+    @Transactional
+    public CurrentUserGetRequest mapUserToCurrentUser(String user_id) {
+        User user = userService.getUserEntity(user_id);
+        CurrentUserGetRequest userDto = new CurrentUserGetRequest();
+        userDto.setUsername(user.getUsername());
+        userDto.setAvatar(user.getAvatarUser());
+        userDto.setEmail(user.getEmail());
+        userDto.setEnabled(user.isEnabled());
+        userDto.setVerified(user.isVerified());
+        userDto.setGroupsUserIsIn(mapListOfGroupsToDto(user.getGroupsUserIsIn()));
+        userDto.setHideMediaFromOthers(user.isMediaHidden());
+        userDto.setWatchedFilms(mapListOfFilmsToDto(user.getWatchedFilms()));
+        userDto.setPlannedFilms(mapListOfFilmsToDto(user.getPlannedFlms()));
+        userDto.setWatchedSeries(mapListOfSeriesToDto(user.getWatchedSeries()));
+        userDto.setPlannedSeries(mapListOfSeriesToDto(user.getPlannedSeries()));
+        userDto.setFavoriteFilms(mapListOfFilmsToDto(user.getFavoriteFilms()));
+        userDto.setFavoriteSeries(mapListOfSeriesToDto(user.getFavoriteSeries()));
+        return userDto;
+    }
+
     public SearchedUserGetRequest mapUserToSearchedUser(String user_id) {
         User user = userService.getUserEntity(user_id);
         SearchedUserGetRequest userDto = new SearchedUserGetRequest();
@@ -39,8 +60,8 @@ public class EntityToDtoService {
         userDto.setAvatar(user.getAvatarUser());
         if (!user.isMediaHidden()) {
             userDto.setWatchedFilms(mapListOfFilmsToDto(user.getWatchedFilms()));
-            userDto.setWatchedSeries(mapListOfSeriesToDto(user.getWatchedSeries()));
             userDto.setPlannedFilms(mapListOfFilmsToDto(user.getPlannedFlms()));
+            userDto.setWatchedSeries(mapListOfSeriesToDto(user.getWatchedSeries()));
             userDto.setPlannedSeries(mapListOfSeriesToDto(user.getPlannedSeries()));
             userDto.setFavoriteFilms(mapListOfFilmsToDto(user.getFavoriteFilms()));
             userDto.setFavoriteSeries(mapListOfSeriesToDto(user.getFavoriteSeries()));
@@ -125,6 +146,14 @@ public class EntityToDtoService {
         List<SeriesGetRequest> toReturnList = new ArrayList<>();
         for (Series singularSeries : series) {
             toReturnList.add(mapSeriesToDto(singularSeries.getSeries_id()));
+        }
+        return toReturnList;
+    }
+
+    public List<GroupGetRequest> mapListOfGroupsToDto(List<Group> groups) {
+        List<GroupGetRequest> toReturnList = new ArrayList<>();
+        for (Group group : groups) {
+            toReturnList.add(mapGroupToDto(group.getGroup_id()));
         }
         return toReturnList;
     }

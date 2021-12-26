@@ -2,6 +2,7 @@ package nl.serkanertas.filmspringserver.service.models;
 
 import nl.serkanertas.filmspringserver.dto.request.CreateUserPostRequest;
 import nl.serkanertas.filmspringserver.dto.request.UpdateUserDetailsRequest;
+import nl.serkanertas.filmspringserver.dto.response.CurrentUserGetRequest;
 import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
 import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
@@ -81,6 +82,10 @@ public class UserService  {
 
     public void saveUserEntity(User user) {
         userRepository.save(user);
+    }
+
+    public CurrentUserGetRequest getCurrentUser(String user_id) {
+        return entityToDtoService.mapUserToCurrentUser(user_id);
     }
 
     public SearchedUserGetRequest getSearchedUser(String user_id) {

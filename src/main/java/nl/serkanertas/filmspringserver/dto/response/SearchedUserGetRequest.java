@@ -46,6 +46,10 @@ public class SearchedUserGetRequest {
         this.mediaHidden = mediaHidden;
     }
 
+    public List<FilmGetRequest> getWatchedFilms() {
+        return watchedFilms;
+    }
+
     public void setWatchedFilms(List<FilmGetRequest> watchedFilms) {
         this.watchedFilms = watchedFilms;
     }

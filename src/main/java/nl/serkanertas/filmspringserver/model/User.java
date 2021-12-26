@@ -33,7 +33,6 @@ public class User {
     @Column(name = "enabled")
     private boolean enabled;
 
-    // TODO: update DTOs
     @Column(name = "is_verified")
     private boolean isVerified;
 

@@ -42,7 +42,7 @@ public class UserService  {
         String bCryptPassword = passwordEncoder.encode(userDto.getPassword());
         user.setPassword(bCryptPassword);
         user.setEnabled(true);
-        user.setVerified(false);
+        user.setVerified(true); // no SMTP server, so can't verify via email.
         user.setMediaHidden(false);
         user.setAvatarUser(avatarService.setDefaultAvatarUser());
         user.addAuthority("ROLE_USER");

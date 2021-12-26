@@ -15,9 +15,9 @@ public class GroupGetRequest {
 
     private List<SearchedUserGetRequest> usersInGroup;
 
-    private List<Film> plannedFilms;
+    private List<FilmGetRequest> plannedFilms;
 
-    private List<Series> plannedSeries;
+    private List<SeriesGetRequest> plannedSeries;
 
     public String getGroupName() {
         return groupName;
@@ -51,19 +51,19 @@ public class GroupGetRequest {
         this.usersInGroup = usersInGroup;
     }
 
-    public List<Film> getPlannedFilms() {
+    public List<FilmGetRequest> getPlannedFilms() {
         return plannedFilms;
     }
 
-    public void setPlannedFilms(List<Film> plannedFilms) {
+    public void setPlannedFilms(List<FilmGetRequest> plannedFilms) {
         this.plannedFilms = plannedFilms;
     }
 
-    public List<Series> getPlannedSeries() {
+    public List<SeriesGetRequest> getPlannedSeries() {
         return plannedSeries;
     }
 
-    public void setPlannedSeries(List<Series> plannedSeries) {
+    public void setPlannedSeries(List<SeriesGetRequest> plannedSeries) {
         this.plannedSeries = plannedSeries;
     }
 }

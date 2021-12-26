@@ -42,6 +42,8 @@ public class EntityToDtoService {
             userDto.setWatchedSeries(mapListOfSeriesToDto(user.getWatchedSeries()));
             userDto.setPlannedFilms(mapListOfFilmsToDto(user.getPlannedFlms()));
             userDto.setPlannedSeries(mapListOfSeriesToDto(user.getPlannedSeries()));
+            userDto.setFavoriteFilms(mapListOfFilmsToDto(user.getFavoriteFilms()));
+            userDto.setFavoriteSeries(mapListOfSeriesToDto(user.getFavoriteSeries()));
         }
         userDto.setMediaHidden(user.isMediaHidden());
         return userDto;

@@ -71,6 +71,15 @@ public class Film {
     @JsonIgnore
     @ManyToMany
     @JoinTable(
+            name = "user_filmFAV",
+            joinColumns = @JoinColumn(name = "film_id"),
+            inverseJoinColumns = @JoinColumn(name = "username")
+    )
+    private List<User> usersFavoriteFilm = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
             name = "group_filmPL",
             joinColumns = @JoinColumn(name = "film_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id")
@@ -163,6 +172,14 @@ public class Film {
 
     public List<User> getUsersWatchedFilm() {
         return usersWatchedFilm;
+    }
+
+    public List<User> getUsersFavoriteFilm() {
+        return usersFavoriteFilm;
+    }
+
+    public void setUsersFavoriteFilm(List<User> usersFavoriteFilm) {
+        this.usersFavoriteFilm = usersFavoriteFilm;
     }
 
     public void setUsersWatchedFilm(List<User> usersWatchedFilm) {

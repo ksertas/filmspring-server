@@ -67,6 +67,15 @@ public class Series {
     @JsonIgnore
     @ManyToMany
     @JoinTable(
+            name = "user_seriesFAV",
+            joinColumns = @JoinColumn(name = "series_id"),
+            inverseJoinColumns = @JoinColumn(name = "username")
+    )
+    private List<User> usersFavoriteSeries = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
             name = "group_seriesPL",
             joinColumns = @JoinColumn(name = "series_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id")
@@ -178,6 +187,14 @@ public class Series {
 
     public void setUsersPlannedSeries(List<User> usersPlannedSeries) {
         this.usersPlannedSeries = usersPlannedSeries;
+    }
+
+    public List<User> getUsersFavoriteSeries() {
+        return usersFavoriteSeries;
+    }
+
+    public void setUsersFavoriteSeries(List<User> usersFavoriteSeries) {
+        this.usersFavoriteSeries = usersFavoriteSeries;
     }
 
     public Poster getPosterSeries() {

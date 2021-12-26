@@ -13,15 +13,25 @@ public class CurrentUserGetRequest {
 
     private boolean enabled;
 
+    private boolean isVerified;
+
     private boolean hideMediaFromOthers;
 
     private Avatar avatar;
 
-    private List<Film> watchedFilms;
+    private List<FilmGetRequest> watchedFilms;
 
-    private List<Series> watchedSeries;
+    private List<SeriesGetRequest> watchedSeries;
 
-    private List<Group> groupsUserIsIn;
+    private List<FilmGetRequest> plannedFilms;
+
+    private List<SeriesGetRequest> plannedSeries;
+
+    private List<FilmGetRequest> favoriteFilms;
+
+    private List<SeriesGetRequest> favoriteSeries;
+
+    private List<GroupGetRequest> groupsUserIsIn;
 
     public String getUsername() {
         return username;
@@ -47,6 +57,14 @@ public class CurrentUserGetRequest {
         this.enabled = enabled;
     }
 
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
     public boolean isHideMediaFromOthers() {
         return hideMediaFromOthers;
     }
@@ -63,27 +81,59 @@ public class CurrentUserGetRequest {
         this.avatar = avatar;
     }
 
-    public List<Film> getWatchedFilms() {
+    public List<FilmGetRequest> getWatchedFilms() {
         return watchedFilms;
     }
 
-    public void setWatchedFilms(List<Film> watchedFilms) {
+    public void setWatchedFilms(List<FilmGetRequest> watchedFilms) {
         this.watchedFilms = watchedFilms;
     }
 
-    public List<Series> getWatchedSeries() {
+    public List<SeriesGetRequest> getWatchedSeries() {
         return watchedSeries;
     }
 
-    public void setWatchedSeries(List<Series> watchedSeries) {
+    public void setWatchedSeries(List<SeriesGetRequest> watchedSeries) {
         this.watchedSeries = watchedSeries;
     }
 
-    public List<Group> getGroupsUserIsIn() {
+    public List<FilmGetRequest> getPlannedFilms() {
+        return plannedFilms;
+    }
+
+    public void setPlannedFilms(List<FilmGetRequest> plannedFilms) {
+        this.plannedFilms = plannedFilms;
+    }
+
+    public List<SeriesGetRequest> getPlannedSeries() {
+        return plannedSeries;
+    }
+
+    public void setPlannedSeries(List<SeriesGetRequest> plannedSeries) {
+        this.plannedSeries = plannedSeries;
+    }
+
+    public List<FilmGetRequest> getFavoriteFilms() {
+        return favoriteFilms;
+    }
+
+    public void setFavoriteFilms(List<FilmGetRequest> favoriteFilms) {
+        this.favoriteFilms = favoriteFilms;
+    }
+
+    public List<SeriesGetRequest> getFavoriteSeries() {
+        return favoriteSeries;
+    }
+
+    public void setFavoriteSeries(List<SeriesGetRequest> favoriteSeries) {
+        this.favoriteSeries = favoriteSeries;
+    }
+
+    public List<GroupGetRequest> getGroupsUserIsIn() {
         return groupsUserIsIn;
     }
 
-    public void setGroupsUserIsIn(List<Group> groupsUserIsIn) {
+    public void setGroupsUserIsIn(List<GroupGetRequest> groupsUserIsIn) {
         this.groupsUserIsIn = groupsUserIsIn;
     }
 }

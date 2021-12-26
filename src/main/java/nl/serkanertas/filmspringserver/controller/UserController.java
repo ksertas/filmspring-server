@@ -2,6 +2,7 @@ package nl.serkanertas.filmspringserver.controller;
 
 import nl.serkanertas.filmspringserver.dto.request.CreateUserPostRequest;
 import nl.serkanertas.filmspringserver.dto.request.UpdateUserDetailsRequest;
+import nl.serkanertas.filmspringserver.service.PostAuthService;
 import nl.serkanertas.filmspringserver.service.models.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +18,25 @@ import java.io.IOException;
 public class UserController {
 
     private final UserService userService;
+    private final PostAuthService postAuthService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, PostAuthService postAuthService) {
         this.userService = userService;
+        this.postAuthService = postAuthService;
     }
 
-//  logged in only
     @GetMapping("/{user_id}")
     @PreAuthorize("hasRole(\"ROLE_USER\")")
     ResponseEntity<Object> getUser(@PathVariable String user_id) {
+        if (postAuthService.isCurrentUser(user_id)) {
+            return ResponseEntity.ok().body(userService.getCurrentUser(user_id));
+        }
         return ResponseEntity.ok().body(userService.getSearchedUser(user_id));
     }
 
     @PostMapping
     @PreAuthorize("hasRole(\"ROLE_ANONYMOUS\")")
-    ResponseEntity<Object> createUser(@Valid @RequestBody CreateUserPostRequest
+    ResponseEntity<Object> createNewUser(@Valid @RequestBody CreateUserPostRequest
                                               newUserPostRequestDto, BindingResult result)
             throws IOException {
         if (result.hasErrors()) {
@@ -44,14 +49,14 @@ public class UserController {
 
     @PatchMapping("/{user_id}/account")
     @PreAuthorize("@postAuthService.isCurrentUser(#user_id)")
-    ResponseEntity<Object> updateUser(@PathVariable String user_id, @Valid @RequestBody UpdateUserDetailsRequest updateDetailsDto) {
+    ResponseEntity<Object> updateCurrentUser(@PathVariable String user_id, @Valid @RequestBody UpdateUserDetailsRequest updateDetailsDto) {
         userService.updateDetails(user_id, updateDetailsDto);
         return ResponseEntity.ok().body("Updated account.");
     }
 
     @DeleteMapping("/{user_id}/account")
     @PreAuthorize("@postAuthService.isCurrentUser(#user_id) or hasRole(\"ROLE_ADMIN\")")
-    ResponseEntity<Object> deleteUser(@PathVariable String user_id) {
+    ResponseEntity<Object> deleteCurrentUser(@PathVariable String user_id) {
         userService.deleteUser(user_id);
         return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
     }

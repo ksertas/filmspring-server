@@ -13,6 +13,16 @@ public class ExceptionController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = GroupNotFoundException.class)
+    public ResponseEntity<Object> exception(GroupNotFoundException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = ActorNotFoundException.class)
+    public ResponseEntity<Object> exception(ActorNotFoundException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(value = MediaNotFoundException.class)
     public ResponseEntity<Object> exception(MediaNotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

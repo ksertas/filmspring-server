@@ -12,33 +12,30 @@ import java.io.IOException;
 public class PosterService {
     private final PosterRepository posterRepository;
     private final FilmService filmService;
-    private final FilmRepository filmRepository;
     private final SeriesService seriesService;
-    private final SeriesRepository seriesRepository;
 
     public PosterService(PosterRepository posterRepository,
                          FilmService filmService,
-                         FilmRepository filmRepository,
-                         SeriesService seriesService,
-                         SeriesRepository seriesRepository) {
+                         SeriesService seriesService) {
         this.posterRepository = posterRepository;
         this.filmService = filmService;
-        this.filmRepository = filmRepository;
         this.seriesService = seriesService;
-        this.seriesRepository = seriesRepository;
     }
-
 
     @Transactional
     public void storePosterFilm(long film_id, MultipartFile file) throws IOException {
-        Film film = filmService.getFilmEntity(film_id);
-        Poster poster = new Poster(
-                file.getOriginalFilename(),
-                file.getContentType(),
-                file.getBytes());
+        try {
+            Film film = filmService.getFilmEntity(film_id);
+            Poster poster = new Poster(
+                    file.getOriginalFilename(),
+                    file.getContentType(),
+                    file.getBytes());
 
-        film.setPosterFilm(poster);
-        filmRepository.save(film);
+            film.setPosterFilm(poster);
+            filmService.saveFilmEntity(film);
+        } catch (IOException e) {
+            throw new IOException(e.getMessage());
+        }
     }
 
     @Transactional
@@ -52,19 +49,23 @@ public class PosterService {
         Long currentPosterId = film.getPosterFilm().getPoster_id();
         film.setPosterFilm(null);
         posterRepository.deleteById(currentPosterId);
-        filmRepository.save(film);
+        filmService.saveFilmEntity(film);
     }
 
     @Transactional
     public void storePosterSeries(long series_id, MultipartFile file) throws IOException {
-        Series series = seriesService.getSeriesEntity(series_id);
-        Poster poster = new Poster(
-                file.getOriginalFilename(),
-                file.getContentType(),
-                file.getBytes());
+        try {
+            Series series = seriesService.getSeriesEntity(series_id);
+            Poster poster = new Poster(
+                    file.getOriginalFilename(),
+                    file.getContentType(),
+                    file.getBytes());
 
-        series.setPosterSeries(poster);
-        seriesRepository.save(series);
+            series.setPosterSeries(poster);
+            seriesService.saveSeriesEntity(series);
+        } catch (IOException e) {
+            throw new IOException(e.getMessage());
+        }
     }
 
     @Transactional
@@ -78,6 +79,6 @@ public class PosterService {
         Long currentPosterId = series.getPosterSeries().getPoster_id();
         series.setPosterSeries(null);
         posterRepository.deleteById(currentPosterId);
-        seriesRepository.save(series);
+        seriesService.saveSeriesEntity(series);
     }
 }

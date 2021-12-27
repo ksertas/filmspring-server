@@ -1,12 +1,8 @@
 package nl.serkanertas.filmspringserver.service;
 
-import nl.serkanertas.filmspringserver.model.Authority;
-import nl.serkanertas.filmspringserver.model.GroupInvitation;
 import nl.serkanertas.filmspringserver.model.User;
-import nl.serkanertas.filmspringserver.service.models.GroupInvitationService;
 import nl.serkanertas.filmspringserver.service.models.GroupService;
 import nl.serkanertas.filmspringserver.service.models.UserService;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,14 +12,11 @@ public class InviteService {
 
     private final UserService userService;
     private final GroupService groupService;
-    private final GroupInvitationService groupInvitationService;
 
     public InviteService(UserService userService,
-                         GroupService groupService,
-                         GroupInvitationService groupInvitationService) {
+                         GroupService groupService) {
         this.userService = userService;
         this.groupService = groupService;
-        this.groupInvitationService = groupInvitationService;
     }
 
     @Transactional

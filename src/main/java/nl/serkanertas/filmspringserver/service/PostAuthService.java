@@ -1,5 +1,6 @@
 package nl.serkanertas.filmspringserver.service;
 
+import nl.serkanertas.filmspringserver.exception.UserNotAuthorizedException;
 import nl.serkanertas.filmspringserver.model.*;
 import nl.serkanertas.filmspringserver.service.models.*;
 import org.springframework.context.annotation.Lazy;
@@ -26,8 +27,9 @@ public class PostAuthService {
     }
 
     public boolean isCurrentUser(String user_id) {
-        return SecurityContextHolder.getContext().getAuthentication()
-                .getName().equals(user_id);
+        if (SecurityContextHolder.getContext().getAuthentication()
+                .getName().equals(user_id)) return true;
+            else throw new UserNotAuthorizedException("Not authorized to perform request");
     }
 
     public boolean isGroupOwner(long group_id) {
@@ -36,7 +38,8 @@ public class PostAuthService {
         String ownerGroupAuthority = "ROLE_OWNER-GROUP-";
         String groupIdPart = String.valueOf(group_id);
         String completeGroupAuthority = ownerGroupAuthority.concat(groupIdPart);
-        return userAuthorities.contains(new SimpleGrantedAuthority(completeGroupAuthority));
+        if (userAuthorities.contains(new SimpleGrantedAuthority(completeGroupAuthority))) return true;
+        else throw new UserNotAuthorizedException("user is not group owner");
     }
 
     public boolean isCurrentUserInGroup(long group_id) {
@@ -45,7 +48,8 @@ public class PostAuthService {
         String ownerGroupAuthority = "ROLE_MEMBER-GROUP-";
         String groupIdPart = String.valueOf(group_id);
         String completeGroupAuthority = ownerGroupAuthority.concat(groupIdPart);
-        return userAuthorities.contains(new SimpleGrantedAuthority(completeGroupAuthority));
+        if (userAuthorities.contains(new SimpleGrantedAuthority(completeGroupAuthority))) return true;
+        else throw new UserNotAuthorizedException("user is not in group");
     }
 
     public boolean currentUserIsInvited(long group_id) {
@@ -54,32 +58,37 @@ public class PostAuthService {
         String ownerGroupAuthority = "ROLE_INVITED-";
         String groupIdPart = String.valueOf(group_id);
         String completeGroupAuthority = ownerGroupAuthority.concat(groupIdPart);
-        return userAuthorities.contains(new SimpleGrantedAuthority(completeGroupAuthority));
+        if (userAuthorities.contains(new SimpleGrantedAuthority(completeGroupAuthority))) return true;
+        else throw new UserNotAuthorizedException();
     }
 
     public boolean isVerified() {
         String currentUserName = SecurityContextHolder.getContext()
                 .getAuthentication().getName();
-        return userService.getUserEntity(currentUserName).isVerified();
+        if (userService.getUserEntity(currentUserName).isVerified()) return true;
+        else throw new UserNotAuthorizedException("User is not verified");
     }
 
     public boolean isVerified(String user_id) {
         String currentUserName = SecurityContextHolder.getContext()
                 .getAuthentication().getName();
-        return userService.getUserEntity(currentUserName).isVerified() &&
-                isCurrentUser(user_id);
+        if (userService.getUserEntity(currentUserName).isVerified() &&
+                isCurrentUser(user_id)) return true;
+        else throw new UserNotAuthorizedException("User is not verified");
     }
 
     public boolean userHasWatchedFilm(String user_id, long film_id) {
         User user = userService.getUserEntity(user_id);
         Film film = filmService.getFilmEntity(film_id);
-        return user.getWatchedFilms().contains(film) && isCurrentUser(user_id);
+        if (user.getWatchedFilms().contains(film) && isCurrentUser(user_id)) return true;
+        else throw new UserNotAuthorizedException("User has not watched film");
     }
 
     public boolean userHasWatchedSeries(String user_id, long series_id) {
         User user = userService.getUserEntity(user_id);
         Series series = seriesService.getSeriesEntity(series_id);
-        return user.getWatchedSeries().contains(series) && isCurrentUser(user_id);
+        if (user.getWatchedSeries().contains(series) && isCurrentUser(user_id)) return true;
+        else throw new UserNotAuthorizedException("User has not watched series");
     }
 
 }

@@ -2,6 +2,7 @@ package nl.serkanertas.filmspringserver.service;
 
 import nl.serkanertas.filmspringserver.dto.request.UserAuthenticationRequestDto;
 import nl.serkanertas.filmspringserver.dto.response.UserAuthenticationResponseDto;
+import nl.serkanertas.filmspringserver.exception.InvalidCredentialsException;
 import nl.serkanertas.filmspringserver.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,8 +39,8 @@ public class UserAuthenticateService {
                     new UsernamePasswordAuthenticationToken(username, password)
             );
         }
-        catch (BadCredentialsException ex) {
-            throw new UsernameNotFoundException("Incorrect username or password");
+        catch (InvalidCredentialsException e) {
+            throw new InvalidCredentialsException("Incorrect username or password");
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);

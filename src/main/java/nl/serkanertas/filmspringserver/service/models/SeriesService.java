@@ -1,6 +1,7 @@
 package nl.serkanertas.filmspringserver.service.models;
 
 import nl.serkanertas.filmspringserver.dto.response.SeriesGetRequest;
+import nl.serkanertas.filmspringserver.exception.MediaNotFoundException;
 import nl.serkanertas.filmspringserver.model.*;
 import nl.serkanertas.filmspringserver.repository.ActorRepository;
 import nl.serkanertas.filmspringserver.repository.SeriesRepository;
@@ -36,11 +37,21 @@ public class SeriesService {
         this.entityToDtoService = entityToDtoService;
     }
 
+    public boolean seriesEntityExists(long series_id) {
+        return seriesRepository.existsById(series_id);
+    }
+
     public SeriesGetRequest getSearchedSeries(long series_id) {
         return entityToDtoService.mapSeriesToDto(series_id);
     }
 
-    public Series getSeriesEntity(long series_id) { return seriesRepository.findById(series_id).get(); }
+    public Series getSeriesEntity(long series_id) {
+        if (seriesEntityExists(series_id)) {
+            return seriesRepository.findById(series_id).get();
+        } else {
+            throw new MediaNotFoundException("Series does not exist");
+        }
+    }
 
     public void saveSeriesEntity(Series series) {
         seriesRepository.save(series);

@@ -3,6 +3,7 @@ package nl.serkanertas.filmspringserver.service.models;
 import nl.serkanertas.filmspringserver.dto.request.CreateGroupPostRequest;
 import nl.serkanertas.filmspringserver.dto.response.GroupGetRequest;
 import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
+import nl.serkanertas.filmspringserver.exception.GroupNotFoundException;
 import nl.serkanertas.filmspringserver.model.*;
 import nl.serkanertas.filmspringserver.repository.GroupInvitationRepository;
 import nl.serkanertas.filmspringserver.repository.GroupRepository;
@@ -22,27 +23,26 @@ import java.util.List;
 @Service
 public class GroupService {
     private final GroupRepository groupRepository;
-    private final UserRepository userRepository;
-    private final GroupInvitationRepository groupInvitationRepository;
     private final UserService userService;
     private final AvatarService avatarService;
     private final EntityToDtoService entityToDtoService;
-    private final PostAuthService postAuthService;
 
     public GroupService(GroupRepository groupRepository,
-                        UserRepository userRepository,
-                        GroupInvitationRepository groupInvitationRepository,
                         UserService userService,
                         AvatarService avatarService,
-                        @Lazy EntityToDtoService entityToDtoService,
-                        @Lazy PostAuthService postAuthService) {
+                        @Lazy EntityToDtoService entityToDtoService) {
         this.groupRepository = groupRepository;
-        this.userRepository = userRepository;
-        this.groupInvitationRepository = groupInvitationRepository;
         this.userService = userService;
         this.avatarService = avatarService;
         this.entityToDtoService = entityToDtoService;
-        this.postAuthService = postAuthService;
+    }
+
+    public boolean groupEntityExists(long group_id) {
+        return groupRepository.existsById(group_id);
+    }
+
+    public void saveGroupEntity(Group group) {
+        groupRepository.save(group);
     }
 
     public void createGroup(CreateGroupPostRequest groupDto) throws IOException {
@@ -56,7 +56,7 @@ public class GroupService {
         groupCreator.addAuthority("ROLE_OWNER-GROUP-" + group.getGroup_id());
         userService.saveUserEntity(groupCreator);
         addUserToGroup(groupCreatorName, group.getGroup_id());
-        groupRepository.save(group);
+        saveGroupEntity(group);
     }
 
     public void deleteGroup(long group_id) {
@@ -70,7 +70,11 @@ public class GroupService {
 
     @Transactional
     public Group getGroupEntity(long group_id) {
-        return groupRepository.findById(group_id).get();
+        if (groupEntityExists(group_id)) {
+            return groupRepository.findById(group_id).get();
+        } else {
+            throw new GroupNotFoundException("Group not found");
+        }
     }
 
     @Transactional
@@ -91,19 +95,19 @@ public class GroupService {
     @Transactional
     public void addUserToGroup(String user_id, long group_id) {
         User user = userService.getUserEntity(user_id);
-        Group group = groupRepository.findById(group_id).get();
+        Group group = getGroupEntity(group_id);
         group.getUsersInGroup().add(user);
         user.addAuthority("ROLE_MEMBER-GROUP-" + group.getGroup_id());
-        groupRepository.save(group);
+        saveGroupEntity(group);
     }
 
     @Transactional
     public void removeUserFromGroup(String user_id, long group_id) {
         User user = userService.getUserEntity(user_id);
-        Group group = groupRepository.findById(group_id).get();
+        Group group = getGroupEntity(group_id);
         group.getUsersInGroup().remove(user);
         user.removeAuthority("ROLE_MEMBER-GROUP-" + group.getGroup_id());
-        groupRepository.save(group);
+        saveGroupEntity(group);
     }
 
 }

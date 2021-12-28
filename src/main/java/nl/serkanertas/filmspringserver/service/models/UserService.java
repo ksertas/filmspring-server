@@ -6,6 +6,7 @@ import nl.serkanertas.filmspringserver.dto.response.CurrentUserGetRequest;
 import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
 import nl.serkanertas.filmspringserver.exception.BadRequestException;
 import nl.serkanertas.filmspringserver.exception.InvalidCredentialsException;
+import nl.serkanertas.filmspringserver.exception.ResourceAlreadyExistsException;
 import nl.serkanertas.filmspringserver.exception.UserNotFoundException;
 import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
@@ -42,9 +43,14 @@ public class UserService  {
         return userRepository.existsById(user_id);
     }
 
-    public String createUser(CreateUserPostRequest userDto) {
-       try {
+    public void createUser(CreateUserPostRequest userDto) throws IOException {
            User user = new User();
+           if (userRepository.existsByUsername(userDto.getUsername())) {
+               throw new ResourceAlreadyExistsException("Username already exists");
+           }
+           if (userRepository.existsByEmail(userDto.getEmail())) {
+               throw new ResourceAlreadyExistsException("Email already exists");
+           }
            user.setUsername(userDto.getUsername());
            user.setEmail(userDto.getEmail());
            String bCryptPassword = passwordEncoder.encode(userDto.getPassword());
@@ -52,40 +58,38 @@ public class UserService  {
            user.setEnabled(true);
            user.setVerified(true); // no SMTP server, so can't verify via email.
            user.setMediaHidden(false);
-           user.setAvatarUser(avatarService.setDefaultAvatarUser());
+           try {
+               user.setAvatarUser(avatarService.setDefaultAvatarUser());
+           } catch (IOException e) {
+               throw new IOException(e.getMessage());
+           }
            user.addAuthority("ROLE_USER");
             saveUserEntity(user);
-           return ("User " + userDto.getUsername() + " created");
-       } catch (Exception e) {
-           throw new BadRequestException("Could not create user");
-       }
 
     }
 
-    public String updateDetails(String user_id, UpdateUserDetailsRequest updateDetailsDto) {
+    public void updateDetails(String user_id, UpdateUserDetailsRequest updateDetailsDto) {
         User user = getUserEntity(user_id);
-        try {
-            if (!(updateDetailsDto.getEmail() == null)) {
-                user.setEmail(updateDetailsDto.getEmail());
+        if (!(updateDetailsDto.getEmail() == null)) {
+            if (userRepository.existsByEmail(updateDetailsDto.getEmail())) {
+                throw new ResourceAlreadyExistsException("Email already exists");
             }
-            if (!(updateDetailsDto.getNewPassword() == null)) {
-                String currentPassHash = user.getPassword();
-                String oldPassRaw = updateDetailsDto.getOldPassword();
-                String newPassRaw = updateDetailsDto.getNewPassword();
-                if (passwordEncoder.matches(oldPassRaw, currentPassHash)) {
-                    String bCryptPassword = passwordEncoder.encode(newPassRaw);
-                    user.setPassword(bCryptPassword);
-                } else {
-                    throw new InvalidCredentialsException("Current password is invalid");
-                }
-            }
-            // preference will be 'false' if not sent
-            user.setMediaHidden(updateDetailsDto.isHideMediaPreference());
-            saveUserEntity(user);
-            return user_id;
-        } catch (Exception e) {
-            throw new BadRequestException("Could not update user");
+            user.setEmail(updateDetailsDto.getEmail());
         }
+        if (!(updateDetailsDto.getNewPassword() == null)) {
+            String currentPassHash = user.getPassword();
+            String oldPassRaw = updateDetailsDto.getOldPassword();
+            String newPassRaw = updateDetailsDto.getNewPassword();
+            if (passwordEncoder.matches(oldPassRaw, currentPassHash)) {
+                String bCryptPassword = passwordEncoder.encode(newPassRaw);
+                user.setPassword(bCryptPassword);
+            } else {
+                throw new InvalidCredentialsException("Current password is invalid");
+            }
+        }
+        // preference will be 'false' if not sent
+        user.setMediaHidden(updateDetailsDto.isHideMediaPreference());
+        saveUserEntity(user);
     }
 
     public User getUserEntity(String user_id) {

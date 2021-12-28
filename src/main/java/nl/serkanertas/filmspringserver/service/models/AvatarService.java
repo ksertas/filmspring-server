@@ -6,6 +6,7 @@ import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.AvatarRepository;
 import nl.serkanertas.filmspringserver.repository.GroupRepository;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.mock.web.MockMultipartFile;
@@ -19,57 +20,67 @@ import java.io.IOException;
 public class AvatarService {
     private final UserService userService;
     private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
+    private final GroupService groupService;
     private final AvatarRepository avatarRepository;
 
     public AvatarService(UserService userService,
                          UserRepository userRepository,
-                         GroupRepository groupRepository,
+                         @Lazy GroupService groupService,
                          AvatarRepository avatarRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
-        this.groupRepository = groupRepository;
+        this.groupService = groupService;
         this.avatarRepository = avatarRepository;
     }
 
     public Avatar setDefaultAvatarUser() throws IOException {
-        File file = new File("src/main/resources/static/img/default_pfp.png");
-        FileInputStream fileInput = new FileInputStream(file);
-        MultipartFile multipartFile = new MockMultipartFile("default_avatar", "default_pfp.png",
-                "image/png", fileInput);
+      try {
+          File file = new File("src/main/resources/static/img/default_pfp.png");
+          FileInputStream fileInput = new FileInputStream(file);
+          MultipartFile multipartFile = new MockMultipartFile("default_avatar", "default_pfp.png",
+                  "image/png", fileInput);
 
-        Avatar avatar = new Avatar(
-                multipartFile.getOriginalFilename(),
-                multipartFile.getContentType(),
-                multipartFile.getBytes());
-
-        return avatar;
+          return new Avatar(
+                  multipartFile.getOriginalFilename(),
+                  multipartFile.getContentType(),
+                  multipartFile.getBytes());
+      } catch (IOException e) {
+          throw new IOException(e.getMessage());
+      }
     }
 
     public Avatar setDefaultAvatarGroup() throws IOException {
-        File file = new File("src/main/resources/static/img/default_group.png");
-        FileInputStream fileInput = new FileInputStream(file);
-        MultipartFile multipartFile = new MockMultipartFile("default_group_avatar", "default_group.png",
-                "image/png", fileInput);
+        try {
+            File file = new File("src/main/resources/static/img/default_group.png");
+            FileInputStream fileInput = new FileInputStream(file);
+            MultipartFile multipartFile = new MockMultipartFile("default_group_avatar", "default_group.png",
+                    "image/png", fileInput);
 
-        Avatar avatar = new Avatar(
-                multipartFile.getOriginalFilename(),
-                multipartFile.getContentType(),
-                multipartFile.getBytes());
-
-        return avatar;
+            return new Avatar(
+                    multipartFile.getOriginalFilename(),
+                    multipartFile.getContentType(),
+                    multipartFile.getBytes());
+        }
+        catch (IOException e) {
+            throw new IOException(e.getMessage());
+        }
     }
 
     @Transactional
     public void storeAvatarUser(String user_id, MultipartFile file) throws IOException {
-        User user = userService.getUserEntity(user_id);
-        Avatar avatar = new Avatar(
-                file.getOriginalFilename(),
-                file.getContentType(),
-                file.getBytes());
+        try {
+            User user = userService.getUserEntity(user_id);
+            Avatar avatar = new Avatar(
+                    file.getOriginalFilename(),
+                    file.getContentType(),
+                    file.getBytes());
 
-        user.setAvatarUser(avatar);
-        userRepository.save(user);
+            user.setAvatarUser(avatar);
+            userService.saveUserEntity(user);
+        }
+        catch (IOException e) {
+            throw new IOException(e.getMessage());
+        }
     }
 
     @Transactional
@@ -83,32 +94,38 @@ public class AvatarService {
         Long currentAvatarId = user.getAvatarUser().getAvatar_id();
         user.setAvatarUser(null);
         avatarRepository.deleteById(currentAvatarId);
-        userRepository.save(user);
+        userService.saveUserEntity(user);
     }
 
     @Transactional
     public void storeAvatarGroup(long group_id, MultipartFile file) throws IOException {
-        Group group = groupRepository.findById(group_id).get();
-        Avatar avatar = new Avatar(
-                file.getOriginalFilename(),
-                file.getContentType(),
-                file.getBytes());
+        try {
+            Group group = groupService.getGroupEntity(group_id);
+            Avatar avatar = new Avatar(
+                    file.getOriginalFilename(),
+                    file.getContentType(),
+                    file.getBytes());
 
-        group.setAvatarGroup(avatar);
-        groupRepository.save(group);
+            group.setAvatarGroup(avatar);
+            groupService.saveGroupEntity(group);
+        }
+        catch (IOException e) {
+            throw new IOException(e.getMessage());
+        }
     }
 
     @Transactional
     public Avatar getAvatarGroup(long group_id) {
-        Group group = groupRepository.findById(group_id).get();
+        Group group = groupService.getGroupEntity(group_id);
         return group.getAvatarGroup();
     }
 
     public void deleteAvatarGroup(long group_id) {
-        Group group = groupRepository.findById(group_id).get();
+        Group group = groupService.getGroupEntity(group_id);
         Long currentAvatarId = group.getAvatarGroup().getAvatar_id();
         group.setAvatarGroup(null);
         avatarRepository.deleteById(currentAvatarId);
-        groupRepository.save(group);}
+        groupService.saveGroupEntity(group);
+    }
 }
 

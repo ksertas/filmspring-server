@@ -1,9 +1,8 @@
 package nl.serkanertas.filmspringserver.service.models;
 
 import nl.serkanertas.filmspringserver.dto.response.FilmGetRequest;
-import nl.serkanertas.filmspringserver.model.Actor;
+import nl.serkanertas.filmspringserver.exception.MediaNotFoundException;
 import nl.serkanertas.filmspringserver.model.Film;
-import nl.serkanertas.filmspringserver.repository.ActorRepository;
 import nl.serkanertas.filmspringserver.repository.FilmRepository;
 import nl.serkanertas.filmspringserver.service.EntityToDtoService;
 import org.springframework.stereotype.Service;
@@ -14,30 +13,30 @@ import java.util.List;
 
 @Service
 public class FilmService {
-    private final UserService userService;
-    private final GroupService groupService;
     private final FilmRepository filmRepository;
-    private final ActorRepository actorRepository;
-
     private final EntityToDtoService entityToDtoService;
 
-    public FilmService(UserService userService,
-                       GroupService groupService,
-                       FilmRepository filmRepository,
-                       ActorRepository actorRepository,
+    public FilmService(FilmRepository filmRepository,
                        EntityToDtoService entityToDtoService) {
-        this.userService = userService;
-        this.groupService = groupService;
         this.filmRepository = filmRepository;
-        this.actorRepository = actorRepository;
         this.entityToDtoService = entityToDtoService;
+    }
+
+    public boolean filmEntityExists(long film_id) {
+        return filmRepository.existsById(film_id);
     }
 
     public FilmGetRequest getSearchedFilm(long film_id) {
         return entityToDtoService.mapFilmToDto(film_id);
     }
 
-    public Film getFilmEntity(long film_id) { return filmRepository.findById(film_id).get(); }
+    public Film getFilmEntity(long film_id) {
+        if (filmEntityExists(film_id)) {
+            return filmRepository.findById(film_id).get();
+        } else {
+            throw new MediaNotFoundException("Film does not exist");
+        }
+    }
 
     public void saveFilmEntity(Film film) {
         filmRepository.save(film);

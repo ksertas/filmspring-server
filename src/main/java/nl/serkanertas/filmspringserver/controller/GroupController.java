@@ -29,8 +29,8 @@ public class GroupController {
         return ResponseEntity.ok().body(groupService.getGroup(group_id));
     }
 
-//    TODO: check if this function is needed
     @GetMapping
+    @PreAuthorize("hasRole(\"ROLE_ADMIN\")")
     ResponseEntity<Object> getAllGroups() {
         return ResponseEntity.ok().body(groupService.getAllGroups());
     }

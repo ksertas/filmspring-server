@@ -4,6 +4,10 @@ import nl.serkanertas.filmspringserver.dto.request.CreateUserPostRequest;
 import nl.serkanertas.filmspringserver.dto.request.UpdateUserDetailsRequest;
 import nl.serkanertas.filmspringserver.dto.response.CurrentUserGetRequest;
 import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
+import nl.serkanertas.filmspringserver.exception.BadRequestException;
+import nl.serkanertas.filmspringserver.exception.InvalidCredentialsException;
+import nl.serkanertas.filmspringserver.exception.ResourceAlreadyExistsException;
+import nl.serkanertas.filmspringserver.exception.UserNotFoundException;
 import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
 import nl.serkanertas.filmspringserver.service.EntityToDtoService;
@@ -35,25 +39,41 @@ public class UserService  {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public String createUser(CreateUserPostRequest userDto) throws IOException {
-        User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setEmail(userDto.getEmail());
-        String bCryptPassword = passwordEncoder.encode(userDto.getPassword());
-        user.setPassword(bCryptPassword);
-        user.setEnabled(true);
-        user.setVerified(true); // no SMTP server, so can't verify via email.
-        user.setMediaHidden(false);
-        user.setAvatarUser(avatarService.setDefaultAvatarUser());
-        user.addAuthority("ROLE_USER");
-        userRepository.save(user);
-        return ("User " + userDto.getUsername() + " created");
+    public boolean userEntityExists(String user_id) {
+        return userRepository.existsById(user_id);
+    }
+
+    public void createUser(CreateUserPostRequest userDto) throws IOException {
+           User user = new User();
+           if (userRepository.existsByUsername(userDto.getUsername())) {
+               throw new ResourceAlreadyExistsException("Username already exists");
+           }
+           if (userRepository.existsByEmail(userDto.getEmail())) {
+               throw new ResourceAlreadyExistsException("Email already exists");
+           }
+           user.setUsername(userDto.getUsername());
+           user.setEmail(userDto.getEmail());
+           String bCryptPassword = passwordEncoder.encode(userDto.getPassword());
+           user.setPassword(bCryptPassword);
+           user.setEnabled(true);
+           user.setVerified(true); // no SMTP server, so can't verify via email.
+           user.setMediaHidden(false);
+           try {
+               user.setAvatarUser(avatarService.setDefaultAvatarUser());
+           } catch (IOException e) {
+               throw new IOException(e.getMessage());
+           }
+           user.addAuthority("ROLE_USER");
+            saveUserEntity(user);
 
     }
 
-    public String updateDetails(String user_id, UpdateUserDetailsRequest updateDetailsDto) {
+    public void updateDetails(String user_id, UpdateUserDetailsRequest updateDetailsDto) {
         User user = getUserEntity(user_id);
         if (!(updateDetailsDto.getEmail() == null)) {
+            if (userRepository.existsByEmail(updateDetailsDto.getEmail())) {
+                throw new ResourceAlreadyExistsException("Email already exists");
+            }
             user.setEmail(updateDetailsDto.getEmail());
         }
         if (!(updateDetailsDto.getNewPassword() == null)) {
@@ -63,21 +83,19 @@ public class UserService  {
             if (passwordEncoder.matches(oldPassRaw, currentPassHash)) {
                 String bCryptPassword = passwordEncoder.encode(newPassRaw);
                 user.setPassword(bCryptPassword);
-                System.out.println("yes match");
             } else {
-                System.out.println("No match");
-                return "Current password doesn't match";
+                throw new InvalidCredentialsException("Current password is invalid");
             }
         }
         // preference will be 'false' if not sent
         user.setMediaHidden(updateDetailsDto.isHideMediaPreference());
-
-        userRepository.save(user);
-        return user_id;
+        saveUserEntity(user);
     }
 
     public User getUserEntity(String user_id) {
-        return userRepository.findById(user_id).get();
+        if (userEntityExists(user_id)) {
+            return userRepository.findById(user_id).get();
+        } else throw new UserNotFoundException("User " + user_id + " not found");
     }
 
     public void saveUserEntity(User user) {
@@ -107,7 +125,7 @@ public class UserService  {
     }
 
     public void deleteUser(String user_id) {
-        User user = userRepository.findById(user_id).get();
+        User user = getUserEntity(user_id);
         userRepository.delete(user);
     }
 

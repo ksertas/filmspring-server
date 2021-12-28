@@ -18,6 +18,12 @@ public class ExceptionController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = ResourceAlreadyExistsException.class)
+    public ResponseEntity<Object> exception(ResourceAlreadyExistsException e) {
+        // Http 303 'See Other' possible alternative
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(value = ActorNotFoundException.class)
     public ResponseEntity<Object> exception(ActorNotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

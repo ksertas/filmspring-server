@@ -4,14 +4,12 @@ import nl.serkanertas.filmspringserver.dto.request.CreateGroupPostRequest;
 import nl.serkanertas.filmspringserver.dto.response.GroupGetRequest;
 import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
 import nl.serkanertas.filmspringserver.exception.GroupNotFoundException;
+import nl.serkanertas.filmspringserver.exception.ResourceAlreadyExistsException;
+import nl.serkanertas.filmspringserver.exception.UserNotFoundException;
 import nl.serkanertas.filmspringserver.model.*;
-import nl.serkanertas.filmspringserver.repository.GroupInvitationRepository;
 import nl.serkanertas.filmspringserver.repository.GroupRepository;
-import nl.serkanertas.filmspringserver.repository.UserRepository;
 import nl.serkanertas.filmspringserver.service.EntityToDtoService;
-import nl.serkanertas.filmspringserver.service.PostAuthService;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -46,17 +44,21 @@ public class GroupService {
     }
 
     public void createGroup(CreateGroupPostRequest groupDto) throws IOException {
-        Group group = new Group();
-        group.setName(groupDto.getGroupName());
-        group.setAvatarGroup(avatarService.setDefaultAvatarGroup());
-        group.setWarned(false);
-        groupRepository.save(group);
-        String groupCreatorName = SecurityContextHolder.getContext().getAuthentication().getName();
-        User groupCreator = userService.getUserEntity(groupCreatorName);
-        groupCreator.addAuthority("ROLE_OWNER-GROUP-" + group.getGroup_id());
-        userService.saveUserEntity(groupCreator);
-        addUserToGroup(groupCreatorName, group.getGroup_id());
-        saveGroupEntity(group);
+        try {
+            Group group = new Group();
+            group.setName(groupDto.getGroupName());
+            group.setAvatarGroup(avatarService.setDefaultAvatarGroup());
+            group.setWarned(false);
+            groupRepository.save(group);
+            String groupCreatorName = SecurityContextHolder.getContext().getAuthentication().getName();
+            User groupCreator = userService.getUserEntity(groupCreatorName);
+            groupCreator.addAuthority("ROLE_OWNER-GROUP-" + group.getGroup_id());
+            userService.saveUserEntity(groupCreator);
+            addUserToGroup(groupCreatorName, group.getGroup_id());
+            saveGroupEntity(group);
+        } catch (Exception e) {
+            throw new IOException(e.getMessage());
+        }
     }
 
     public void deleteGroup(long group_id) {
@@ -96,6 +98,9 @@ public class GroupService {
     public void addUserToGroup(String user_id, long group_id) {
         User user = userService.getUserEntity(user_id);
         Group group = getGroupEntity(group_id);
+        if (group.getUsersInGroup().contains(user)) {
+            throw new ResourceAlreadyExistsException("User already in group");
+        }
         group.getUsersInGroup().add(user);
         user.addAuthority("ROLE_MEMBER-GROUP-" + group.getGroup_id());
         saveGroupEntity(group);
@@ -105,6 +110,9 @@ public class GroupService {
     public void removeUserFromGroup(String user_id, long group_id) {
         User user = userService.getUserEntity(user_id);
         Group group = getGroupEntity(group_id);
+        if (!(group.getUsersInGroup().contains(user))) {
+            throw new UserNotFoundException("User not in group");
+        }
         group.getUsersInGroup().remove(user);
         user.removeAuthority("ROLE_MEMBER-GROUP-" + group.getGroup_id());
         saveGroupEntity(group);

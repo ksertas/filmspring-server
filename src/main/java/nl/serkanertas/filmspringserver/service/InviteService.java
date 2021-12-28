@@ -1,5 +1,7 @@
 package nl.serkanertas.filmspringserver.service;
 
+import nl.serkanertas.filmspringserver.exception.BadRequestException;
+import nl.serkanertas.filmspringserver.model.Authority;
 import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.service.models.GroupService;
 import nl.serkanertas.filmspringserver.service.models.UserService;
@@ -19,11 +21,26 @@ public class InviteService {
         this.groupService = groupService;
     }
 
+    public boolean checkIfAuthorityExists(String user_id, String authority) {
+        User user = userService.getUserEntity(user_id);
+        for (Authority auth : user.getAuthorities()) {
+            if (auth.getAuthority().equals(authority)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Transactional
     public void inviteUser(String user_id, long group_id) {
         User user = userService.getUserEntity(user_id);
-        user.addAuthority("ROLE_INVITED-" + group_id);
-        userService.saveUserEntity(user);
+        String searchedAuthority = "ROLE_INVITED-" + group_id;
+        if (!checkIfAuthorityExists(user_id, searchedAuthority)) {
+            user.addAuthority(searchedAuthority);
+            userService.saveUserEntity(user);
+        } else {
+            throw new BadRequestException("User is already invited");
+        }
     }
 
     @Transactional

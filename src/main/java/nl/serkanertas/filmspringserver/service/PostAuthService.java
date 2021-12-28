@@ -27,9 +27,8 @@ public class PostAuthService {
     }
 
     public boolean isCurrentUser(String user_id) {
-        if (SecurityContextHolder.getContext().getAuthentication()
-                .getName().equals(user_id)) return true;
-            else throw new UserNotAuthorizedException("Not authorized to perform request");
+        return SecurityContextHolder.getContext().getAuthentication()
+                .getName().equals(user_id);
     }
 
     public boolean isGroupOwner(long group_id) {

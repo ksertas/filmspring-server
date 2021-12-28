@@ -1,6 +1,8 @@
 package nl.serkanertas.filmspringserver.service;
 
 import nl.serkanertas.filmspringserver.dto.request.RatingDto;
+import nl.serkanertas.filmspringserver.exception.BadRequestException;
+import nl.serkanertas.filmspringserver.exception.ResourceAlreadyExistsException;
 import nl.serkanertas.filmspringserver.model.Film;
 import nl.serkanertas.filmspringserver.model.Series;
 import nl.serkanertas.filmspringserver.model.User;
@@ -37,6 +39,9 @@ public class WatchMediaService {
     public void storeFilmToWatched(String user_id, long film_id){
         User user = userService.getUserEntity(user_id);
         Film film = filmService.getFilmEntity(film_id);
+        if (film.getUsersWatchedFilm().contains(user)) {
+            throw new ResourceAlreadyExistsException("Film already in watched");
+        }
         film.getUsersWatchedFilm().add(user);
         filmService.saveFilmEntity(film);
         RatingDto ratingDto = new RatingDto();
@@ -48,6 +53,9 @@ public class WatchMediaService {
     public void deleteFilmFromWatched(String user_id, long film_id) {
         User user = userService.getUserEntity(user_id);
         Film film = filmService.getFilmEntity(film_id);
+        if (!film.getUsersWatchedFilm().contains(user)) {
+            throw new BadRequestException("Film not in watched");
+        }
         film.getUsersWatchedFilm().remove(user);
         filmService.saveFilmEntity(film);
         filmRatingService.deleteFilmRating(user_id, film_id);
@@ -57,6 +65,9 @@ public class WatchMediaService {
     public void storeSeriesToWatched(String user_id, long series_id) {
         User user = userService.getUserEntity(user_id);
         Series series = seriesService.getSeriesEntity(series_id);
+        if (series.getUsersWatchedSeries().contains(user)) {
+            throw new ResourceAlreadyExistsException("Series already in watched");
+        }
         series.getUsersWatchedSeries().add(user);
         seriesService.saveSeriesEntity(series);
         RatingDto ratingDto = new RatingDto();
@@ -68,6 +79,9 @@ public class WatchMediaService {
     public void deleteSeriesFromWatched(String user_id, long series_id) {
         User user = userService.getUserEntity(user_id);
         Series series = seriesService.getSeriesEntity(series_id);
+        if (!series.getUsersWatchedSeries().contains(user)) {
+            throw new BadRequestException("Series not in watched");
+        }
         series.getUsersWatchedSeries().remove(user);
         seriesService.saveSeriesEntity(series);
         seriesRatingService.deleteSeriesRating(user_id, series_id);

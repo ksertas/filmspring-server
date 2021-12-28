@@ -30,7 +30,7 @@ public class MediaUsersController {
     ResponseEntity<Object> addFilmToWatched(@PathVariable("user_id") String user_id,
                                             @PathVariable("film_id") long film_id) {
         watchMediaService.storeFilmToWatched(user_id, film_id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{user_id}/films/watched/{film_id}")
@@ -46,7 +46,7 @@ public class MediaUsersController {
     ResponseEntity<Object> addFilmToPlanned(@PathVariable("user_id") String user_id,
                                             @PathVariable("film_id") long film_id) {
         planMediaService.storeFilmToPlanned(user_id, film_id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{user_id}/films/planned/{film_id}")
@@ -62,7 +62,7 @@ public class MediaUsersController {
     ResponseEntity<Object> addFilmToFavorites(@PathVariable("user_id") String user_id,
                                               @PathVariable("film_id") long film_id) {
         favoriteMediaService.storeFilmToFavorites(user_id, film_id);
-        return ResponseEntity.ok().body("Film added to favorites");
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{user_id}/films/favorites/{film_id}")
@@ -70,7 +70,7 @@ public class MediaUsersController {
     ResponseEntity<Object> removeFilmToFavorites(@PathVariable("user_id") String user_id,
                                               @PathVariable("film_id") long film_id) {
         favoriteMediaService.deleteFilmFromFavorites(user_id, film_id);
-        return ResponseEntity.ok().body("Film removed from favorites");
+        return ResponseEntity.noContent().build();
     }
 
     // series
@@ -80,7 +80,7 @@ public class MediaUsersController {
     ResponseEntity<Object> addSeriesToWatched(@PathVariable("user_id") String user_id,
                                               @PathVariable("series_id") long series_id) {
         watchMediaService.storeSeriesToWatched(user_id, series_id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{user_id}/series/watched/{series_id}")
@@ -96,7 +96,7 @@ public class MediaUsersController {
     ResponseEntity<Object> addSeriesToPlanned(@PathVariable("user_id") String user_id,
                                               @PathVariable("series_id") long series_id) {
         planMediaService.storeSeriesToPlanned(user_id, series_id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{user_id}/series/planned/{series_id}")
@@ -112,7 +112,7 @@ public class MediaUsersController {
     ResponseEntity<Object> addSeriesToFavorites(@PathVariable("user_id") String user_id,
                                               @PathVariable("series_id") long series_id) {
         favoriteMediaService.storeSeriesToFavorites(user_id, series_id);
-        return ResponseEntity.ok().body("Series added to favorites");
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{user_id}/series/favorites/{series_id}")
@@ -120,7 +120,7 @@ public class MediaUsersController {
     ResponseEntity<Object> removeSeriesToFavorites(@PathVariable("user_id") String user_id,
                                                  @PathVariable("series_id") long series_id) {
         favoriteMediaService.deleteSeriesFromFavorites(user_id, series_id);
-        return ResponseEntity.ok().body("Series removed from favorites");
+        return ResponseEntity.noContent().build();
     }
 
 }

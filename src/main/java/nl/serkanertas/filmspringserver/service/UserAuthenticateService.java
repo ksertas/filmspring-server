@@ -22,6 +22,7 @@ public class UserAuthenticateService {
     private UserDetailsService userDetailsService;
 
     private JwtUtil jwtUtl;
+    private boolean auth = true;
 
     public UserAuthenticateService(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, JwtUtil jwtUtl) {
         this.authenticationManager = authenticationManager;
@@ -47,7 +48,7 @@ public class UserAuthenticateService {
 
         final String jwt = jwtUtl.generateToken(userDetails);
 
-        return new UserAuthenticationResponseDto(jwt);
+        return new UserAuthenticationResponseDto(auth, jwt);
     }
 
 }

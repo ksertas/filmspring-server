@@ -13,6 +13,8 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class AvatarService {
@@ -27,6 +29,8 @@ public class AvatarService {
         this.groupService = groupService;
         this.avatarRepository = avatarRepository;
     }
+
+    private final List<String> contentTypes = Arrays.asList("image/png", "image/jpeg", "image/jpg");
 
     public Avatar setDefaultAvatarUser() throws IOException {
       try {
@@ -65,13 +69,20 @@ public class AvatarService {
     public void storeAvatarUser(String user_id, MultipartFile file) throws IOException {
         try {
             User user = userService.getUserEntity(user_id);
-            Avatar avatar = new Avatar(
-                    file.getOriginalFilename(),
-                    file.getContentType(),
-                    file.getBytes());
 
-            user.setAvatarUser(avatar);
-            userService.saveUserEntity(user);
+            if (contentTypes.contains(file.getContentType())) {
+                if (!(file.getSize() > 5242880)) {
+                    Long currentAvatarId = user.getAvatarUser().getAvatar_id();
+                    avatarRepository.deleteById(currentAvatarId);
+                    Avatar avatar = new Avatar(
+                            file.getOriginalFilename(),
+                            file.getContentType(),
+                            file.getBytes());
+
+                    user.setAvatarUser(avatar);
+                    userService.saveUserEntity(user);
+                }
+            }
         }
         catch (IOException e) {
             throw new IOException(e.getMessage());

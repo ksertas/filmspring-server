@@ -66,7 +66,7 @@ public class AvatarService {
     }
 
     @Transactional
-    public void storeAvatarUser(String user_id, MultipartFile file) throws IOException {
+    public Avatar storeAvatarUser(String user_id, MultipartFile file) throws IOException {
         try {
             User user = userService.getUserEntity(user_id);
 
@@ -81,12 +81,15 @@ public class AvatarService {
 
                     user.setAvatarUser(avatar);
                     userService.saveUserEntity(user);
+
+                    return user.getAvatarUser();
                 }
             }
         }
         catch (IOException e) {
             throw new IOException(e.getMessage());
         }
+        return null;
     }
 
     @Transactional

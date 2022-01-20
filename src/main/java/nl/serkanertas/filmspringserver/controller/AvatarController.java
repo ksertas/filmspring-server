@@ -31,8 +31,7 @@ public class AvatarController {
     public ResponseEntity<Object> uploadAvatarUser(@RequestParam("file") MultipartFile file,
                                                @PathVariable String user_id) {
         try {
-            avatarService.storeAvatarUser(user_id, file);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().body(avatarService.storeAvatarUser(user_id, file));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e);

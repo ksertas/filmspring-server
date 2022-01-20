@@ -4,8 +4,6 @@ import nl.serkanertas.filmspringserver.model.Avatar;
 import nl.serkanertas.filmspringserver.model.Group;
 import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.AvatarRepository;
-import nl.serkanertas.filmspringserver.repository.GroupRepository;
-import nl.serkanertas.filmspringserver.repository.UserRepository;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,23 +13,24 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class AvatarService {
     private final UserService userService;
-    private final UserRepository userRepository;
     private final GroupService groupService;
     private final AvatarRepository avatarRepository;
 
     public AvatarService(UserService userService,
-                         UserRepository userRepository,
                          @Lazy GroupService groupService,
                          AvatarRepository avatarRepository) {
         this.userService = userService;
-        this.userRepository = userRepository;
         this.groupService = groupService;
         this.avatarRepository = avatarRepository;
     }
+
+    private final List<String> contentTypes = Arrays.asList("image/png", "image/jpeg", "image/jpg");
 
     public Avatar setDefaultAvatarUser() throws IOException {
       try {
@@ -67,20 +66,30 @@ public class AvatarService {
     }
 
     @Transactional
-    public void storeAvatarUser(String user_id, MultipartFile file) throws IOException {
+    public Avatar storeAvatarUser(String user_id, MultipartFile file) throws IOException {
         try {
             User user = userService.getUserEntity(user_id);
-            Avatar avatar = new Avatar(
-                    file.getOriginalFilename(),
-                    file.getContentType(),
-                    file.getBytes());
 
-            user.setAvatarUser(avatar);
-            userService.saveUserEntity(user);
+            if (contentTypes.contains(file.getContentType())) {
+                if (!(file.getSize() > 5242880)) {
+                    Long currentAvatarId = user.getAvatarUser().getAvatar_id();
+                    avatarRepository.deleteById(currentAvatarId);
+                    Avatar avatar = new Avatar(
+                            file.getOriginalFilename(),
+                            file.getContentType(),
+                            file.getBytes());
+
+                    user.setAvatarUser(avatar);
+                    userService.saveUserEntity(user);
+
+                    return user.getAvatarUser();
+                }
+            }
         }
         catch (IOException e) {
             throw new IOException(e.getMessage());
         }
+        return null;
     }
 
     @Transactional
@@ -89,10 +98,10 @@ public class AvatarService {
         return user.getAvatarUser();
     }
 
-    public void deleteAvatarUser(String user_id) {
+    public void deleteAvatarUser(String user_id) throws IOException {
         User user = userService.getUserEntity(user_id);
         Long currentAvatarId = user.getAvatarUser().getAvatar_id();
-        user.setAvatarUser(null);
+        user.setAvatarUser(setDefaultAvatarUser());
         avatarRepository.deleteById(currentAvatarId);
         userService.saveUserEntity(user);
     }
@@ -120,10 +129,10 @@ public class AvatarService {
         return group.getAvatarGroup();
     }
 
-    public void deleteAvatarGroup(long group_id) {
+    public void deleteAvatarGroup(long group_id) throws IOException {
         Group group = groupService.getGroupEntity(group_id);
         Long currentAvatarId = group.getAvatarGroup().getAvatar_id();
-        group.setAvatarGroup(null);
+        group.setAvatarGroup(setDefaultAvatarGroup());
         avatarRepository.deleteById(currentAvatarId);
         groupService.saveGroupEntity(group);
     }

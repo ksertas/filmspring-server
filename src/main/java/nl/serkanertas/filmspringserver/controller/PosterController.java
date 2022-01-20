@@ -29,7 +29,7 @@ public class PosterController {
                                                    @PathVariable long film_id) {
         try {
             posterService.storePosterFilm(film_id, file);
-            return ResponseEntity.status(HttpStatus.OK).body("Success");
+            return ResponseEntity.ok().build();
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e);
@@ -40,7 +40,7 @@ public class PosterController {
     @PreAuthorize("hasRole(\"ROLE_ADMIN\")")
     public ResponseEntity<Object> deletePosterFilm(@PathVariable long film_id) {
         posterService.deletePosterFilm(film_id);
-        return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/series/{series_id}")
@@ -55,7 +55,7 @@ public class PosterController {
                                                     @PathVariable long series_id) {
         try {
             posterService.storePosterSeries(series_id, file);
-            return ResponseEntity.status(HttpStatus.OK).body("Success");
+            return ResponseEntity.ok().build();
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e);
@@ -66,6 +66,6 @@ public class PosterController {
     @PreAuthorize("hasRole(\"ROLE_ADMIN\")")
     public ResponseEntity<Object> deletePosterSeries(@PathVariable long  series_id) {
         posterService.deletePosterSeries(series_id);
-        return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }

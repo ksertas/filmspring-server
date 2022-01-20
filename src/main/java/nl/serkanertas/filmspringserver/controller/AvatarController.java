@@ -7,6 +7,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/api/avatars/")
 public class AvatarController {
@@ -25,12 +27,11 @@ public class AvatarController {
     }
 
     @PutMapping("/users/{user_id}")
-    @PreAuthorize("@postAuthService.isVerified(#user_id)")
+    @PreAuthorize("@postAuthService.isVerified() and @postAuthService.isCurrentUser(#user_id)")
     public ResponseEntity<Object> uploadAvatarUser(@RequestParam("file") MultipartFile file,
                                                @PathVariable String user_id) {
         try {
-            avatarService.storeAvatarUser(user_id, file);
-            return ResponseEntity.status(HttpStatus.OK).body("Success");
+            return ResponseEntity.ok().body(avatarService.storeAvatarUser(user_id, file));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e);
@@ -38,10 +39,10 @@ public class AvatarController {
     }
 
     @DeleteMapping("/users/{user_id}")
-    @PreAuthorize("@postAuthService.isVerified(#user_id)")
-    public ResponseEntity<Object> deleteAvatarUser(@PathVariable String user_id) {
+    @PreAuthorize("@postAuthService.isVerified() and @postAuthService.isCurrentUser(#user_id)")
+    public ResponseEntity<Object> deleteAvatarUser(@PathVariable String user_id) throws IOException {
         avatarService.deleteAvatarUser(user_id);
-        return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 //    GROUPS
@@ -66,9 +67,9 @@ public class AvatarController {
 
     @DeleteMapping("/groups/{group_id}")
     @PreAuthorize("@postAuthService.isGroupOwner(#group_id)")
-    public ResponseEntity<Object> deleteAvatarGroup(@PathVariable long group_id) {
+    public ResponseEntity<Object> deleteAvatarGroup(@PathVariable long group_id) throws IOException {
         avatarService.deleteAvatarGroup(group_id);
-        return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

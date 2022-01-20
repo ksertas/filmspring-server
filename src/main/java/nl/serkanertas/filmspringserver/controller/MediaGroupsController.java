@@ -20,7 +20,7 @@ public class MediaGroupsController {
     ResponseEntity<Object> addFilmToPlannedGroup(@PathVariable("group_id") long group_id,
                                                  @PathVariable("film_id") long film_id) {
         planMediaService.storeFilmToPlannedGroup(group_id, film_id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{group_id}/films/planned/{film_id}")
@@ -38,7 +38,7 @@ public class MediaGroupsController {
     ResponseEntity<Object> addSeriesToPlannedGroup(@PathVariable("group_id") long group_id,
                                                    @PathVariable("series_id") long series_id) {
         planMediaService.storeSeriesToPlannedGroup(group_id, series_id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{group_id}/series/planned/{series_id}")

@@ -104,6 +104,7 @@ public class EntityToDtoService {
         for (Actor actor : film.getActorsInFilm()) {
             actorsList.add(mapActorToDto(actor.getActor_id()));
         }
+        filmDto.setId(film.getFilm_id());
         filmDto.setTitle(film.getTitle());
         filmDto.setAlt_titles(film.getAlt_titles());
         filmDto.setPlot(film.getPlot());
@@ -122,6 +123,7 @@ public class EntityToDtoService {
         for (Actor actor : series.getActorsInSeries()) {
             actorsList.add(mapActorToDto(actor.getActor_id()));
         }
+        seriesDto.setId(series.getSeries_id());
         seriesDto.setTitle(series.getTitle());
         seriesDto.setAlt_titles(series.getAlt_titles());
         seriesDto.setPlot(series.getPlot());

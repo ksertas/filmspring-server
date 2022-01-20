@@ -9,9 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/users")
@@ -42,33 +44,38 @@ public class UserController {
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body("Failed to register account");
         } else {
-            userService.createUser(newUserPostRequestDto);
-            return ResponseEntity.ok("created successfully");
+            String newUserName = userService.createUser(newUserPostRequestDto);
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{user_id}")
+                    .buildAndExpand(newUserName)
+                    .toUri();
+
+            return ResponseEntity.created(location).build();
         }
     }
 
     @PatchMapping("/{user_id}/account")
     @PreAuthorize("@postAuthService.isCurrentUser(#user_id)")
-    ResponseEntity<Object> updateCurrentUser(@PathVariable String user_id, @Valid @RequestBody UpdateUserDetailsRequest updateDetailsDto) {
+    ResponseEntity<Object> updateCurrentUser(@PathVariable String user_id,
+                                             @Valid @RequestBody UpdateUserDetailsRequest updateDetailsDto) {
         userService.updateDetails(user_id, updateDetailsDto);
-        return ResponseEntity.ok().body("Updated account.");
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{user_id}/account")
     @PreAuthorize("@postAuthService.isCurrentUser(#user_id) or hasRole(\"ROLE_ADMIN\")")
     ResponseEntity<Object> deleteCurrentUser(@PathVariable String user_id) {
         userService.deleteUser(user_id);
-        return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
-//    logged in only
     @GetMapping
     @PreAuthorize("hasRole(\"ROLE_USER\")")
     ResponseEntity<Object> getSearchedUsers(@RequestParam("search") String query) {
         return ResponseEntity.ok().body(userService.getSearchedUsers(query));
     }
 
-//    admin only
     @GetMapping("/raw")
     @PreAuthorize("hasRole(\"ROLE_ADMIN\")")
     ResponseEntity<Object> getAllUserEntities() {

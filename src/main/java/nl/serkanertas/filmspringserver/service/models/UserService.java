@@ -4,7 +4,6 @@ import nl.serkanertas.filmspringserver.dto.request.CreateUserPostRequest;
 import nl.serkanertas.filmspringserver.dto.request.UpdateUserDetailsRequest;
 import nl.serkanertas.filmspringserver.dto.response.CurrentUserGetRequest;
 import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
-import nl.serkanertas.filmspringserver.exception.BadRequestException;
 import nl.serkanertas.filmspringserver.exception.InvalidCredentialsException;
 import nl.serkanertas.filmspringserver.exception.ResourceAlreadyExistsException;
 import nl.serkanertas.filmspringserver.exception.UserNotFoundException;
@@ -43,7 +42,7 @@ public class UserService  {
         return userRepository.existsById(user_id);
     }
 
-    public void createUser(CreateUserPostRequest userDto) throws IOException {
+    public String createUser(CreateUserPostRequest userDto) throws IOException {
            User user = new User();
            if (userRepository.existsByUsername(userDto.getUsername())) {
                throw new ResourceAlreadyExistsException("Username already exists");
@@ -64,8 +63,8 @@ public class UserService  {
                throw new IOException(e.getMessage());
            }
            user.addAuthority("ROLE_USER");
-            saveUserEntity(user);
-
+           saveUserEntity(user);
+           return user.getUsername();
     }
 
     public void updateDetails(String user_id, UpdateUserDetailsRequest updateDetailsDto) {

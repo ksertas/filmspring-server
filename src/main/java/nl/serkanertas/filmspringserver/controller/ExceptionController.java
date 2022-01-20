@@ -1,6 +1,7 @@
 package nl.serkanertas.filmspringserver.controller;
 
 import nl.serkanertas.filmspringserver.exception.*;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -52,5 +53,9 @@ public class ExceptionController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler(value = SizeLimitExceededException.class)
+    public ResponseEntity<Object> exception(SizeLimitExceededException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.PAYLOAD_TOO_LARGE);
+    }
 
 }

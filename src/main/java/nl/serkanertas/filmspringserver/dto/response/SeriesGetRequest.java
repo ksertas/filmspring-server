@@ -3,6 +3,7 @@ package nl.serkanertas.filmspringserver.dto.response;
 import java.util.List;
 
 public class SeriesGetRequest {
+    private long id;
     private String title;
     private String alt_titles;
     private String plot;
@@ -12,6 +13,14 @@ public class SeriesGetRequest {
     private int seasons;
     private String runtime;
     private List<ActorGetRequest> actors;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;

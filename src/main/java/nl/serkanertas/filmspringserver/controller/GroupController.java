@@ -74,7 +74,7 @@ public class GroupController {
     ResponseEntity<Object> removeUserFromGroup(@PathVariable("group_id") long group_id,
                                                @PathVariable("user_id") String user_id) {
         groupService.removeUserFromGroup(user_id, group_id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{group_id}/invite/{user_id}")
@@ -82,7 +82,7 @@ public class GroupController {
     ResponseEntity<Object> inviteUserToGroup(@PathVariable("user_id") String user_id,
                                              @PathVariable("group_id") long group_id) {
         inviteService.inviteUser(user_id, group_id);
-        return ResponseEntity.ok().body("Invite success");
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{group_id}/invite/{user_id}/accept")
@@ -90,7 +90,7 @@ public class GroupController {
     ResponseEntity<Object> acceptInviteToGroup(@PathVariable("user_id") String user_id,
                                         @PathVariable("group_id") long group_id) {
         inviteService.acceptInvite(user_id, group_id);
-        return ResponseEntity.ok().body("Accepted invite");
+        return ResponseEntity.ok().build();
     }
 
     // TODO: preauthorize user with INVITED-id role
@@ -99,6 +99,6 @@ public class GroupController {
     ResponseEntity<Object> rejectInviteToGroup(@PathVariable("user_id") String user_id,
                                                @PathVariable("group_id") long group_id) {
         inviteService.rejectInvite(user_id, group_id);
-        return ResponseEntity.ok().body("Rejected invite");
+        return ResponseEntity.ok().build();
     }
 }

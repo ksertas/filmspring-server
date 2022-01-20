@@ -53,7 +53,7 @@ public class SeriesController {
                                            @PathVariable("user_id") String user_id,
                                            @Valid @RequestBody RatingDto ratingDto) {
         seriesRatingService.updateSeriesRating(user_id, series_id, ratingDto);
-        return ResponseEntity.ok().body("Rating: " + ratingDto.getRating());
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{series_id}/actors")
@@ -64,7 +64,9 @@ public class SeriesController {
 
     @GetMapping("/raw")
     @PreAuthorize("hasRole(\"ROLE_ADMIN\")")
-    ResponseEntity<Object> getAllSeriesEntities() { return ResponseEntity.ok().body(seriesService.getAllSeriesEntities()); }
+    ResponseEntity<Object> getAllSeriesEntities() {
+        return ResponseEntity.ok().body(seriesService.getAllSeriesEntities());
+    }
 
 
     @GetMapping("/raw/{series_id}")

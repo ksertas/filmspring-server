@@ -38,7 +38,7 @@ public class FilmRatingService {
         if (filmRating != null) {
             return filmRating.getRating();
         }
-        return 0;
+        return -1;
     }
 
     public FilmRating getFilmRatingEntity(String user_id, long film_id) {

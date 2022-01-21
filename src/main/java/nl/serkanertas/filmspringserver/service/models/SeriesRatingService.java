@@ -36,7 +36,7 @@ public class SeriesRatingService {
         if (seriesRating != null) {
             return seriesRating.getRating();
         }
-        return 0;
+        return -1;
     }
 
     public SeriesRating getSeriesRatingEntity(String user_id, long series_id) {

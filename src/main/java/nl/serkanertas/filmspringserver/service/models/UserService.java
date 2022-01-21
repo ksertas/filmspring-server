@@ -51,6 +51,8 @@ public class UserService  {
                throw new ResourceAlreadyExistsException("Email already exists");
            }
            user.setUsername(userDto.getUsername());
+           user.setFirstName(userDto.getFirstName());
+           user.setLastName(userDto.getLastName());
            user.setEmail(userDto.getEmail());
            String bCryptPassword = passwordEncoder.encode(userDto.getPassword());
            user.setPassword(bCryptPassword);
@@ -69,6 +71,19 @@ public class UserService  {
 
     public void updateDetails(String user_id, UpdateUserDetailsRequest updateDetailsDto) {
         User user = getUserEntity(user_id);
+
+        if (!(updateDetailsDto.getFirstName() == null)) {
+            user.setFirstName(updateDetailsDto.getFirstName());
+        }
+
+        if (!(updateDetailsDto.getLastName() == null)) {
+            user.setLastName(updateDetailsDto.getLastName());
+        }
+
+        if (!(updateDetailsDto.getBio() == null)) {
+            user.setBio(updateDetailsDto.getBio());
+        }
+
         if (!(updateDetailsDto.getEmail() == null)) {
             if (userRepository.existsByEmail(updateDetailsDto.getEmail())) {
                 throw new ResourceAlreadyExistsException("Email already exists");
@@ -86,8 +101,9 @@ public class UserService  {
                 throw new InvalidCredentialsException("Current password is invalid");
             }
         }
-        // preference will be 'false' if not sent
+
         user.setMediaHidden(updateDetailsDto.isHideMediaPreference());
+
         saveUserEntity(user);
     }
 

@@ -1,10 +1,20 @@
 package nl.serkanertas.filmspringserver.dto.request;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class UpdateUserDetailsRequest {
+
+    @Size(min = 1, max = 24, message = "First name must be between 1 and 24 characters long.")
+    private String firstName;
+
+    @Size(max = 24, message = "Last name must be between 1 and 24 characters long.")
+    private String lastName;
+
+    @Size(max = 150, message = "Bio must be shorter than or equal to 150 characters.")
+    private String bio;
 
     // Email regex from: http://emailregex.com/
     @Email(regexp = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])",
@@ -17,8 +27,34 @@ public class UpdateUserDetailsRequest {
     @Size(min = 8, max = 32, message = "Password must be between 8 and 32 characters long.")
     private String newPassword;
 
-    @NotNull
     private boolean hideMedia;
+
+    public UpdateUserDetailsRequest() {
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
 
     public String getEmail() {
         return email;
@@ -48,7 +84,7 @@ public class UpdateUserDetailsRequest {
         return hideMedia;
     }
 
-    public void setHideMediaPreference(boolean hideMediaPreference) {
-        this.hideMedia = hideMediaPreference;
+    public void setHideMediaPreference(boolean hideMedia) {
+        this.hideMedia = hideMedia;
     }
 }

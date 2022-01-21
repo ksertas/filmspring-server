@@ -38,6 +38,9 @@ public class EntityToDtoService {
         User user = userService.getUserEntity(user_id);
         CurrentUserGetRequest userDto = new CurrentUserGetRequest();
         userDto.setUsername(user.getUsername());
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
+        userDto.setBio(user.getBio());
         userDto.setAvatar(user.getAvatarUser());
         userDto.setEmail(user.getEmail());
         userDto.setEnabled(user.isEnabled());
@@ -57,6 +60,9 @@ public class EntityToDtoService {
         User user = userService.getUserEntity(user_id);
         SearchedUserGetRequest userDto = new SearchedUserGetRequest();
         userDto.setUsername(user.getUsername());
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
+        userDto.setBio(user.getBio());
         userDto.setAvatar(user.getAvatarUser());
         if (!user.isMediaHidden()) {
             userDto.setWatchedFilms(mapListOfFilmsToDto(user.getWatchedFilms()));

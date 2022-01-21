@@ -18,6 +18,15 @@ public class User {
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
+
+    @Column(name = "last_name", nullable = true)
+    private String LastName;
+
+    @Column(name = "biography", nullable = true)
+    private String bio;
+
     @Column(name = "email", nullable = false)
     private String email;
 
@@ -104,6 +113,30 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return LastName;
+    }
+
+    public void setLastName(String lastName) {
+        LastName = lastName;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public String getEmail() {

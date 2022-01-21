@@ -9,6 +9,12 @@ import java.util.List;
 public class CurrentUserGetRequest {
     private String username;
 
+    private String firstName;
+
+    private String lastName;
+
+    private String bio;
+
     private String email;
 
     private boolean enabled;
@@ -39,6 +45,30 @@ public class CurrentUserGetRequest {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public String getEmail() {

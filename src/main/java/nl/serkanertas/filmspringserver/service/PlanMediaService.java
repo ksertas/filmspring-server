@@ -41,6 +41,9 @@ public class PlanMediaService {
         if (film.getUsersPlannedFilm().contains(user)) {
             throw new ResourceAlreadyExistsException("Film already in planned");
         }
+        if (film.getUsersWatchedFilm().contains(user)) {
+            throw new ResourceAlreadyExistsException("Film already in watched");
+        }
         film.getUsersPlannedFilm().add(user);
         filmService.saveFilmEntity(film);
     }
@@ -62,6 +65,9 @@ public class PlanMediaService {
         Series series = seriesService.getSeriesEntity(series_id);
         if (series.getUsersPlannedSeries().contains(user)) {
             throw new ResourceAlreadyExistsException("Series already in planned");
+        }
+        if (series.getUsersWatchedSeries().contains(user)) {
+            throw new ResourceAlreadyExistsException("Series already in watched");
         }
         series.getUsersPlannedSeries().add(user);
         seriesService.saveSeriesEntity(series);

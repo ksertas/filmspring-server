@@ -18,17 +18,20 @@ public class WatchMediaService {
     private final UserService userService;
     private final FilmService filmService;
     private final SeriesService seriesService;
+    private final PlanMediaService planMediaService;
     private final FilmRatingService filmRatingService;
     private final SeriesRatingService seriesRatingService;
 
     public WatchMediaService(UserService userService,
                              FilmService filmService,
                              SeriesService seriesService,
+                             @Lazy PlanMediaService planMediaService,
                              @Lazy FilmRatingService filmRatingService,
                              @Lazy SeriesRatingService seriesRatingService) {
         this.userService = userService;
         this.filmService = filmService;
         this.seriesService = seriesService;
+        this.planMediaService = planMediaService;
         this.filmRatingService = filmRatingService;
         this.seriesRatingService = seriesRatingService;
     }
@@ -44,6 +47,9 @@ public class WatchMediaService {
         }
         film.getUsersWatchedFilm().add(user);
         filmService.saveFilmEntity(film);
+        if (film.getUsersPlannedFilm().contains(user)) {
+            planMediaService.deleteFilmFromPlanned(user_id, film_id);
+        }
         RatingDto ratingDto = new RatingDto();
         ratingDto.setRating(0);
         filmRatingService.addFilmRating(user_id, film_id, ratingDto);
@@ -70,6 +76,9 @@ public class WatchMediaService {
         }
         series.getUsersWatchedSeries().add(user);
         seriesService.saveSeriesEntity(series);
+        if (series.getUsersPlannedSeries().contains(user)) {
+               planMediaService.deleteSeriesFromPlanned(user_id, series_id);
+        }
         RatingDto ratingDto = new RatingDto();
         ratingDto.setRating(0);
         seriesRatingService.addSeriesRating(user_id, series_id, ratingDto);

@@ -7,6 +7,7 @@ import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
 import nl.serkanertas.filmspringserver.exception.InvalidCredentialsException;
 import nl.serkanertas.filmspringserver.exception.ResourceAlreadyExistsException;
 import nl.serkanertas.filmspringserver.exception.UserNotFoundException;
+import nl.serkanertas.filmspringserver.model.Group;
 import nl.serkanertas.filmspringserver.model.User;
 import nl.serkanertas.filmspringserver.repository.UserRepository;
 import nl.serkanertas.filmspringserver.service.EntityToDtoService;
@@ -24,16 +25,19 @@ public class UserService  {
 
     private final UserRepository userRepository;
     private final AvatarService avatarService;
+    private final GroupService groupService;
     private final EntityToDtoService entityToDtoService;
     private final PasswordEncoder passwordEncoder;
 
 
     public UserService(@Lazy AvatarService avatarService,
                        UserRepository userRepository,
+                       @Lazy GroupService groupService,
                        @Lazy EntityToDtoService entityToDtoService,
                        PasswordEncoder passwordEncoder) {
         this.avatarService = avatarService;
         this.userRepository = userRepository;
+        this.groupService = groupService;
         this.entityToDtoService = entityToDtoService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -141,6 +145,13 @@ public class UserService  {
 
     public void deleteUser(String user_id) {
         User user = getUserEntity(user_id);
+        List<Long> groupIds = new ArrayList<>();
+        for (Group group : user.getGroupsUserIsIn()) {
+            groupIds.add(group.getGroup_id());
+        }
+        for (int i = 0; i < groupIds.size(); i++) {
+            groupService.removeUserFromGroup(user_id, groupIds.get(i));
+        }
         userRepository.delete(user);
     }
 

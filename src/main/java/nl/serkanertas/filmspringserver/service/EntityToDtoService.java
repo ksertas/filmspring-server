@@ -82,6 +82,7 @@ public class EntityToDtoService {
         Group group = groupService.getGroupEntity(group_id);
         GroupGetRequest groupDto = new GroupGetRequest();
         ArrayList<SearchedUserGetRequest> userGroupList = new ArrayList<>();
+        groupDto.setId(group.getGroup_id());
         groupDto.setGroupName(group.getName());
         groupDto.setAvatar(group.getAvatarGroup());
 

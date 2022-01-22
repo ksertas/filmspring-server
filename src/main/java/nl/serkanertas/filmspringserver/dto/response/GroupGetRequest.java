@@ -7,6 +7,9 @@ import nl.serkanertas.filmspringserver.model.Series;
 import java.util.List;
 
 public class GroupGetRequest {
+
+    private long id;
+
     private String groupName;
 
     private boolean isWarned;
@@ -18,6 +21,14 @@ public class GroupGetRequest {
     private List<FilmGetRequest> plannedFilms;
 
     private List<SeriesGetRequest> plannedSeries;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getGroupName() {
         return groupName;

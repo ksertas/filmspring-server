@@ -95,17 +95,9 @@ public class User {
         this.groupInvitations = groupInvitations;
     }
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "rating", fetch = FetchType.LAZY)
-    private List<FilmRating> filmRatings;
-
-    public List<FilmRating> getRatings() {
-        return filmRatings;
-    }
-
-    public void setRatings(List<FilmRating> filmRatings) {
-        this.filmRatings = filmRatings;
-    }
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "rating", fetch = FetchType.LAZY)
+//    private List<FilmRating> filmRatings;
 
     public String getUsername() {
         return username;

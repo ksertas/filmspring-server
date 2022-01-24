@@ -1,6 +1,7 @@
 package nl.serkanertas.filmspringserver.service.models;
 
 import nl.serkanertas.filmspringserver.dto.request.CreateUserPostRequest;
+import nl.serkanertas.filmspringserver.dto.request.DeleteUserRequest;
 import nl.serkanertas.filmspringserver.dto.request.UpdateUserDetailsRequest;
 import nl.serkanertas.filmspringserver.dto.response.CurrentUserGetRequest;
 import nl.serkanertas.filmspringserver.dto.response.SearchedUserGetRequest;
@@ -143,16 +144,20 @@ public class UserService  {
         return userRepository.findAll();
     }
 
-    public void deleteUser(String user_id) {
+    public void deleteUser(String user_id, DeleteUserRequest deleteUserRequest) {
         User user = getUserEntity(user_id);
-        List<Long> groupIds = new ArrayList<>();
-        for (Group group : user.getGroupsUserIsIn()) {
-            groupIds.add(group.getGroup_id());
+        if (passwordEncoder.matches(deleteUserRequest.getPassword(), user.getPassword())) {
+            List<Long> groupIds = new ArrayList<>();
+            for (Group group : user.getGroupsUserIsIn()) {
+                groupIds.add(group.getGroup_id());
+            }
+            for (Long groupId : groupIds) {
+                groupService.removeUserFromGroup(user_id, groupId);
+            }
+            userRepository.delete(user);
+        } else {
+            throw new InvalidCredentialsException("Invalid password.");
         }
-        for (int i = 0; i < groupIds.size(); i++) {
-            groupService.removeUserFromGroup(user_id, groupIds.get(i));
-        }
-        userRepository.delete(user);
     }
 
 }

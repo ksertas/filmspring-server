@@ -1,6 +1,7 @@
 package nl.serkanertas.filmspringserver.controller;
 
 import nl.serkanertas.filmspringserver.dto.request.CreateUserPostRequest;
+import nl.serkanertas.filmspringserver.dto.request.DeleteUserRequest;
 import nl.serkanertas.filmspringserver.dto.request.UpdateUserDetailsRequest;
 import nl.serkanertas.filmspringserver.service.PostAuthService;
 import nl.serkanertas.filmspringserver.service.models.UserService;
@@ -63,10 +64,12 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{user_id}/account")
+    // Request body is not recognized in @Deletemapping, hence @Postmapping is chosen to request account deletion.
+    @PostMapping("/{user_id}/account")
     @PreAuthorize("@postAuthService.isCurrentUser(#user_id) or hasRole(\"ROLE_ADMIN\")")
-    ResponseEntity<Object> deleteCurrentUser(@PathVariable String user_id) {
-        userService.deleteUser(user_id);
+    ResponseEntity<Object> deleteCurrentUser(@PathVariable String user_id,
+                                             @Valid @RequestBody DeleteUserRequest deleteUserRequest) {
+        userService.deleteUser(user_id, deleteUserRequest);
         return ResponseEntity.noContent().build();
     }
 

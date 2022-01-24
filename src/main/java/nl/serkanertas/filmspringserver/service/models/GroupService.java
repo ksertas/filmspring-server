@@ -52,6 +52,7 @@ public class GroupService {
             groupRepository.save(group);
             String groupCreatorName = SecurityContextHolder.getContext().getAuthentication().getName();
             User groupCreator = userService.getUserEntity(groupCreatorName);
+            group.setGroupOwnerName(groupCreatorName);
             groupCreator.addAuthority("ROLE_OWNER-GROUP-" + group.getGroup_id());
             userService.saveUserEntity(groupCreator);
             addUserToGroup(groupCreatorName, group.getGroup_id());

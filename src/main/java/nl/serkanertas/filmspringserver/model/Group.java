@@ -44,6 +44,8 @@ public class Group {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Series> plannedSeries = new ArrayList<>();
 
+    private String groupOwnerName;
+
     public long getGroup_id() {
         return group_id;
     }
@@ -98,5 +100,13 @@ public class Group {
 
     public void setPlannedSeries(List<Series> plannedSeries) {
         this.plannedSeries = plannedSeries;
+    }
+
+    public String getGroupOwnerName() {
+        return groupOwnerName;
+    }
+
+    public void setGroupOwnerName(String groupOwnerName) {
+        this.groupOwnerName = groupOwnerName;
     }
 }

@@ -84,6 +84,7 @@ public class EntityToDtoService {
         ArrayList<SearchedUserGetRequest> userGroupList = new ArrayList<>();
         groupDto.setId(group.getGroup_id());
         groupDto.setGroupName(group.getName());
+        groupDto.setGroupOwnerName(group.getGroupOwnerName());
         groupDto.setAvatar(group.getAvatarGroup());
 
         for (User user : group.getUsersInGroup()) {

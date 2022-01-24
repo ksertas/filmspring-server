@@ -12,6 +12,8 @@ public class GroupGetRequest {
 
     private String groupName;
 
+    private String groupOwnerName;
+
     private boolean isWarned;
 
     private Avatar avatar;
@@ -37,6 +39,15 @@ public class GroupGetRequest {
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
+
+    public String getGroupOwnerName() {
+        return groupOwnerName;
+    }
+
+    public void setGroupOwnerName(String groupOwnerName) {
+        this.groupOwnerName = groupOwnerName;
+    }
+
 
     public boolean isWarned() {
         return isWarned;

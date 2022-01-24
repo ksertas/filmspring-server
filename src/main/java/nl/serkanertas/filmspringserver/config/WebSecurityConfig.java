@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 @Configuration
@@ -76,8 +77,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .anyRequest().permitAll()
 //                .and()
                 .logout()
-                .logoutUrl("/api/logout")
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                })
                 .and()
+                .cors().and()
                 .csrf().disable()
                 .formLogin().disable()
                 .sessionManagement()

@@ -60,12 +60,12 @@ public class SeriesService {
     public Iterable<Series> getAllSeriesEntities() { return seriesRepository.findAll(); }
 
     @Transactional
-    public List<Series> getSearchedSeries(String query) {
+    public List<SeriesGetRequest> getSearchedSeries(String query) {
         Iterable<Series> foundSeries = seriesRepository.findSeriesByTitleContainsIgnoreCase(query);
         ArrayList<Series> toReturnSeries = new ArrayList<>();
         for (Series series : foundSeries) {
             toReturnSeries.add(series);
         }
-        return toReturnSeries;
+        return entityToDtoService.mapListOfSeriesToDto(toReturnSeries);
     }
 }

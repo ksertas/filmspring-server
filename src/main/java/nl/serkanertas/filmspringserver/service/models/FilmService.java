@@ -43,13 +43,13 @@ public class FilmService {
     }
 
     @Transactional
-    public List<Film> getSearchedFilms(String query) {
+    public List<FilmGetRequest> getSearchedFilms(String query) {
         Iterable<Film> films = filmRepository.findFIlmByTitleContainsIgnoreCase(query);
         ArrayList<Film> toReturnFilms = new ArrayList<>();
         for (Film film : films) {
             toReturnFilms.add(film);
         }
-        return toReturnFilms;
+        return entityToDtoService.mapListOfFilmsToDto(toReturnFilms);
     }
 
     public Iterable<Film> getAllFilmEntities() {

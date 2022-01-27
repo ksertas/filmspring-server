@@ -39,6 +39,8 @@ public class CurrentUserGetRequest {
 
     private List<GroupGetRequest> groupsUserIsIn;
 
+    private List<String> groupInvitationIds;
+
     public String getUsername() {
         return username;
     }
@@ -165,5 +167,13 @@ public class CurrentUserGetRequest {
 
     public void setGroupsUserIsIn(List<GroupGetRequest> groupsUserIsIn) {
         this.groupsUserIsIn = groupsUserIsIn;
+    }
+
+    public List<String> getGroupInvitationIds() {
+        return groupInvitationIds;
+    }
+
+    public void setGroupInvitationIds(List<String> groupInvitationIds) {
+        this.groupInvitationIds = groupInvitationIds;
     }
 }

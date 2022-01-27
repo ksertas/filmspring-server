@@ -46,6 +46,7 @@ public class EntityToDtoService {
         userDto.setEnabled(user.isEnabled());
         userDto.setVerified(user.isVerified());
         userDto.setGroupsUserIsIn(mapListOfGroupsToDto(user.getGroupsUserIsIn()));
+        userDto.setGroupInvitationIds(user.getGroupInvitationIds());
         userDto.setHideMediaFromOthers(user.isMediaHidden());
         userDto.setWatchedFilms(mapListOfFilmsToDto(user.getWatchedFilms()));
         userDto.setPlannedFilms(mapListOfFilmsToDto(user.getPlannedFlms()));

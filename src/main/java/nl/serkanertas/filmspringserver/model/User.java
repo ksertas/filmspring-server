@@ -87,6 +87,17 @@ public class User {
     @ManyToMany
     private List<GroupInvitation> groupInvitations;
 
+    @ElementCollection
+    private List<String> groupInvitationIds;
+
+    public List<String> getGroupInvitationIds() {
+        return groupInvitationIds;
+    }
+
+    public void setGroupInvitationIds(List<String> groupInvitationIds) {
+        this.groupInvitationIds = groupInvitationIds;
+    }
+
     public List<GroupInvitation> getGroupInvitations() {
         return groupInvitations;
     }
@@ -94,10 +105,6 @@ public class User {
     public void setGroupInvitations(List<GroupInvitation> groupInvitations) {
         this.groupInvitations = groupInvitations;
     }
-
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "rating", fetch = FetchType.LAZY)
-//    private List<FilmRating> filmRatings;
 
     public String getUsername() {
         return username;

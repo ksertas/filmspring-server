@@ -37,6 +37,7 @@ public class InviteService {
         String searchedAuthority = "ROLE_INVITED-" + group_id;
         if (!checkIfAuthorityExists(user_id, searchedAuthority)) {
             user.addAuthority(searchedAuthority);
+            user.getGroupInvitationIds().add(Long.toString(group_id));
             userService.saveUserEntity(user);
         } else {
             throw new BadRequestException("User is already invited");
@@ -49,6 +50,7 @@ public class InviteService {
         String searchInviteRole = "ROLE_INVITED-" + group_id;
         groupService.addUserToGroup(user_id, group_id);
         user.removeAuthority(searchInviteRole);
+        user.getGroupInvitationIds().remove(Long.toString(group_id));
         userService.saveUserEntity(user);
     }
 
@@ -57,6 +59,7 @@ public class InviteService {
         User user = userService.getUserEntity(user_id);
         String searchInviteRole = "ROLE_INVITED-" + group_id;
         user.removeAuthority(searchInviteRole);
+        user.getGroupInvitationIds().remove(Long.toString(group_id));
         userService.saveUserEntity(user);
     }
 }

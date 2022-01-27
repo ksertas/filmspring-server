@@ -86,7 +86,7 @@ public class GroupController {
     }
 
     @PutMapping("/{group_id}/invite/{user_id}")
-    @PreAuthorize("@postAuthService.isCurrentUserInGroup(#group_id)")
+    @PreAuthorize("@postAuthService.isCurrentUserInGroup(#group_id) and not @postAuthService.isCurrentUser(#user_id)")
     ResponseEntity<Object> inviteUserToGroup(@PathVariable("user_id") String user_id,
                                              @PathVariable("group_id") long group_id) {
         inviteService.inviteUser(user_id, group_id);

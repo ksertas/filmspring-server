@@ -77,6 +77,14 @@ public class GroupController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/{group_id}/users/{user_id}/leave")
+    @PreAuthorize("@postAuthService.isCurrentUserInGroup(#group_id) and @postAuthService.isCurrentUser(#user_id)")
+    ResponseEntity<Object> leaveGroup(@PathVariable("group_id") long group_id,
+                                      @PathVariable("user_id") String user_id) {
+        groupService.removeUserFromGroup(user_id, group_id);
+        return ResponseEntity.noContent().build();
+    }
+
     @PutMapping("/{group_id}/invite/{user_id}")
     @PreAuthorize("@postAuthService.isCurrentUserInGroup(#group_id)")
     ResponseEntity<Object> inviteUserToGroup(@PathVariable("user_id") String user_id,

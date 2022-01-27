@@ -63,6 +63,7 @@ public class WatchMediaService {
             throw new BadRequestException("Film not in watched");
         }
         film.getUsersWatchedFilm().remove(user);
+        film.getUsersFavoriteFilm().remove(user);
         filmService.saveFilmEntity(film);
         filmRatingService.deleteFilmRating(user_id, film_id);
     }
@@ -92,6 +93,7 @@ public class WatchMediaService {
             throw new BadRequestException("Series not in watched");
         }
         series.getUsersWatchedSeries().remove(user);
+        series.getUsersFavoriteSeries().remove(user);
         seriesService.saveSeriesEntity(series);
         seriesRatingService.deleteSeriesRating(user_id, series_id);
     }

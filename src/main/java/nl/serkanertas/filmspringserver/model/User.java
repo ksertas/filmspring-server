@@ -98,14 +98,6 @@ public class User {
         this.groupInvitationIds = groupInvitationIds;
     }
 
-    public List<GroupInvitation> getGroupInvitations() {
-        return groupInvitations;
-    }
-
-    public void setGroupInvitations(List<GroupInvitation> groupInvitations) {
-        this.groupInvitations = groupInvitations;
-    }
-
     public String getUsername() {
         return username;
     }

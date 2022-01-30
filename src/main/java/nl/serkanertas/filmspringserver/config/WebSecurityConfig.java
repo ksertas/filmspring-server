@@ -35,20 +35,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
-//    @Bean
-//    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        return http
-//                .requiresChannel(channel ->
-//                        channel.anyRequest().requiresSecure())
-//                .build();
-//    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Authentication
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 

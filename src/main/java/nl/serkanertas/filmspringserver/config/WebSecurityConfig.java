@@ -16,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +30,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final DataSource dataSource;
     private final JwtRequestFilter jwtRequestFilter;
 
-//    @Autowired
     WebSecurityConfig(@Lazy DataSource dataSource, @Lazy JwtRequestFilter jwtRequestFilter) {
         this.dataSource = dataSource;
         this.jwtRequestFilter = jwtRequestFilter;
@@ -40,7 +40,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    // Authentication
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 
@@ -67,15 +66,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
 
-                //HTTP Basic authentication
-//                .httpBasic()
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers("/api/users/login").permitAll()
-//                .anyRequest().authenticated()
-//                .antMatchers(PATCH,"/users/{^[\\w]$}/password").authenticated()
-//                .anyRequest().permitAll()
-//                .and()
                 .logout()
                 .logoutSuccessHandler((request, response, authentication) -> {
                     response.setStatus(HttpServletResponse.SC_OK);
